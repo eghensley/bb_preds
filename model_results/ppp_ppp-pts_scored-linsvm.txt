@@ -1,0 +1,2 @@
+scale: RobustScaler(copy=True, quantile_range=(25.0, 75.0), with_centering=True,
+       with_scaling=True),start C: 0.346449314972,n feats: 9,significant features: linsvm_ppp, ridge_ppp, lightgbm_target, linsvm_target, ridge_target, lightgbm_team, linsvm_team, rest, lasso_target, final C: 0.215329117725,final score: 0.206859880745,

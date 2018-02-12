@@ -1,0 +1,1 @@
+scale: MinMaxScaler(copy=True, feature_range=(0, 1)),start solver: sag,start alpha: 835.663064391,n feats: 3,significant features: ha, 10_game_avg, streak, final solver: sag,final alpha: 584.39992591,final score: 0.00059655567887,

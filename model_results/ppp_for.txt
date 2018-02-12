@@ -1,0 +1,3 @@
+scale: MinMaxScaler(copy=True, feature_range=(0, 1)),start C: 1,n feats: 8,significant features: linsvm_ppp, ridge_ppp, lightgbm_target, ridge_target, lightgbm_team, linsvm_team, rest, lasso_target, final C: 1,final score: 0.207118644769,
+
+model: linsvm

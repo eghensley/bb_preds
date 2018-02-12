@@ -1,0 +1,4 @@
+scale: StandardScaler(copy=True, with_mean=True, with_std=True),start solver: sparse_cg,start alpha: 0.00105221447723,n feats: 10,significant features: linsvm_ppp, ridge_ppp, lightgbm_target, ridge_target, lightgbm_team, linsvm_team, lightgbm_possessions, lasso_possessions, rest, lasso_target, final solver: sparse_cg,final alpha: 0.00149714794699,final score: 0.206982222014,
+
+
+model: Ridge

@@ -1,0 +1,1 @@
+scale: StandardScaler(copy=True, with_mean=True, with_std=True),start lr: 0.00375,start n feats: 4,significant features: 10_game_avg, streak, ha, 50_game_avg, trees: 1000.0,lr: 0.00140625,final score: 0.000701680307138,
