@@ -33,6 +33,12 @@ stored_models = {
                 'model': Pipeline([('scale',StandardScaler()), ('clf',Ridge(random_state = 1108, solver = 'lsqr', alpha = 0.00101115979472))]),
             },  
         },
+        'points':{
+                    'ridge': {
+                        'features': ['-lightgbm_team', '+lasso_possessions', '+ridge_team', '+linsvm_team', '+lightgbm_team', '+lasso_team', '+ridge_all', '+lightgbm_all', '+lightgbm_ppp', '+lasso_ppp', '-ridge_ppp', '-lightgbm_ppp', '-lasso_ppp', '-linsvm_possessions', '-lightgbm_possessions', '-lasso_possessions', '-ridge_all', '-linsvm_all', '-linsvm_team', '-linsvm_ppp', '+ridge_possessions', '-rest', '+lightgbm_possessions', '+rest'],
+                        'model': Pipeline([('scale',RobustScaler()), ('clf',Ridge(random_state = 1108, solver = 'saga', alpha = 0.5904378324937618))]),
+                        },            
+        },
         'result':{
                 'line':{
                     'ridge': {
