@@ -16,6 +16,11 @@ sys.path.insert(-1, os.path.join(cur_path, 'db_utils'))
 sys.path.insert(-1, os.path.join(cur_path, 'model_tuning'))
 
 output_folder = os.path.join(cur_path, 'model_results')
+sys.path.insert(-1, output_folder)
+f = open('keras_model_tuning.txt', 'w')
+f.write('Starting Keras Analysis...')
+f.close()
+
 features_folder = os.path.join(cur_path, 'feature_dumps')
 input_folder = os.path.join(cur_path, 'derived_data')
 import pull_data
@@ -76,7 +81,7 @@ pipeline = Pipeline(estimators)
 baseline_results = cross_val_score(pipeline, x_data, y_data, scoring = 'explained_variance' ,cv = kfold)
 print("Results: %.2f (%.2f) Explained Variance" % (baseline_results.mean(), baseline_results.std()))
 results['baseline'] = baseline_results
-f = open(os.path.join(output_folder, 'keras_model_tuning.txt', 'a'))
+f = open('keras_model_tuning.txt', 'a')
 f.write('Baseline: %s, %s.  ' % (baseline_results.mean(), baseline_results.std()))
 f.close()
 for width in np.linspace(1, 2, 4):
@@ -99,7 +104,7 @@ for width in np.linspace(1, 2, 4):
         test_results = cross_val_score(pipeline, x_data, y_data, scoring = 'explained_variance' ,cv = kfold)
         print("Results: %.2f (%.2f) Explained Variance" % (baseline_results.mean(), baseline_results.std()))
         results['width-%s_depth-%s_model' % (width, depth)] = test_results
-        f = open(os.path.join(output_folder, 'keras_model_tuning.txt', 'a'))
+        f = open('keras_model_tuning.txt', 'a')
         f.write('Width-%s_depth-%s_model: %s, %s.  ' % (width, depth, baseline_results.mean(), baseline_results.std()))
         f.close()
 
