@@ -21,13 +21,13 @@ import pull_data
 import update_dbs
 
 x_vals = 'predictive'
-y_val = '+points'
+y_val = '+pts'
 x_data_stable = pull_data.score(update_dbs.mysql_client())
 x_cols = list(x_data_stable)
 x_cols.remove(y_val)
 y_data = x_data_stable[y_val] 
 
-x_data = x_data_stable   
+x_data = x_data_stable[x_cols]
 result = lasso_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
 print("Best %s %s score: %s" % (x_vals, y_val, result))
  

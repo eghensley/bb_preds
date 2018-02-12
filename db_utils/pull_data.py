@@ -84,7 +84,7 @@ def offensive_points(cnx):
     for name, date in np.array(data[['teamname', 'date']]):
         idx.append(str(date)+name.replace(' ','_'))
     data['idx'] = idx
-    data.set_index('idx')
+    data = data.set_index('idx')
     del data['teamname']
     del data['date']
     
@@ -96,10 +96,8 @@ def offensive_points(cnx):
 
 def score(cnx):
     off_data = offensive_points(cnx)
-    del off_data['idx']
     off_data = off_data.rename(columns = {i:'+'+i for i in list(off_data)})
     def_data = defensive_points(cnx)
-    del def_data['idx']
     def_data = def_data.rename(columns = {i:'-'+i for i in list(def_data)})
     del def_data['-pts']
     def_data *= -1
@@ -115,7 +113,11 @@ def score(cnx):
         idx.append(idx_switch[idxx])
     def_data['idx'] = idx
     def_data = def_data.set_index('idx')
-    data = def_data.join(off_data)   
+    data = def_data.join(off_data) 
+    
+    data = data.replace([np.inf, -np.inf], np.nan)
+    data = data.replace('NULL', np.nan)
+    data = data.dropna(how = 'any')
     return data
     
 def offensive_pace(cnx):
@@ -127,7 +129,7 @@ def offensive_pace(cnx):
     for name, date in np.array(data[['teamname', 'date']]):
         idx.append(str(date)+name.replace(' ','_'))
     data['idx'] = idx
-    data.set_index('idx')
+    data = data.set_index('idx')
     del data['teamname']
     del data['date']
     
@@ -144,7 +146,7 @@ def defensive_pace(cnx):
     for name, date in np.array(data[['teamname', 'date']]):
         idx.append(str(date)+name.replace(' ','_'))
     data['idx'] = idx
-    data.set_index('idx')
+    data = data.set_index('idx')
     del data['teamname']
     del data['date']
     
@@ -162,7 +164,7 @@ def defensive_points(cnx):
     for name, date in np.array(data[['teamname', 'date']]):
         idx.append(str(date)+name.replace(' ','_'))
     data['idx'] = idx
-    data.set_index('idx')
+    data = data.set_index('idx')
     del data['teamname']
     del data['date']
     
@@ -181,7 +183,7 @@ def offensive_ppp(cnx):
     for name, date in np.array(data[['teamname', 'date']]):
         idx.append(str(date)+name.replace(' ','_'))
     data['idx'] = idx
-    data.set_index('idx')
+    data = data.set_index('idx')
     del data['teamname']
     del data['date']
     
@@ -200,7 +202,7 @@ def defensive_ppp(cnx):
     for name, date in np.array(data[['teamname', 'date']]):
         idx.append(str(date)+name.replace(' ','_'))
     data['idx'] = idx
-    data.set_index('idx')
+    data = data.set_index('idx')
     del data['teamname']
     del data['date']
     
