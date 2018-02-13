@@ -37,6 +37,27 @@ def pull_possessions(od, cnx):
     data = data.dropna(how = 'any')
     return data
 
+def pull_wl(cnx):
+    cursor = cnx.cursor()
+    query = 'select gd.teamname, date, bs1.`points-per-game` - bs2.`points-per-game` from gamedata as gd join basestats as bs1 on bs1.teamname = gd.teamname and bs1.statdate = gd.date join basestats as bs2 on bs2.teamname = gd.opponent and bs2.statdate = gd.date'
+    cursor.execute(query)
+    gamedata = pd.DataFrame(cursor.fetchall() , columns = ['name', 'date', 'result'])
+    idx = []
+    result = []
+    
+    for n, d ,r in np.array(gamedata):
+        if r > 0:
+            result.append(1)
+            idx.append(str(d)+n.replace(' ', '_'))
+        elif r <0:
+            result.append(0)
+            idx.append(str(d)+n.replace(' ', '_'))
+    resultdata = pd.DataFrame()
+    resultdata['idx'] = idx
+    resultdata['outcome'] = result
+    resultdata = resultdata.set_index('idx')
+    return resultdata
+    
 def pull_odds_data(cnx):
     cursor = cnx.cursor()
     query = 'select * from oddsdata'
