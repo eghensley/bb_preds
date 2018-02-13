@@ -24,7 +24,7 @@ def test_scaler(x, y):
     scores = []
     for scale in [StandardScaler(), MinMaxScaler(), RobustScaler()]:
         pipe = Pipeline([('scale',scale), ('clf',LogisticRegression(random_state = 1108))])
-        score = cross_val_score(pipe, x, y, scoring = 'neg_log_loss' ,cv = KFold(n_splits = 10, random_state = 46))
+        score = cross_val_score(pipe, x, y, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 46))
         scores.append(np.mean(score))
     if scores.index(max(scores)) == 0:
         print('Using Standard Scaler')
@@ -40,7 +40,7 @@ def sample_loss_n_feats(parameters):
     feats = int(parameters[0])
     print('%s features' % (feats))
     model = Pipeline([('scale',scale),  ('clf',LogisticRegression(random_state = 1108, solver = solver_, C = C_))])
-    score = cross_val_score(model, x_data[feat_sigs[:feats]], y_data, scoring = 'neg_log_loss' ,cv = KFold(n_splits = 10, random_state = 1108))
+    score = cross_val_score(model, x_data[feat_sigs[:feats]], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 1108))
     print('----> score: %s' % np.mean(score))
     return np.mean(score)
 
@@ -58,33 +58,30 @@ def find_feats():
 def test_solver(x, y):
     print('Searching for best solver...')
     scores = []
-    for slvr in ['svd', 'cholesky', 'lsqr', 'sparse_cg', 'sag', 'saga']:
+    for slvr in ['liblinear', 'newton-cg', 'lbfgs', 'sag','saga']:
         pipe = Pipeline([('scale',scale), ('clf',LogisticRegression(random_state = 1108, solver = slvr, C = C_))])
-        score = cross_val_score(pipe, x, y, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 86))
+        score = cross_val_score(pipe, x, y, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 86))
         scores.append(np.mean(score))
     if scores.index(max(scores)) == 0:
-        print('Using svd')
-        return 'svd'
+        print('Using liblinear')
+        return 'liblinear'
     elif scores.index(max(scores)) == 1:
-        print('Using cholesky')
-        return 'cholesky'
+        print('Using newton-cg')
+        return 'newton-cg'
     elif scores.index(max(scores)) == 2:
-        print('Using lsqr')
-        return 'lsqr'
+        print('Using lbfgs')
+        return 'lbfgs'
     elif scores.index(max(scores)) == 3:
-        print('Using sparse_cg')
-        return 'sparse_cg'
-    elif scores.index(max(scores)) == 4:
         print('Using sag')
         return 'sag'
-    elif scores.index(max(scores)) == 5:
+    elif scores.index(max(scores)) == 4:
         print('Using saga')
         return 'saga'
     
 def sample_loss_c(parameters):
     c = 10**parameters[0]
-    model = Pipeline([('scale',scale), ('clf',LogisticRegression(random_state = 1108, C = c, epsilon=0))])
-    score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'neg_log_loss' ,cv = KFold(n_splits = 10, random_state = 88))
+    model = Pipeline([('scale',scale), ('clf',LogisticRegression(random_state = 1108, C = c))])
+    score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 88))
     print('----> score: %s' % np.mean(score))
     return np.mean(score)
  
@@ -158,11 +155,11 @@ def execute(sa, od, X_data = None, Y_data = None):
     
     print('---Finalizing Log Model')
     model = Pipeline([('scale',scale), ('clf',LogisticRegression(random_state = 1108, solver = solver_, C = C_))])                    
-    tune_score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'neg_log_loss' ,cv = KFold(n_splits = 10, random_state = 88))
+    tune_score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 88))
     print('...Log Model Finalized')
     tune_score = np.mean(tune_score)
     base_model = Pipeline([('scale',scale), ('clf',GaussianNB())])
-    baseline_score = cross_val_score(base_model, x_data[feat_sigs], y_data, scoring = 'neg_log_loss' ,cv = KFold(n_splits = 10, random_state = 86))
+    baseline_score = cross_val_score(base_model, x_data[feat_sigs], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 86))
     baseline_score = np.mean(baseline_score)
     improvement = (tune_score - baseline_score)/baseline_score
     print('%s percent improvement from baseline' % (improvement * 100))

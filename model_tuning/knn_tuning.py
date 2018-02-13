@@ -6,7 +6,7 @@ from sklearn.gaussian_process.kernels import Matern
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 from sklearn.pipeline import Pipeline
 from sklearn.naive_bayes import GaussianNB
-from sklearn.neighbors import NearestNeighbors
+from sklearn.neighbors import KNeighborsClassifier
 import pandas as pd
 from sklearn.feature_selection import f_classif
 
@@ -23,8 +23,8 @@ def test_scaler(x, y):
     print('Searching for best scaler...')
     scores = []
     for scale in [StandardScaler(), MinMaxScaler(), RobustScaler()]:
-        pipe = Pipeline([('scale',scale), ('clf',NearestNeighbors())])
-        score = cross_val_score(pipe, x, y, scoring = 'neg_log_loss' ,cv = KFold(n_splits = 10, random_state = 46))
+        pipe = Pipeline([('scale',scale), ('clf',KNeighborsClassifier())])
+        score = cross_val_score(pipe, x, y, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 46))
         scores.append(np.mean(score))
     if scores.index(max(scores)) == 0:
         print('Using Standard Scaler')
@@ -39,8 +39,8 @@ def test_scaler(x, y):
 def sample_loss_n_feats(parameters):
     feats = int(parameters[0])
     print('%s features' % (feats))
-    model = Pipeline([('scale',scale),  ('clf',NearestNeighbors(leaf_size = leaf_, n_neighbors = n_))])
-    score = cross_val_score(model, x_data[feat_sigs[:feats]], y_data, scoring = 'neg_log_loss' ,cv = KFold(n_splits = 10, random_state = 1108))
+    model = Pipeline([('scale',scale),  ('clf',KNeighborsClassifier(leaf_size = leaf_, n_neighbors = n_))])
+    score = cross_val_score(model, x_data[feat_sigs[:feats]], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 1108))
     print('----> score: %s' % np.mean(score))
     return np.mean(score)
 
@@ -56,10 +56,10 @@ def find_feats():
     return int(results[0][list(results[1]).index(max(results[1]))])
 
 def sample_loss_leaf(parameters):
-    leaf = parameters[0]
-    n = parameters[1]
-    model = Pipeline([('scale',scale), ('clf',NearestNeighbors(leaf_size = leaf, n_neighbors = n))])
-    score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'neg_log_loss' ,cv = KFold(n_splits = 10, random_state = 88))
+    leaf = int(parameters[0])
+    n = int(parameters[1])
+    model = Pipeline([('scale',scale), ('clf',KNeighborsClassifier(leaf_size = leaf, n_neighbors = n))])
+    score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 88))
     print('----> score: %s' % np.mean(score))
     return np.mean(score)
  
@@ -122,18 +122,22 @@ def execute(sa, od, X_data = None, Y_data = None):
     f.close()
     
     leaf_, n_ = leaf_tuning()
+    leaf_ = int(leaf_)
+    n_ = int(n_)
+    global leaf_
+    global n_
     f = open(os.path.join(output_folder,  '%s-%s-knn.txt'%(sa, od)), 'a')
     f.write('final neighbors: %s,'%(n_))
     f.write('final leaves: %s,'%(leaf_))
     f.close()
     
     print('---Finalizing KNN Model')
-    model = Pipeline([('scale',scale), ('clf',NearestNeighbors(leaf_size = leaf_, n_neighbors = n_))])                    
-    tune_score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'neg_log_loss' ,cv = KFold(n_splits = 10, random_state = 88))
+    model = Pipeline([('scale',scale), ('clf',KNeighborsClassifier(leaf_size = leaf_, n_neighbors = n_))])                    
+    tune_score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 88))
     print('...KNN Model Finalized')
     tune_score = np.mean(tune_score)
     base_model = Pipeline([('scale',scale), ('clf',GaussianNB())])
-    baseline_score = cross_val_score(base_model, x_data[feat_sigs], y_data, scoring = 'neg_log_loss' ,cv = KFold(n_splits = 10, random_state = 86))
+    baseline_score = cross_val_score(base_model, x_data[feat_sigs], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 86))
     baseline_score = np.mean(baseline_score)
     improvement = (tune_score - baseline_score)/baseline_score
     print('%s percent improvement from baseline' % (improvement * 100))
@@ -143,7 +147,7 @@ def execute(sa, od, X_data = None, Y_data = None):
         f.close()
         return 0
     else:
-        f = open(os.path.join(output_folder, '%s-%s-linsvc.txt'%(sa, od)), 'a')
+        f = open(os.path.join(output_folder, '%s-%s-knn.txt'%(sa, od)), 'a')
         f.write('final score: %s,'%(tune_score))
         f.close()
         return tune_score

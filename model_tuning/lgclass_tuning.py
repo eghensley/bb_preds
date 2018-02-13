@@ -67,7 +67,7 @@ def test_scaler(x, y):
     scores = []
     for scale in [StandardScaler(), MinMaxScaler(), RobustScaler()]:
         pipe = Pipeline([('scale',scale), ('clf',lgb.LGBMClassifier(random_state = 1108))])
-        score = cross_val_score(pipe, x, y, scoring = 'neg_log_loss' ,cv = KFold(n_splits = 10, random_state = 46))
+        score = cross_val_score(pipe, x, y, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 46))
         scores.append(np.mean(score))
     if scores.index(max(scores)) == 0:
         print('Using Standard Scaler')
@@ -83,7 +83,7 @@ def check_lr(lr, x, y, scale):
     scores = []
     for tree in [75, 100, 125]:
         test = Pipeline([('scale',scale), ('clf',lgb.LGBMClassifier(random_state = 1108, n_estimators = tree, subsample = .8, learning_rate = lr))])
-        score = cross_val_score(test, x, y, scoring = 'neg_log_loss' ,cv = KFold(n_splits = 10, random_state = 86))
+        score = cross_val_score(test, x, y, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 86))
         scores.append(np.mean(score))
     return scores.index(max(scores))
 
@@ -116,9 +116,11 @@ def find_lr(start_lr, x_, y, scale):
 
 def sample_loss_n_feats(parameters):
     feats = int(parameters[0])
+    if feats == 0:
+        feats = 1
     print('%s features' % (feats))
     model = Pipeline([('scale',scale), ('clf',lgb.LGBMClassifier(random_state = 1108, n_estimators = 100, subsample = .8, learning_rate = learn_rate))])
-    score = cross_val_score(model, x_data[feat_sigs[:feats]], y_data, scoring = 'neg_log_loss' ,cv = KFold(n_splits = 10, random_state = 1108))
+    score = cross_val_score(model, x_data[feat_sigs[:feats]], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 1108))
     print('----> score: %s' % np.mean(score))
     return np.mean(score)
 
@@ -140,7 +142,7 @@ def sample_loss_hyperparameters(parameters):
     leaves = int(parameters[3])
     sample = parameters[4]
     model = Pipeline([('scale',scale), ('clf',lgb.LGBMClassifier(random_state = 1108, n_estimators = 100, colsample_bytree = tree_sample, min_child_samples = child_samples, num_leaves = leaves, subsample = sample, max_bin = bin_max, learning_rate = new_learn_rate))])
-    score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 88))
+    score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 88))
     print('----> score: %s' % np.mean(score))
     return np.mean(score)
  
@@ -166,7 +168,7 @@ def drop_lr(l_drop, trees):
     for trial in np.linspace(1.5, 8.5, 15):
         num_trees = trees * trial
         model_lr = Pipeline([('scale',scale), ('clf',lgb.LGBMClassifier(random_state = 1108, n_estimators = int(num_trees), colsample_bytree = colsample, min_child_samples = int(min_child), num_leaves = int(n_leaves), subsample = sub_sample, max_bin = int(bin_size), learning_rate = l_drop))])
-        lr_score = cross_val_score(model_lr, x_data[feat_sigs[:features]], y_data, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 151))
+        lr_score = cross_val_score(model_lr, x_data[feat_sigs[:features]], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 151))
         if np.mean(lr_score) > prev_score:
             print('%s x trees IMPROVEMENT, continuing'  % (trial))
             prev_score = np.mean(lr_score)
@@ -221,7 +223,7 @@ def execute(sa, od, X_data = None, Y_data = None):
     gauss_results.to_csv(os.path.join(output_folder, '%s-%s-lightc-results.csv'%(sa, od)))
     
     base_model = Pipeline([('scale',scale), ('clf',GaussianNB())])
-    baseline_score = cross_val_score(base_model, x_data[feat_sigs], y_data, scoring = 'neg_log_loss' ,cv = KFold(n_splits = 10, random_state = 86))
+    baseline_score = cross_val_score(base_model, x_data[feat_sigs], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 86))
     baseline_score = np.mean(baseline_score)
     colsample, bin_size, min_child, n_leaves, score_val, sub_sample = gauss_results.sort_values('score', ascending = False)[:1].values[0]
     global colsample
@@ -230,8 +232,8 @@ def execute(sa, od, X_data = None, Y_data = None):
     global n_leaves
     global sub_sample
     
-    tune_model = Pipeline([('scale',scale), ('clf',lgb.LGBMRegressor(random_state = 1108, n_estimators = 100, colsample_bytree = colsample, min_child_samples = int(min_child), num_leaves = int(n_leaves), subsample = sub_sample, max_bin = int(bin_size), learning_rate = new_learn_rate))])    
-    tune_score = cross_val_score(tune_model, x_data[feat_sigs[:features]], y_data, scoring = 'neg_log_loss' ,cv = KFold(n_splits = 10, random_state = 86))
+    tune_model = Pipeline([('scale',scale), ('clf',lgb.LGBMClassifier(random_state = 1108, n_estimators = 100, colsample_bytree = colsample, min_child_samples = int(min_child), num_leaves = int(n_leaves), subsample = sub_sample, max_bin = int(bin_size), learning_rate = new_learn_rate))])    
+    tune_score = cross_val_score(tune_model, x_data[feat_sigs[:features]], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 86))
     tune_score = np.mean(tune_score)        
         
     lr_drop = new_learn_rate
@@ -267,7 +269,7 @@ def execute(sa, od, X_data = None, Y_data = None):
         
     print('--- Finalizing Light GBC model')    
     model_lr = Pipeline([('scale',scale), ('clf',lgb.LGBMClassifier(random_state = 1108, n_estimators = int(trees_drop), colsample_bytree = colsample, min_child_samples = int(min_child), num_leaves = int(n_leaves), subsample = sub_sample, max_bin = int(bin_size), learning_rate = lr_drop))])
-    tune_score = cross_val_score(model_lr, x_data[feat_sigs[:features]], y_data, scoring = 'neg_log_loss' ,cv = KFold(n_splits = 10, random_state = 151))
+    tune_score = cross_val_score(model_lr, x_data[feat_sigs[:features]], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 151))
     print('...Light GBC finalized')
     tune_score = np.mean(tune_score)
     improvement = (tune_score - baseline_score)/baseline_score
