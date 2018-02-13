@@ -47,7 +47,7 @@ stored_models = {
                         },
                     'lasso': {
                         'features': ['ha', '10_game_avg', 'streak'],
-                        'model': Pipeline([('scale',StandardScaler()), ('clf',Lasso(random_state = 1108, alpha = 0.0011089952827))]),
+                        'model': Pipeline([('scale',StandardScaler()), ('clf',Lasso(random_state = 1108, alpha = 0.0011089952827, max_iter = 2000))]),
                         },
                     'lightgbm': {
                         'features': ['10_game_avg', 'streak', 'ha', '50_game_avg'],
@@ -92,7 +92,7 @@ stored_models = {
 #                        }, 
                     'lasso': {
                         'features': ['expected_ppp_allowed', '50_g_HAspread_allow_points-per-game`/`possessions-per-game', 'expected_pts_pg_allowed', 'pregame_ppp_allowed', '25_g_HAspread_allow_points-per-game`/`possessions-per-game', '10_g_HAspread_allow_points-per-game`/`possessions-per-game', '20_game_avg_5_g_HAweight_allow_points-per-game', '20_game_avg_25_g_Tweight_allow_points-per-game', '20_game_avg_50_g_Tweight_allow_points-per-game', '30_game_avg_25_g_Tweight_allow_points-per-game', '30_game_avg_50_g_Tweight_allow_points-per-game`/`possessions-per-game', '10_game_avg_5_g_Tweight_allow_points-per-game`/`possessions-per-game', '10_game_avg_25_g_HAweight_allow_points-per-game', '1_game_avg_25_g_Tweight_allow_points-per-game`/`possessions-per-game'],
-                        'model': Pipeline([('scale',StandardScaler()), ('clf',Lasso(random_state = 1108, alpha = 0.001))]),
+                        'model': Pipeline([('scale',StandardScaler()), ('clf',Lasso(random_state = 1108, alpha = 0.001, max_iter = 2000))]),
                         },
                     },
 #                 
@@ -122,7 +122,7 @@ stored_models = {
                         },  
                     'lasso': {
                         'features': ['expected_effective-field-goal-pct_allowed', '75_g_HAspread_allow_floor-percentage', 'expected_turnovers-per-possession_allowed', 'expected_effective-field-goal-pct_allowed', 'expected_offensive-rebounding-pct_allowed', '75_g_HAspread_allow_defensive-efficiency', '100_g_HAspread_for_defensive-efficiency', '100_g_HAspread_allow_assist--per--turnover-ratio', '50_g_HAspread_for_assist--per--turnover-ratio', '30_g_HAspread_for_offensive-efficiency', '100_g_HAspread_for_points-per-game'],
-                        'model': Pipeline([('scale',RobustScaler()), ('clf',Lasso(random_state = 1108, alpha = 0.00125925622966))]),
+                        'model': Pipeline([('scale',RobustScaler()), ('clf',Lasso(random_state = 1108, alpha = 0.00125925622966, max_iter = 2000))]),
                         },
                     'lightgbm': {
                         'features': ['75_g_HAspread_allow_floor-percentage', 'expected_effective-field-goal-pct_allowed', '50_game_avg_15_g_Tweight_allow_blocks-per-game', '30_g_HAspread_for_offensive-efficiency', 'expected_effective-field-goal-pct_allowed', '100_g_HAspread_allow_assist--per--turnover-ratio', '20_game_avg_30_g_Tweight_for_defensive-rebounding-pct', 'pregame_offensive-rebounding-pct_allowed', '100_g_HAspread_for_points-per-game', '100_g_HAspread_for_defensive-efficiency', '50_g_HAspread_for_assist--per--turnover-ratio', '75_g_HAspread_allow_defensive-efficiency', 'expected_offensive-rebounding-pct_allowed', 'pregame_turnovers-per-possession_allowed', 'expected_turnovers-per-possession_allowed'],
@@ -157,7 +157,7 @@ stored_models = {
 #                        },
                     'lasso': {
                         'features': ['expected_poss_pg_for', 'pregame_poss_pg_for', '10_game_avg_10_g_Tweight_for_possessions-per-game', '10_game_avg_10_g_HAweight_for_possessions-per-game', '25_g_HAspread_for_possessions-per-game', '50_g_HAspread_for_possessions-per-game', '1_game_avg_50_g_Tweight_for_possessions-per-game', '1_game_avg_5_g_Tweight_for_possessions-per-game', '20_game_avg_10_g_HAweight_for_possessions-per-game', '30_game_avg_25_g_Tweight_for_possessions-per-game', '30_game_avg_10_g_Tweight_for_possessions-per-game', '30_game_avg_5_g_Tweight_for_possessions-per-game', '30_game_avg_50_g_HAweight_for_possessions-per-game'],
-                        'model': Pipeline([('scale',StandardScaler()), ('clf',Lasso(random_state = 1108, alpha = 0.0015540696172751227))]),
+                        'model': Pipeline([('scale',StandardScaler()), ('clf',Lasso(random_state = 1108, alpha = 0.0015540696172751227, max_iter = 2000))]),
                         },
                     },
 #                        
@@ -176,7 +176,7 @@ stored_models = {
                         },
                     'lasso': {
                         'features': ['expected_ppp_for', 'pregame_ppp_for', '50_g_HAspread_for_points-per-game`/`possessions-per-game', 'expected_pts_pg_for', '50_g_HAspread_for_points-per-game', 'pregame_pts_pg_for', '25_g_HAspread_for_points-per-game`/`possessions-per-game', '20_game_avg_50_g_HAweight_for_points-per-game`/`possessions-per-game'],
-                        'model': Pipeline([('scale',StandardScaler()), ('clf',Lasso(random_state = 1108, alpha = 0.13526474650418807))]),
+                        'model': Pipeline([('scale',StandardScaler()), ('clf',Lasso(random_state = 1108, alpha = 0.13526474650418807, max_iter = 2000))]),
                         },
                     },
 #                        

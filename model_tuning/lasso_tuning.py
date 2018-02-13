@@ -78,7 +78,7 @@ def test_scaler(x, y):
 def sample_loss_n_feats(parameters):
     feats = int(parameters[0])
     print('%s features' % (feats))
-    model = Pipeline([('scale',scale),  ('clf',Lasso(random_state = 1108, alpha = alpha_))])
+    model = Pipeline([('scale',scale),  ('clf',Lasso(random_state = 1108, alpha = alpha_, max_iter = 2000))])
     score = cross_val_score(model, x_data[feat_sigs[:feats]], y_data, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 1108))
     print('----> score: %s' % np.mean(score))
     return np.mean(score)
@@ -96,7 +96,7 @@ def find_feats():
     
 def sample_loss_alpha(parameters):
     alph = 10**parameters[0]
-    model = Pipeline([('scale',scale), ('clf',Lasso(random_state = 1108, alpha = alph))])
+    model = Pipeline([('scale',scale), ('clf',Lasso(random_state = 1108, alpha = alph, max_iter = 2000))])
     score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 88))
     print('----> score: %s' % np.mean(score))
     return np.mean(score)
@@ -159,7 +159,7 @@ def execute(sa, od, X_data = None, Y_data = None):
     f.close()
     
     print('---Finalizing Lasso Model')
-    model = Pipeline([('scale',scale), ('clf',Lasso(random_state = 1108, alpha = alpha_))])                    
+    model = Pipeline([('scale',scale), ('clf',Lasso(random_state = 1108, alpha = alpha_, max_iter = 2000))])                    
     tune_score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 88))
     print('...Lasso Model Finalized')
     tune_score = np.mean(tune_score)
