@@ -15,27 +15,27 @@ from sklearn.svm import LinearSVR
 stored_models = {
         'offense':{
             'pace': {
-                'features': ['lasso', 'lightgbm', 'linsvm'],
+                'features': ['lasso_possessions', 'lightgbm_possessions', 'linsvm_possessions'],
                 'model': Pipeline([('scale',StandardScaler()), ('clf',Lasso(random_state = 1108, alpha = 0.019012104600893226))]),
             },    
             'ppp': {
-                'features': ['linsvm_ppp', 'ridge_ppp', 'lightgbm_target', 'ridge_target', 'lightgbm_team', 'linsvm_team', 'rest', 'lasso_target', 'linsvm_target'],
+                'features': ['linsvm_all', 'ridge_all', 'lightgbm_target', 'ridge_target', 'lightgbm_team', 'linsvm_team', 'rest', 'lasso_target', 'linsvm_target'],
                 'model': Pipeline([('scale',RobustScaler()), ('clf',LinearSVR(random_state = 1108, C = 0.215329117725, epsilon=0))]),
             },                 
         },
         'defense':{
             'pace': {
-                'features': ['lasso', 'lightgbm', 'ridge'],
+                'features': ['lasso_possessions', 'lightgbm_possessions', 'ridge_possessions'],
                 'model': Pipeline([('scale',MinMaxScaler()), ('clf',LinearSVR(random_state = 1108, C = 0.6652011887133216, epsilon=0))]),
             },  
             'ppp': {
-                'features': ['lightgbm_ppp', 'ridge_ppp', 'lasso_target', 'lightgbm_target', 'lasso_team', 'lightgbm_team', 'linsvm_team', 'ridge_team', 'rest'],
+                'features': ['lightgbm_all', 'ridge_all', 'lasso_target', 'lightgbm_target', 'lasso_team', 'lightgbm_team', 'linsvm_team', 'ridge_team', 'rest'],
                 'model': Pipeline([('scale',StandardScaler()), ('clf',Ridge(random_state = 1108, solver = 'lsqr', alpha = 0.00101115979472))]),
             },  
         },
-        'points':{
-                    'ridge': {
-                        'features': ['-lightgbm_team', '+lasso_possessions', '+ridge_team', '+linsvm_team', '+lightgbm_team', '+lasso_team', '+ridge_all', '+lightgbm_all', '+lightgbm_ppp', '+lasso_ppp', '-ridge_ppp', '-lightgbm_ppp', '-lasso_ppp', '-linsvm_possessions', '-lightgbm_possessions', '-lasso_possessions', '-ridge_all', '-linsvm_all', '-linsvm_team', '-linsvm_ppp', '+ridge_possessions', '-rest', '+lightgbm_possessions', '+rest'],
+        'points':{  # RIDGE
+                    '+pts': {
+                        'features': ['-lightgbm_team', '+lasso_possessions', '+ridge_team', '+linsvm_team', '+lightgbm_team', '+lasso_team', '+ridge_all', '+lightgbm_all', '+lightgbm_target', '+lasso_target', '-ridge_target', '-lightgbm_target', '-lasso_target', '-linsvm_possessions', '-lightgbm_possessions', '-lasso_possessions', '-ridge_all', '-linsvm_all', '-linsvm_team', '-linsvm_target', '+ridge_possessions', '-rest', '+lightgbm_possessions', '+rest'],
                         'model': Pipeline([('scale',RobustScaler()), ('clf',Ridge(random_state = 1108, solver = 'saga', alpha = 0.5904378324937618))]),
                         },            
         },

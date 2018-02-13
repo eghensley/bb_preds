@@ -75,29 +75,14 @@ def pull_train_index(cnx):
         idx.append(str(d)+n.replace(' ','_'))
     return idx 
     
-def offensive_points(cnx):
-    cursor = cnx.cursor()
-    query = 'SELECT `teamname`, `date`, `lightgbm_all`, `ridge_all`, `lasso_team`, `lightgbm_team`, `linsvm_team`, `ridge_team`, `lasso_possessions`, `lightgbm_possessions`, `ridge_possessions`, `lasso_ppp`, `lightgbm_ppp` FROM offensive_preds as op;'
-    cursor.execute(query)
-    data = pd.DataFrame(cursor.fetchall(), columns = ['teamname', 'date', 'lightgbm_all', 'ridge_all', 'lasso_team', 'lightgbm_team', 'linsvm_team', 'ridge_team', 'lasso_possessions', 'lightgbm_possessions', 'ridge_possessions', 'lasso_ppp', 'lightgbm_ppp'])
-    idx = []
-    for name, date in np.array(data[['teamname', 'date']]):
-        idx.append(str(date)+name.replace(' ','_'))
-    data['idx'] = idx
-    data = data.set_index('idx')
-    del data['teamname']
-    del data['date']
-    
-    rest = pull_days_rest(cnx)
-    data = data.join(rest, how = 'inner')
-    points = pull_pts('offensive', cnx)
-    data = data.join(points, how = 'inner')
-    return data
-
 def score(cnx):
-    off_data = offensive_points(cnx)
+    off_data = points(cnx, 'offense')
+    off_poss = pace(cnx, 'offense')
+    off_data = off_data.join(off_poss, how = 'inner')
     off_data = off_data.rename(columns = {i:'+'+i for i in list(off_data)})
-    def_data = defensive_points(cnx)
+    def_data = points(cnx, 'defense')
+    def_poss = pace(cnx, 'defense')
+    def_data = def_data.join(def_poss, how = 'inner')
     def_data = def_data.rename(columns = {i:'-'+i for i in list(def_data)})
     del def_data['-pts']
     def_data *= -1
@@ -119,98 +104,150 @@ def score(cnx):
     data = data.replace('NULL', np.nan)
     data = data.dropna(how = 'any')
     return data
-    
-def offensive_pace(cnx):
+
+def line(cnx):
+    import vegas_watson
+    import bb_odds
+    off_data = points(cnx, 'offense')
+    off_data = off_data.rename(columns = {i:'+'+i for i in list(off_data)})
+    def_data = points(cnx, 'defense')
+    def_data = def_data.rename(columns = {i:'-'+i for i in list(def_data)})
+    del def_data['-pts']
+    def_data *= -1
     cursor = cnx.cursor()
-    query = 'SELECT `teamname`, `date`, `lasso_possessions`, `lightgbm_possessions`, `ridge_possessions` FROM offensive_preds as op;'
+    query = 'SELECT * from gamedata;'
     cursor.execute(query)
-    data = pd.DataFrame(cursor.fetchall(), columns = ['teamname', 'date', 'lasso_possessions', 'lightgbm_possessions', 'ridge_possessions'])
+    data = pd.DataFrame(cursor.fetchall(), columns = ['teamname', 'date', 'opponent', 'location'])
+    idx_switch = {}
+    for t,d,o,l in np.array(data):
+        idx_switch[str(d)+t.replace(' ', '_')] = str(d)+o.replace(' ', '_')
     idx = []
-    for name, date in np.array(data[['teamname', 'date']]):
-        idx.append(str(date)+name.replace(' ','_'))
-    data['idx'] = idx
-    data = data.set_index('idx')
-    del data['teamname']
-    del data['date']
+    for idxx in def_data.index:
+        idx.append(idx_switch[idxx])
+    def_data['idx'] = idx
+    def_data = def_data.set_index('idx')
+    data = def_data.join(off_data) 
     
-    points = pull_possessions('pts_scored', cnx)
-    data = data.join(points, how = 'inner')
-    return data    
+    line = vegas_watson.rolling_vegas(pull_odds_data(cnx), bb_odds.teamnames, 'line')
+    data = data.join(line, how = 'inner')
+    data = data.replace([np.inf, -np.inf], np.nan)
+    data = data.replace('NULL', np.nan)
+    data = data.dropna(how = 'any')
+    return data
     
-def defensive_pace(cnx):
-    cursor = cnx.cursor()
-    query = 'SELECT teamname, date, lasso_possessions, lightgbm_possessions, linsvm_possessions FROM defensive_preds as dp;'
-    cursor.execute(query)
-    data = pd.DataFrame(cursor.fetchall(), columns = ['teamname', 'date', 'lasso_possessions', 'lightgbm_possessions', 'linsvm_possessions'])
-    idx = []
-    for name, date in np.array(data[['teamname', 'date']]):
-        idx.append(str(date)+name.replace(' ','_'))
-    data['idx'] = idx
-    data = data.set_index('idx')
-    del data['teamname']
-    del data['date']
-    
-    points = pull_possessions('pts_allowed', cnx)
-    data = data.join(points, how = 'inner')
-    return data 
+def pace(cnx, od):
+    if od == 'defense':
+        cursor = cnx.cursor()
+        query = 'SELECT `teamname`, `date`, `lasso_possessions`, `lightgbm_possessions`, `ridge_possessions` FROM defensive_preds as op;'
+        cursor.execute(query)
+        data = pd.DataFrame(cursor.fetchall(), columns = ['teamname', 'date', 'lasso_possessions', 'lightgbm_possessions', 'ridge_possessions'])
+        idx = []
+        for name, date in np.array(data[['teamname', 'date']]):
+            idx.append(str(date)+name.replace(' ','_'))
+        data['idx'] = idx
+        data = data.set_index('idx')
+        del data['teamname']
+        del data['date']
+        
+        points = pull_possessions('pts_allowed', cnx)
+        data = data.join(points, how = 'inner')
+        return data 
+    elif od == 'offense':
+        cursor = cnx.cursor()
+        query = 'SELECT teamname, date, lasso_possessions, lightgbm_possessions, linsvm_possessions FROM offensive_preds as dp;'
+        cursor.execute(query)
+        data = pd.DataFrame(cursor.fetchall(), columns = ['teamname', 'date', 'lasso_possessions', 'lightgbm_possessions', 'linsvm_possessions'])
+        idx = []
+        for name, date in np.array(data[['teamname', 'date']]):
+            idx.append(str(date)+name.replace(' ','_'))
+        data['idx'] = idx
+        data = data.set_index('idx')
+        del data['teamname']
+        del data['date']
+        
+        points = pull_possessions('pts_scored', cnx)
+        data = data.join(points, how = 'inner')
+        return data 
 
   
-def defensive_points(cnx):
-    cursor = cnx.cursor()
-    query = 'SELECT teamname, date, lightgbm_team, linsvm_team, linsvm_all, ridge_all, lasso_possessions, lightgbm_possessions, linsvm_possessions, lasso_ppp, lightgbm_ppp, linsvm_ppp, ridge_ppp FROM defensive_preds as dp;'
-    cursor.execute(query)
-    data = pd.DataFrame(cursor.fetchall(), columns = ['teamname', 'date', 'lightgbm_team', 'linsvm_team', 'linsvm_all', 'ridge_all', 'lasso_possessions', 'lightgbm_possessions', 'linsvm_possessions', 'lasso_ppp', 'lightgbm_ppp', 'linsvm_ppp', 'ridge_ppp'])
-    idx = []
-    for name, date in np.array(data[['teamname', 'date']]):
-        idx.append(str(date)+name.replace(' ','_'))
-    data['idx'] = idx
-    data = data.set_index('idx')
-    del data['teamname']
-    del data['date']
+def points(cnx, od):
+    if od == 'defense':
+        cursor = cnx.cursor()
+        query = 'SELECT `teamname`, `date`, `lightgbm_all`, `ridge_all`, `lasso_team`, `lightgbm_team`, `linsvm_team`, `ridge_team`, `lasso_target`, `lightgbm_target` FROM defensive_preds as op;'
+        cursor.execute(query)
+        data = pd.DataFrame(cursor.fetchall(), columns = ['teamname', 'date', 'lightgbm_all', 'ridge_all', 'lasso_team', 'lightgbm_team', 'linsvm_team', 'ridge_team', 'lasso_target', 'lightgbm_target'])
+        idx = []
+        for name, date in np.array(data[['teamname', 'date']]):
+            idx.append(str(date)+name.replace(' ','_'))
+        data['idx'] = idx
+        data = data.set_index('idx')
+        del data['teamname']
+        del data['date']
+        
+        rest = pull_days_rest(cnx)
+        data = data.join(rest, how = 'inner')
+        points = pull_pts('defensive', cnx)
+        data = data.join(points, how = 'inner')
+        return data
+    elif od == 'offense':
+        cursor = cnx.cursor()
+        query = 'SELECT teamname, date, `linsvm_all`, `ridge_all`, lightgbm_team, linsvm_team, `lightgbm_target`, `ridge_target`, `lasso_target`, `linsvm_target` FROM offensive_preds as dp;'
+        cursor.execute(query)
+        data = pd.DataFrame(cursor.fetchall(), columns = ['teamname', 'date', 'linsvm_all', 'ridge_all', 'lightgbm_team', 'linsvm_team', 'lightgbm_target', 'ridge_target', 'lasso_target', 'linsvm_target'])
+        idx = []
+        for name, date in np.array(data[['teamname', 'date']]):
+            idx.append(str(date)+name.replace(' ','_'))
+        data['idx'] = idx
+        data = data.set_index('idx')
+        del data['teamname']
+        del data['date']
+        
+        rest = pull_days_rest(cnx)
+        data = data.join(rest, how = 'inner')
+        points = pull_pts('offensive', cnx)
+        data = data.join(points, how = 'inner')
+        return data
     
-    rest = pull_days_rest(cnx)
-    data = data.join(rest, how = 'inner')
-    points = pull_pts('defensive', cnx)
-    data = data.join(points, how = 'inner')
-    return data
+    
+def ppp(cnx, od):
+    if od == 'offense':
+        cursor = cnx.cursor()
+        query = 'SELECT teamname, date, `linsvm_all`, `ridge_all`, lightgbm_team, linsvm_team,`lightgbm_target`, `ridge_target`, `lasso_target`, `linsvm_target` FROM offensive_preds as dp;'
+        cursor.execute(query)
+        data = pd.DataFrame(cursor.fetchall(), columns = ['teamname', 'date', 'linsvm_all', 'ridge_all', 'lightgbm_team', 'linsvm_team',  'lightgbm_target', 'ridge_target', 'lasso_target', 'linsvm_target'])
+        idx = []
+        for name, date in np.array(data[['teamname', 'date']]):
+            idx.append(str(date)+name.replace(' ','_'))
+        data['idx'] = idx
+        data = data.set_index('idx')
+        del data['teamname']
+        del data['date']
+        
+        rest = pull_days_rest(cnx)
+        data = data.join(rest, how = 'inner')
+        points = pull_ppp('pts_scored', cnx)
+        data = data.join(points, how = 'inner')
+        return data  
+    
+    elif od == 'defense':
+        cursor = cnx.cursor()
+        query = 'SELECT `teamname`, `date`, `lightgbm_all`, `ridge_all`, `lasso_team`, `lightgbm_team`, `linsvm_team`, `ridge_team`, `lasso_target`, `lightgbm_target` FROM defensive_preds as op;'
+        cursor.execute(query)
+        data = pd.DataFrame(cursor.fetchall(), columns = ['teamname', 'date', 'lightgbm_all', 'ridge_all', 'lasso_team', 'lightgbm_team', 'linsvm_team', 'ridge_team', 'lasso_target', 'lightgbm_target'])
+        idx = []
+        for name, date in np.array(data[['teamname', 'date']]):
+            idx.append(str(date)+name.replace(' ','_'))
+        data['idx'] = idx
+        data = data.set_index('idx')
+        del data['teamname']
+        del data['date']
+        
+        rest = pull_days_rest(cnx)
+        data = data.join(rest, how = 'inner')
+        points = pull_ppp('pts_allowed', cnx)
+        data = data.join(points, how = 'inner')
+        return data
 
-def offensive_ppp(cnx):
-    cursor = cnx.cursor()
-    query = 'SELECT `teamname`, `date`, `lasso_team`, `lightgbm_team`, `linsvm_team`, `ridge_team`, `lasso_ppp`, `lightgbm_ppp` FROM offensive_preds as op;'
-    cursor.execute(query)
-    data = pd.DataFrame(cursor.fetchall(), columns = ['teamname', 'date', 'lasso_team', 'lightgbm_team', 'linsvm_team', 'ridge_team', 'lasso_ppp', 'lightgbm_ppp'])
-    idx = []
-    for name, date in np.array(data[['teamname', 'date']]):
-        idx.append(str(date)+name.replace(' ','_'))
-    data['idx'] = idx
-    data = data.set_index('idx')
-    del data['teamname']
-    del data['date']
-    
-    rest = pull_days_rest(cnx)
-    data = data.join(rest, how = 'inner')
-    points = pull_ppp('offensive', cnx)
-    data = data.join(points, how = 'inner')
-    return data    
-
-def defensive_ppp(cnx):
-    cursor = cnx.cursor()
-    query = 'SELECT teamname, date, lightgbm_team, linsvm_team, lasso_ppp, lightgbm_ppp, linsvm_ppp, ridge_ppp FROM defensive_preds as dp;'
-    cursor.execute(query)
-    data = pd.DataFrame(cursor.fetchall(), columns = ['teamname', 'date', 'lightgbm_team', 'linsvm_team', 'lasso_ppp', 'lightgbm_ppp', 'linsvm_ppp', 'ridge_ppp'])
-    idx = []
-    for name, date in np.array(data[['teamname', 'date']]):
-        idx.append(str(date)+name.replace(' ','_'))
-    data['idx'] = idx
-    data = data.set_index('idx')
-    del data['teamname']
-    del data['date']
-    
-    rest = pull_days_rest(cnx)
-    data = data.join(rest, how = 'inner')
-    points = pull_ppp('defensive', cnx)
-    data = data.join(points, how = 'inner')
-    return data
     
 def pull_ppp(od, cnx): 
     print('Loading Target Data')
