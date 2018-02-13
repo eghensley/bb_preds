@@ -36,7 +36,7 @@ stored_models = {
         'points':{  # RIDGE
                     '+pts': {
                         'features': ['-lightgbm_all', '+lasso_possessions', '+linsvm_target', '+ridge_target', '+lightgbm_target', '+linsvm_team', '+lightgbm_team', '+ridge_all', '+linsvm_all', '+lightgbm_possessions', '-ridge_possessions', '-lasso_possessions', '-lightgbm_target', '-lasso_target', '-ridge_team', '-linsvm_team', '-lightgbm_team', '-lasso_team', '-ridge_all', '-lightgbm_possessions', '+linsvm_possessions', '-rest', '+lasso_target', '+rest'],
-                        'model': Pipeline([('scale',RobustScaler()), ('clf',Ridge(random_state = 1108, solver = 'saga', alpha = 0.5904378324937618))]),
+                        'model': Pipeline([('scale',RobustScaler()), ('clf',LinearSVR(random_state = 1108, C = 11.80012956536623, epsilon=0))]),
                         },            
         },
         'result':{
