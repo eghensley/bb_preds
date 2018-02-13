@@ -35,7 +35,7 @@ stored_models = {
         },
         'points':{  # RIDGE
                     '+pts': {
-                        'features': ['-lightgbm_team', '+lasso_possessions', '+ridge_team', '+linsvm_team', '+lightgbm_team', '+lasso_team', '+ridge_all', '+lightgbm_all', '+lightgbm_target', '+lasso_target', '-ridge_target', '-lightgbm_target', '-lasso_target', '-linsvm_possessions', '-lightgbm_possessions', '-lasso_possessions', '-ridge_all', '-linsvm_all', '-linsvm_team', '-linsvm_target', '+ridge_possessions', '-rest', '+lightgbm_possessions', '+rest'],
+                        'features': ['-lightgbm_all', '+lasso_possessions', '+linsvm_target', '+ridge_target', '+lightgbm_target', '+linsvm_team', '+lightgbm_team', '+ridge_all', '+linsvm_all', '+lightgbm_possessions', '-ridge_possessions', '-lasso_possessions', '-lightgbm_target', '-lasso_target', '-ridge_team', '-linsvm_team', '-lightgbm_team', '-lasso_team', '-ridge_all', '-lightgbm_possessions', '+linsvm_possessions', '-rest', '+lasso_target', '+rest'],
                         'model': Pipeline([('scale',RobustScaler()), ('clf',Ridge(random_state = 1108, solver = 'saga', alpha = 0.5904378324937618))]),
                         },            
         },
