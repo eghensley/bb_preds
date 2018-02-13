@@ -135,8 +135,11 @@ def raw_data():
     opponent_data *= -1
     opponent_data = opponent_data.rename(columns = {i:'-'+i for i in list(opponent_data)})
     data = opponent_data.join(team_data) 
-    data = data[data.index.isin(list(y_data.index))]
-    y_data = y_data[y_data.index.isin(list(data.index))]
+    data = data.join(y_data, how = 'inner')
+    y_data = data[['pts']]
+    x_feats = list(data)
+    x_feats.remove('pts')
+    data = data[x_feats]
     return data, y_data
 x_data, y_data = raw_data()    
 seed = 7
@@ -145,7 +148,7 @@ np.random.seed(seed)
 def baseline_model():
 	# create model
 	model = Sequential()
-	model.add(Dense(24, input_dim=26, kernel_initializer='normal', activation='relu'))
+	model.add(Dense(268, input_dim=268, kernel_initializer='normal', activation='relu'))
 	model.add(Dense(1, kernel_initializer='normal'))
 	# Compile model
 	model.compile(loss='mean_squared_error', optimizer='adam')
@@ -155,9 +158,12 @@ def test_scaler(x, y):
     print('Searching for best scaler...')
     scores = []
     for scale in [StandardScaler(), MinMaxScaler(), RobustScaler()]:
-        pipe = Pipeline([('scale',scale), ('clf',KerasRegressor(build_fn=baseline_model, epochs=25, batch_size=64, verbose=1))])
-        score = cross_val_score(pipe, x, y, scoring = 'explained_variance' ,cv = KFold(n_splits = 5, random_state = 46))
+        pipe = Pipeline([('scale',scale), ('clf',KerasRegressor(build_fn=baseline_model, epochs=200, batch_size=64, verbose=1))])
+        score = cross_val_score(pipe, x, y, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 46))
         scores.append(np.mean(score))
+    f = open('keras_model_tuning.txt', 'w')
+    f.write('Baseline: %s.  ' % (max(scores)))
+    f.close()
     if scores.index(max(scores)) == 0:
         print('Using Standard Scaler')
         return StandardScaler()
@@ -172,7 +178,7 @@ results = {}
 kfold = KFold(n_splits=10, random_state=seed)
 scaler = test_scaler(x_data, y_data) #RobustScaler
 scaler = RobustScaler()
-f = open('keras_model_tuning.txt', 'w')
+f = open('keras_model_tuning.txt', 'a')
 f.write('Scaler: %s  ' % (scaler))
 f.close()
 #estimators = []
@@ -185,15 +191,15 @@ f.close()
 #f = open('keras_model_tuning.txt', 'a')
 #f.write('Baseline: %s, %s.  ' % (baseline_results.mean(), baseline_results.std()))
 #f.close()
-for width in np.linspace(1, 2, 3):
+for width in np.linspace(.25, 2, 6):
     for depth in range(0,4):
         def nn_model():
         	# create model
             model = Sequential()
-            model.add(Dense(int(24*width), input_dim=24, kernel_initializer='normal', activation='relu'))
+            model.add(Dense(int(268*width), input_dim=268, kernel_initializer='normal', activation='relu'))
             for lay in range(depth):
                 model.add(Dropout(.9))
-                model.add(Dense(int((float(26*width)/(depth+1))*(depth-lay)), kernel_initializer='normal', activation='relu'))
+                model.add(Dense(int((float(268*width)/(depth+1))*(depth-lay)), kernel_initializer='normal', activation='relu'))
             model.add(Dense(1, kernel_initializer='normal'))
         	# Compile model
             model.compile(loss='mean_squared_error', optimizer='adam')
