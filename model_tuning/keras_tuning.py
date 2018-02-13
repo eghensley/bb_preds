@@ -92,7 +92,6 @@ def raw_data():
     train_index = pull_data.pull_train_index(update_dbs.mysql_client())
     x_data = x_data.loc[x_data.index.isin(train_index)]
     y_data = pull_data.pull_pts('offensive', update_dbs.mysql_client())
-    y_data = x_data.join(y_data, how = 'inner')['pts']
     team_data = x_data.join(y_data, how = 'inner')[list(x_data)]
     def_data = None
     off_data = None
@@ -111,9 +110,7 @@ def raw_data():
     tar_data = hfa_patch(tar_data, update_dbs.mysql_client())  
     x_data = def_data.join(off_data, how = 'inner')   
     x_data = x_data.join(poss_data, how = 'inner')
-    x_data = x_data.join(tar_data, how = 'inner')
-    train_index = pull_data.pull_train_index(update_dbs.mysql_client())
-    opponent_data = x_data.loc[x_data.index.isin(train_index)]
+    opponent_data = x_data.join(tar_data, how = 'inner')
     def_data = None
     off_data = None
     poss_data = None
@@ -136,12 +133,20 @@ def raw_data():
     opponent_data = opponent_data.rename(columns = {i:'-'+i for i in list(opponent_data)})
     data = opponent_data.join(team_data) 
     data = data.join(y_data, how = 'inner')
-    y_data = data[['pts']]
-    x_feats = list(data)
-    x_feats.remove('pts')
-    data = data[x_feats]
-    return data, y_data
-x_data, y_data = raw_data()    
+    data = data.replace([np.inf, -np.inf], np.nan)
+    data = data.replace('NULL', np.nan)
+    data = data.dropna(how = 'any')
+    return data
+data = raw_data()
+data = data.reset_index()
+del data['index']
+y_data = data[['pts']]
+x_feats = list(data)
+x_feats.remove('pts')
+x_data = data[x_feats]
+
+x_data = np.array(x_data)
+y_data = np.ravel(y_data)
 seed = 7
 np.random.seed(seed)
 
