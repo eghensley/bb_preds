@@ -82,21 +82,21 @@ def test_scaler(x, y):
     
 results = {}
 kfold = StratifiedKFold(n_splits=10, random_state=86)
-scaler = test_scaler(x_data, y_data) #RobustScaler
-#scaler = RobustScaler()
-f = open('keras_classifier_tuning.txt', 'a')
-f.write('Scaler: %s  ' % (scaler))
-f.close()
-estimators = []
-estimators.append(('standardize', scaler))
-estimators.append(('mlp', KerasRegressor(build_fn=baseline_model, epochs=25, batch_size=64, verbose=1)))
-pipeline = Pipeline(estimators)
-baseline_results = cross_val_score(pipeline, x_data, y_data, scoring = 'accuracy' ,cv = kfold)
-print("Results: %.2f (%.2f) accuracy " % (baseline_results.mean(), baseline_results.std()))
-results['baseline'] = baseline_results
-f = open('keras_classifier_tuning.txt', 'a')
-f.write('Baseline: %s, %s.  ' % (baseline_results.mean(), baseline_results.std()))
-f.close()
+#scaler = test_scaler(x_data, y_data) #RobustScaler
+scaler = StandardScaler()
+#f = open('keras_classifier_tuning.txt', 'a')
+#f.write('Scaler: %s  ' % (scaler))
+#f.close()
+#estimators = []
+#estimators.append(('standardize', scaler))
+#estimators.append(('mlp', KerasRegressor(build_fn=baseline_model, epochs=25, batch_size=64, verbose=1)))
+#pipeline = Pipeline(estimators)
+#baseline_results = cross_val_score(pipeline, x_data, y_data,cv = kfold)
+#print("Results: %.2f (%.2f) accuracy " % (baseline_results.mean(), baseline_results.std()))
+#results['baseline'] = baseline_results
+#f = open('keras_classifier_tuning.txt', 'a')
+#f.write('Baseline: %s, %s.  ' % (baseline_results.mean(), baseline_results.std()))
+#f.close()
 for width in np.linspace(.5, 1.5, 5):
     for depth in range(1,4):
         def nn_model():
