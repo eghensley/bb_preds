@@ -57,6 +57,48 @@ def pull_wl(cnx):
     resultdata['outcome'] = result
     resultdata = resultdata.set_index('idx')
     return resultdata
+
+
+
+def line_wl(cnx):
+    cursor = cnx.cursor()
+    query = 'select oddsdate, favorite, underdog, line, favscore, dogscore from oddsdata'
+    cursor.execute(query)
+    oddsdata = pd.DataFrame(cursor.fetchall() , columns = ['date', 'fav', 'dog', 'line', 'fav-score', 'dog-score'])
+    idx = []
+    result = []
+    
+    result_df = pd.DataFrame()
+    for d,f,dog,l, fs, ds in np.array(oddsdata):
+        if fs + l > ds:
+            idx.append(str(d)+f.replace(' ', '_'))
+            idx.append(str(d)+dog.replace(' ', '_'))
+            result.append(1)
+            result.append(0)
+        elif fs + l < ds:
+            idx.append(str(d)+f.replace(' ', '_'))
+            idx.append(str(d)+dog.replace(' ', '_'))
+            result.append(0)
+            result.append(1)
+            
+    result_df['idx'] = idx
+    result_df['outcome'] = result
+    
+    result_df = result_df.set_index('idx')
+    return result_df
+
+def line_preds(cnx):
+    cursor = cnx.cursor()
+    query = 'select * from line_preds'
+    cursor.execute(query)
+    oddsdata = pd.DataFrame(cursor.fetchall() , columns = ['teamname', 'date', 'pca_line', 'tsvd_line', 'lasso_line', 'lightgbm_line', 'ridge_line'])
+    idx = []
+    for d,f in np.array(oddsdata[['date', 'teamname']]):
+        idx.append(str(d)+f.replace(' ', '_'))
+    oddsdata['idx'] = idx
+    oddsdata = oddsdata.set_index('idx')
+    oddsdata = oddsdata[['pca_line', 'tsvd_line', 'lasso_line', 'lightgbm_line', 'ridge_line']]
+    return oddsdata
     
 def pull_odds_data(cnx):
     cursor = cnx.cursor()
