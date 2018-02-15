@@ -58,7 +58,32 @@ def pull_wl(cnx):
     resultdata = resultdata.set_index('idx')
     return resultdata
 
-
+def ou_wl(cnx):
+    cursor = cnx.cursor()
+    query = 'select oddsdate, favorite, underdog, overunder, favscore, dogscore from oddsdata'
+    cursor.execute(query)
+    oddsdata = pd.DataFrame(cursor.fetchall() , columns = ['date', 'fav', 'dog', 'ou', 'fav-score', 'dog-score'])
+    idx = []
+    result = []
+    
+    result_df = pd.DataFrame()
+    for d,f,dog,l, fs, ds in np.array(oddsdata):
+        if fs + ds > l:
+            idx.append(str(d)+f.replace(' ', '_'))
+            idx.append(str(d)+dog.replace(' ', '_'))
+            result.append(1)
+            result.append(1)
+        elif fs + ds < l:
+            idx.append(str(d)+f.replace(' ', '_'))
+            idx.append(str(d)+dog.replace(' ', '_'))
+            result.append(0)
+            result.append(0)
+            
+    result_df['idx'] = idx
+    result_df['ou'] = result
+    
+    result_df = result_df.set_index('idx')
+    return result_df
 
 def line_wl(cnx):
     cursor = cnx.cursor()
@@ -82,7 +107,7 @@ def line_wl(cnx):
             result.append(1)
             
     result_df['idx'] = idx
-    result_df['outcome'] = result
+    result_df['line'] = result
     
     result_df = result_df.set_index('idx')
     return result_df
