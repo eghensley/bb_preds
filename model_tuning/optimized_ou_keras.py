@@ -179,10 +179,10 @@ x_feats = ['expected_effective-field-goal-pct_for',
 '-20_game_avg_50_g_HAweight_allow_defensive-efficiency',
 '50_game_avg_50_g_HAweight_for_assists-per-game',
 '-30_game_avg_25_g_Tweight_allow_points-per-game',
-'-25_g_HAspread_allow_possessions-per-game']
+'-25_g_HAspread_allow_possessions-per-game', 'pca_ou', 'tsvd_ou', 'lasso_ou', 'lightgbm_ou', 'ridge_ou']
 y_data = pull_data.ou_wl(update_dbs.mysql_client())
 data = data.join(y_data, how = 'inner')
-line_preds = pull_data.line_preds(update_dbs.mysql_client())
+line_preds = pull_data.ou_preds(update_dbs.mysql_client())
 data = data.join(line_preds, how = 'inner')
 x_data = data[x_feats]
 y_data = data[['line']]
@@ -193,7 +193,7 @@ line_preds = None
 def baseline_model():
 	# create model
 	model = Sequential()
-	model.add(Dense(33, input_dim=33, kernel_initializer='normal', activation='relu'))
+	model.add(Dense(38, input_dim=38, kernel_initializer='normal', activation='relu'))
 	model.add(Dense(1, kernel_initializer='normal', activation='sigmoid'))
 	# Compile model
 	model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
@@ -203,7 +203,7 @@ def test_scaler(x, y):
     print('Searching for best scaler...')
     scores = []
     for scale in [StandardScaler(), MinMaxScaler(), RobustScaler()]:
-        pipe = Pipeline([('scale',scale), ('clf',KerasRegressor(build_fn=baseline_model, epochs=200, batch_size=64, verbose=1))])
+        pipe = Pipeline([('scale',scale), ('clf',KerasRegressor(build_fn=baseline_model, epochs=100, batch_size=64, verbose=1))])
         score = cross_val_score(pipe, x, y,cv = StratifiedKFold(n_splits = 3, random_state = 46))
         scores.append(np.mean(score))
     f = open('keras_model_tuning.txt', 'w')
@@ -229,10 +229,10 @@ for width in np.linspace(1, 2, 4):
         def nn_model():
         	# create model
             model = Sequential()
-            model.add(Dense(int(33*width), input_dim=33, kernel_initializer='normal', activation='relu'))
+            model.add(Dense(int(38*width), input_dim=38, kernel_initializer='normal', activation='relu'))
             for lay in range(depth):
                 model.add(Dropout(.9))
-                model.add(Dense(int((float(33*width)/(depth+1))*(depth-lay)), kernel_initializer='normal', activation='relu'))
+                model.add(Dense(int((float(38*width)/(depth+1))*(depth-lay)), kernel_initializer='normal', activation='relu'))
             model.add(Dense(1, kernel_initializer='normal', activation='sigmoid'))
         	# Compile model
             model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])

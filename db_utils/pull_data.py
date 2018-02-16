@@ -124,6 +124,19 @@ def line_preds(cnx):
     oddsdata = oddsdata.set_index('idx')
     oddsdata = oddsdata[['pca_line', 'tsvd_line', 'lasso_line', 'lightgbm_line', 'ridge_line']]
     return oddsdata
+
+def ou_preds(cnx):
+    cursor = cnx.cursor()
+    query = 'select * from ou_preds'
+    cursor.execute(query)
+    oddsdata = pd.DataFrame(cursor.fetchall() , columns = ['teamname', 'date', 'pca_ou', 'tsvd_ou', 'lasso_ou', 'lightgbm_ou', 'ridge_ou'])
+    idx = []
+    for d,f in np.array(oddsdata[['date', 'teamname']]):
+        idx.append(str(d)+f.replace(' ', '_'))
+    oddsdata['idx'] = idx
+    oddsdata = oddsdata.set_index('idx')
+    oddsdata = oddsdata[['pca_ou', 'tsvd_ou', 'lasso_ou', 'lightgbm_ou', 'ridge_ou']]
+    return oddsdata
     
 def pull_odds_data(cnx):
     cursor = cnx.cursor()
