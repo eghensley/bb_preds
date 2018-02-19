@@ -10,6 +10,7 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import Lasso, Ridge, LogisticRegression
 from sklearn.svm import LinearSVR, LinearSVC, SVC
+from sklearn.neighbors import KNeighborsClassifier
 
 
 stored_models = {
@@ -68,7 +69,19 @@ stored_models = {
                     'lightgbc': {
                         'features': ['-25_g_HAspread_allow_possessions-per-game', '10_game_avg_10_g_Tweight_for_possessions-per-game', '-30_game_avg_25_g_Tweight_allow_points-per-game', '-1_game_avg_10_g_Tweight_allow_possessions-per-game', '-expected_effective-field-goal-pct_allowed', '-20_game_avg_50_g_Tweight_allow_points-per-game', 'expected_effective-field-goal-pct_for', '25_g_HAspread_for_possessions-per-game', '-50_game_avg_50_g_HAweight_for_assists-per-game', '30_game_avg_5_g_Tweight_for_possessions-per-game', '75_g_HAspread_allow_percent-of-points-from-3-pointers', '10_game_avg_30_g_Tweight_for_true-shooting-percentage', '-10_game_avg_10_g_HAweight_allow_points-per-game', '-30_game_avg_50_g_Tweight_allow_points-per-game`/`possessions-per-game', '-10_game_avg_15_g_HAweight_allow_defensive-rebounds-per-game', '-75_g_HAspread_allow_defensive-efficiency', '-30_game_avg_50_g_HAweight_allow_points-per-game', '100_g_HAspread_allow_block-pct', '-10_game_avg_10_g_Tweight_allow_points-per-game`/`possessions-per-game', '75_g_HAspread_for_floor-percentage', '10_game_avg_50_g_HAweight_for_blocks-per-game', '-20_game_avg_50_g_HAweight_allow_defensive-efficiency', '-100_g_HAspread_allow_assist--per--turnover-ratio', '-50_game_avg_50_g_HAweight_allow_ftm-per-100-possessions', '50_game_avg_50_g_HAweight_for_assists-per-game', '20_game_avg_10_g_HAweight_for_possessions-per-game', '-100_g_HAspread_for_points-per-game', '-20_game_avg_25_g_Tweight_allow_possessions-per-game', '-20_game_avg_50_g_Tweight_for_floor-percentage', '-10_game_avg_15_g_HAweight_for_defensive-efficiency', '-15_g_HAspread_allow_block-pct', '25_g_HAspread_for_points-per-game', '20_game_avg_30_g_HAweight_for_defensive-rebounds-per-game'],
                         'model': Pipeline([('scale',StandardScaler()), ('clf', lgb.LGBMClassifier(random_state = 1108, n_estimators = 200, colsample_bytree = 0.825016949184793, min_child_samples = 187, num_leaves = 47, subsample = 0.409923867971588, max_bin = 1021, learning_rate = 0.005))]),
-                        },                    
+                        },
+                    'knn': {
+                        'features': ['expected_effective-field-goal-pct_for', '-expected_effective-field-goal-pct_allowed', '20_game_avg_10_g_HAweight_for_possessions-per-game', '-20_game_avg_50_g_Tweight_for_floor-percentage', '-10_game_avg_10_g_Tweight_allow_points-per-game`/`possessions-per-game', '-20_game_avg_50_g_Tweight_allow_points-per-game', '20_game_avg_30_g_HAweight_for_defensive-rebounds-per-game', '10_game_avg_30_g_Tweight_for_true-shooting-percentage', '-20_game_avg_25_g_Tweight_allow_possessions-per-game', '-20_game_avg_50_g_HAweight_allow_defensive-efficiency', '-10_game_avg_15_g_HAweight_allow_defensive-rebounds-per-game', '-10_game_avg_15_g_HAweight_for_defensive-efficiency', '75_g_HAspread_allow_percent-of-points-from-3-pointers', '10_game_avg_10_g_Tweight_for_possessions-per-game', '25_g_HAspread_for_points-per-game', '-10_game_avg_10_g_HAweight_allow_points-per-game', '30_game_avg_5_g_Tweight_for_possessions-per-game', '-100_g_HAspread_allow_assist--per--turnover-ratio', '-75_g_HAspread_allow_defensive-efficiency', '-30_game_avg_50_g_Tweight_allow_points-per-game`/`possessions-per-game', '50_game_avg_50_g_HAweight_for_assists-per-game', '75_g_HAspread_for_floor-percentage', '-50_game_avg_50_g_HAweight_allow_ftm-per-100-possessions', '-15_g_HAspread_allow_block-pct', '-50_game_avg_50_g_HAweight_for_assists-per-game', '-100_g_HAspread_for_points-per-game', '-30_game_avg_25_g_Tweight_allow_points-per-game', '25_g_HAspread_for_possessions-per-game', '-25_g_HAspread_allow_possessions-per-game', '10_game_avg_50_g_HAweight_for_blocks-per-game', '-30_game_avg_50_g_HAweight_allow_points-per-game'],
+                        'model': Pipeline([('scale',MinMaxScaler()), ('clf', KNeighborsClassifier(n_neighbors = 190, leaf_size = 98))]),
+                        },                            
+                    'log': {
+                        'features': ['expected_effective-field-goal-pct_for', '-expected_effective-field-goal-pct_allowed', '20_game_avg_10_g_HAweight_for_possessions-per-game', '-20_game_avg_50_g_Tweight_for_floor-percentage', '-10_game_avg_10_g_Tweight_allow_points-per-game`/`possessions-per-game', '-20_game_avg_50_g_Tweight_allow_points-per-game', '20_game_avg_30_g_HAweight_for_defensive-rebounds-per-game', '10_game_avg_30_g_Tweight_for_true-shooting-percentage', '-20_game_avg_25_g_Tweight_allow_possessions-per-game', '-20_game_avg_50_g_HAweight_allow_defensive-efficiency', '-10_game_avg_15_g_HAweight_allow_defensive-rebounds-per-game', '-10_game_avg_15_g_HAweight_for_defensive-efficiency', '75_g_HAspread_allow_percent-of-points-from-3-pointers', '10_game_avg_10_g_Tweight_for_possessions-per-game', '25_g_HAspread_for_points-per-game', '-10_game_avg_10_g_HAweight_allow_points-per-game', '30_game_avg_5_g_Tweight_for_possessions-per-game', '-100_g_HAspread_allow_assist--per--turnover-ratio', '-75_g_HAspread_allow_defensive-efficiency'],
+                        'model': Pipeline([('scale',StandardScaler()), ('clf', LogisticRegression(random_state = 1108, C = 15.412231250845304, solver = "lbfgs"))]),
+                        },                            
+                },
+        },
+        'line':{
+                'raw':{
                 },
         },
         'result':{
