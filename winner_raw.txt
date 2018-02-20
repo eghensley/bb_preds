@@ -1,0 +1,244 @@
+expected_ppp_for > 1.09
+expected_effective-field-goal-pct_for <= 47.85
+50_g_HAspread_allow_defensive-efficiency > 0.03
+expected_offensive-rebounding-pct_for <= 30.55
+-20_game_avg_50_g_Tweight_for_floor-percentage <= -5.74E-5
+expected_ppp_for > 1.09
+expected_effective-field-goal-pct_for <= 47.85
+50_g_HAspread_allow_defensive-efficiency > 0.03
+expected_offensive-rebounding-pct_for <= 30.55
+-20_game_avg_50_g_Tweight_for_floor-percentage > -5.74E-5
+expected_ppp_for > 1.09
+expected_effective-field-goal-pct_for = 47.85 to 49.9
+100_g_HAspread_for_personal-fouls-per-game <= -0.97
+-100_g_HAspread_allow_assist--per--turnover-ratio <= -0.28
+expected_ppp_for > 1.09
+expected_effective-field-goal-pct_for <= 47.85
+50_g_HAspread_allow_defensive-efficiency > 0.03
+expected_offensive-rebounding-pct_for > 30.55
+expected_ppp_for = 1.05 to 1.09
+expected_effective-field-goal-pct_for <= 47.85
+expected_offensive-rebounding-pct_for <= 32.47
+expected_turnovers-per-possession_for > 20.23
+expected_ppp_for > 1.09
+expected_effective-field-goal-pct_for <= 47.85
+50_g_HAspread_allow_defensive-efficiency <= 0.03
+expected_ppp_for > 1.09
+expected_effective-field-goal-pct_for = 49.9 to 51.75
+expected_offensive-rebounding-pct_for <= 28.32
+expected_ppp_for > 1.09
+expected_effective-field-goal-pct_for = 47.85 to 49.9
+100_g_HAspread_for_personal-fouls-per-game <= -0.97
+-100_g_HAspread_allow_assist--per--turnover-ratio > -0.28
+expected_ppp_for = 1.05 to 1.09
+expected_effective-field-goal-pct_for = 47.85 to 49.9
+100_g_HAspread_for_personal-fouls-per-game <= -2.01
+expected_ppp_for = 1.05 to 1.09
+expected_effective-field-goal-pct_for <= 47.85
+expected_offensive-rebounding-pct_for <= 32.47
+expected_turnovers-per-possession_for <= 20.23
+expected_ppp_for > 1.09
+expected_effective-field-goal-pct_for = 49.9 to 51.75
+expected_offensive-rebounding-pct_for > 28.32
+30_g_HAspread_allow_free-throw-rate <= -1.68
+expected_ppp_for = 1.02 to 1.05
+expected_effective-field-goal-pct_for <= 47.85
+-100_g_HAspread_for_defensive-efficiency <= 0.04
+pregame_turnovers-per-possession_for > 17.05
+expected_ppp_for = 1.05 to 1.09
+expected_effective-field-goal-pct_for = 49.9 to 51.75
+-50_g_HAspread_for_personal-fouls-per-game <= 0.88
+pregame_turnovers-per-possession_for > 18.65
+expected_ppp_for > 1.09
+expected_effective-field-goal-pct_for = 51.75 to 54.05
+75_g_HAspread_for_defensive-efficiency <= -0.04
+expected_ppp_for > 1.09
+expected_effective-field-goal-pct_for = 47.85 to 49.9
+100_g_HAspread_for_personal-fouls-per-game > -0.97
+expected_ppp_for = 1.05 to 1.09
+expected_effective-field-goal-pct_for = 47.85 to 49.9
+100_g_HAspread_for_personal-fouls-per-game = -2.01 to 0.85
+expected_ppp_for = 1.02 to 1.05
+expected_effective-field-goal-pct_for = 47.85 to 49.9
+30_g_HAspread_allow_free-throw-rate <= 1.45
+pregame_turnovers-per-possession_for > 18.65
+expected_ppp_for = 1.05 to 1.09
+expected_effective-field-goal-pct_for <= 47.85
+expected_offensive-rebounding-pct_for > 32.47
+expected_ppp_for > 1.09
+expected_effective-field-goal-pct_for > 54.05
+100_g_HAspread_for_personal-fouls-per-game <= -0.97
+expected_ppp_for = 1.02 to 1.05
+expected_effective-field-goal-pct_for <= 47.85
+-100_g_HAspread_for_defensive-efficiency <= 0.04
+pregame_turnovers-per-possession_for <= 17.05
+expected_ppp_for > 1.09
+expected_effective-field-goal-pct_for = 49.9 to 51.75
+expected_offensive-rebounding-pct_for > 28.32
+30_g_HAspread_allow_free-throw-rate > -1.68
+expected_ppp_for = 1.02 to 1.05
+expected_effective-field-goal-pct_for = 49.9 to 51.75
+-100_g_HAspread_allow_assist--per--turnover-ratio <= 0.13
+expected_offensive-rebounding-pct_for <= 30.55
+expected_ppp_for = 1.05 to 1.09
+expected_effective-field-goal-pct_for = 51.75 to 54.05
+-100_g_HAspread_allow_assist--per--turnover-ratio <= 0.13
+expected_turnovers-per-possession_for > 19.18
+expected_ppp_for = 0.98 to 1.02
+expected_effective-field-goal-pct_for <= 47.85
+expected_turnovers-per-possession_for > 20.23
+expected_ppp_for = 1.05 to 1.09
+expected_effective-field-goal-pct_for = 49.9 to 51.75
+-50_g_HAspread_for_personal-fouls-per-game <= 0.88
+pregame_turnovers-per-possession_for <= 18.65
+expected_ppp_for > 1.09
+expected_effective-field-goal-pct_for = 51.75 to 54.05
+75_g_HAspread_for_defensive-efficiency > -0.04
+expected_ppp_for = 1.02 to 1.05
+expected_effective-field-goal-pct_for = 47.85 to 49.9
+30_g_HAspread_allow_free-throw-rate <= 1.45
+pregame_turnovers-per-possession_for <= 18.65
+expected_ppp_for = 1.02 to 1.05
+expected_effective-field-goal-pct_for <= 47.85
+-100_g_HAspread_for_defensive-efficiency > 0.04
+expected_ppp_for = 1.05 to 1.09
+expected_effective-field-goal-pct_for = 47.85 to 49.9
+100_g_HAspread_for_personal-fouls-per-game > 0.85
+expected_ppp_for = 0.98 to 1.02
+expected_effective-field-goal-pct_for = 47.85 to 49.9
+100_g_HAspread_for_defensive-efficiency <= -0.04
+expected_ppp_for = 1.02 to 1.05
+expected_effective-field-goal-pct_for = 49.9 to 51.75
+-100_g_HAspread_allow_assist--per--turnover-ratio <= 0.13
+expected_offensive-rebounding-pct_for > 30.55
+expected_ppp_for = 1.05 to 1.09
+expected_effective-field-goal-pct_for = 49.9 to 51.75
+-50_g_HAspread_for_personal-fouls-per-game > 0.88
+expected_ppp_for = 1.02 to 1.05
+expected_effective-field-goal-pct_for = 51.75 to 54.05
+75_g_HAspread_allow_points-per-game <= -2.3
+expected_ppp_for = 1.02 to 1.05
+expected_effective-field-goal-pct_for = 47.85 to 49.9
+30_g_HAspread_allow_free-throw-rate > 1.45
+expected_ppp_for = 0.98 to 1.02
+expected_effective-field-goal-pct_for <= 47.85
+expected_turnovers-per-possession_for <= 20.23
+expected_ppp_for <= 0.98
+expected_effective-field-goal-pct_for <= 47.85
+75_g_HAspread_allow_points-per-game <= 2.24
+expected_ppp_for <= 0.98
+expected_effective-field-goal-pct_for > 54.05
+-75_g_HAspread_allow_floor-percentage > 2.13
+expected_turnovers-per-possession_for <= 19.18
+expected_ppp_for <= 0.98
+expected_effective-field-goal-pct_for = 51.75 to 54.05
+-75_g_HAspread_allow_floor-percentage > 2.13
+expected_turnovers-per-possession_for <= 19.18
+expected_ppp_for <= 0.98
+expected_effective-field-goal-pct_for > 54.05
+-75_g_HAspread_allow_floor-percentage > 2.13
+expected_turnovers-per-possession_for > 19.18
+expected_ppp_for = 0.98 to 1.02
+expected_effective-field-goal-pct_for > 54.05
+30_g_HAspread_for_floor-percentage <= 1.77
+pregame_turnovers-per-possession_for <= 18.65
+expected_ppp_for <= 0.98
+expected_effective-field-goal-pct_for = 51.75 to 54.05
+-75_g_HAspread_allow_floor-percentage > 2.13
+expected_turnovers-per-possession_for > 19.18
+expected_ppp_for <= 0.98
+expected_effective-field-goal-pct_for = 49.9 to 51.75
+expected_ftm-per-100-possessions_for > 24.58
+expected_ppp_for = 0.98 to 1.02
+expected_effective-field-goal-pct_for = 51.75 to 54.05
+expected_turnovers-per-possession_for <= 20.23
+-75_g_HAspread_allow_defensive-efficiency <= -0.04
+expected_ppp_for <= 0.98
+expected_effective-field-goal-pct_for > 54.05
+-75_g_HAspread_allow_floor-percentage <= 2.13
+expected_ppp_for <= 0.98
+expected_effective-field-goal-pct_for = 47.85 to 49.9
+-50_g_HAspread_allow_points-per-game`/`possessions-per-game > 0.04
+-50_game_avg_30_g_Tweight_allow_fta-per-fga > -2.76E-3
+expected_ppp_for = 0.98 to 1.02
+expected_effective-field-goal-pct_for > 54.05
+30_g_HAspread_for_floor-percentage <= 1.77
+pregame_turnovers-per-possession_for > 18.65
+expected_ppp_for = 1.02 to 1.05
+expected_effective-field-goal-pct_for > 54.05
+-50_g_HAspread_for_assist--per--turnover-ratio <= -0.1
+expected_ppp_for = 0.98 to 1.02
+expected_effective-field-goal-pct_for = 49.9 to 51.75
+expected_turnovers-per-possession_for <= 20.23
+-50_g_HAspread_for_assist--per--turnover-ratio <= -0.1
+expected_ppp_for <= 0.98
+expected_effective-field-goal-pct_for = 51.75 to 54.05
+-75_g_HAspread_allow_floor-percentage <= 2.13
+expected_ppp_for <= 0.98
+expected_effective-field-goal-pct_for = 49.9 to 51.75
+expected_ftm-per-100-possessions_for <= 24.58
+expected_ppp_for <= 0.98
+expected_effective-field-goal-pct_for = 47.85 to 49.9
+-50_g_HAspread_allow_points-per-game`/`possessions-per-game > 0.04
+-50_game_avg_30_g_Tweight_allow_fta-per-fga <= -2.76E-3
+expected_ppp_for = 0.98 to 1.02
+expected_effective-field-goal-pct_for = 51.75 to 54.05
+expected_turnovers-per-possession_for <= 20.23
+-75_g_HAspread_allow_defensive-efficiency > -0.04
+expected_ppp_for = 1.02 to 1.05
+expected_effective-field-goal-pct_for = 51.75 to 54.05
+75_g_HAspread_allow_points-per-game > -2.3
+-10_g_HAspread_allow_ftm-per-100-possessions > 1.38
+expected_ppp_for = 1.05 to 1.09
+expected_effective-field-goal-pct_for > 54.05
+30_g_HAspread_for_floor-percentage <= -1.73
+expected_ppp_for = 0.98 to 1.02
+expected_effective-field-goal-pct_for > 54.05
+30_g_HAspread_for_floor-percentage > 1.77
+expected_ppp_for <= 0.98
+expected_effective-field-goal-pct_for <= 47.85
+75_g_HAspread_allow_points-per-game > 2.24
+expected_ppp_for = 0.98 to 1.02
+expected_effective-field-goal-pct_for = 49.9 to 51.75
+expected_turnovers-per-possession_for <= 20.23
+-50_g_HAspread_for_assist--per--turnover-ratio > -0.1
+expected_ppp_for = 0.98 to 1.02
+expected_effective-field-goal-pct_for = 47.85 to 49.9
+100_g_HAspread_for_defensive-efficiency > -0.04
+expected_turnovers-per-possession_for <= 20.23
+expected_ppp_for <= 0.98
+expected_effective-field-goal-pct_for = 47.85 to 49.9
+-50_g_HAspread_allow_points-per-game`/`possessions-per-game <= 0.04
+expected_ppp_for = 1.02 to 1.05
+expected_effective-field-goal-pct_for = 51.75 to 54.05
+75_g_HAspread_allow_points-per-game > -2.3
+-10_g_HAspread_allow_ftm-per-100-possessions <= 1.38
+expected_ppp_for = 0.98 to 1.02
+expected_effective-field-goal-pct_for = 51.75 to 54.05
+expected_turnovers-per-possession_for > 20.23
+expected_ppp_for = 1.02 to 1.05
+expected_effective-field-goal-pct_for = 49.9 to 51.75
+-100_g_HAspread_allow_assist--per--turnover-ratio > 0.13
+expected_ppp_for = 1.02 to 1.05
+expected_effective-field-goal-pct_for > 54.05
+-50_g_HAspread_for_assist--per--turnover-ratio > -0.1
+expected_ppp_for = 1.05 to 1.09
+expected_effective-field-goal-pct_for = 51.75 to 54.05
+-100_g_HAspread_allow_assist--per--turnover-ratio > 0.13
+expected_ppp_for = 0.98 to 1.02
+expected_effective-field-goal-pct_for = 49.9 to 51.75
+expected_turnovers-per-possession_for > 20.23
+expected_ppp_for = 0.98 to 1.02
+expected_effective-field-goal-pct_for = 47.85 to 49.9
+100_g_HAspread_for_defensive-efficiency > -0.04
+expected_turnovers-per-possession_for > 20.23
+expected_ppp_for > 1.09
+expected_effective-field-goal-pct_for > 54.05
+100_g_HAspread_for_personal-fouls-per-game > -0.97
+expected_ppp_for = 1.05 to 1.09
+expected_effective-field-goal-pct_for = 51.75 to 54.05
+-100_g_HAspread_allow_assist--per--turnover-ratio <= 0.13
+expected_turnovers-per-possession_for <= 19.18
+expected_ppp_for = 1.05 to 1.09
+expected_effective-field-goal-pct_for > 54.05
+30_g_HAspread_for_floor-percentage > -1.73
