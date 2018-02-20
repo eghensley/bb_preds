@@ -165,12 +165,12 @@ def execute(sa, od, X_data = None, Y_data = None):
     improvement = (tune_score - baseline_score)/baseline_score
     print('%s percent improvement from baseline' % (improvement * 100))
     if improvement < 0:
-        f = open(os.path.join(output_folder, '%s-%s-polysvc.txt'%(sa, od)), 'a')
+        f = open(os.path.join(output_folder, '%s-%s-rbfsvc.txt'%(sa, od)), 'a')
         f.write('final score: XXX,')
         f.close()
         return 0
     else:
-        f = open(os.path.join(output_folder, '%s-%s-polysvc.txt'%(sa, od)), 'a')
+        f = open(os.path.join(output_folder, '%s-%s-rbfsvc.txt'%(sa, od)), 'a')
         f.write('final score: %s,'%(tune_score))
         f.close()
         return tune_score
