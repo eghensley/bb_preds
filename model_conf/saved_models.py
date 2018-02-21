@@ -43,24 +43,28 @@ stored_models = {
         'winner':{
                 '+pts':{
                     'lightgbc': {
-                        'features': ['+rest', '-ridge_possessions', '+linsvm_all', '-possessions', '+linsvm_team', '+lightgbm_target', '-lasso_target', '+lasso_target', '+linsvm_possessions', '-lightgbm_all', '-ridge_team', '-lasso_team', '+possessions', '-lasso_possessions', '+lasso_possessions', '-lightgbm_target', '+lightgbm_team', '+ridge_target', '-linsvm_team', '+linsvm_target', '+ridge_all', '+pts', '-lightgbm_team', '-ridge_all', '-rest', '+lightgbm_possessions'],
-                        'model': Pipeline([('scale',StandardScaler()), ('clf', lgb.LGBMClassifier(random_state = 1108, n_estimators = 2000, colsample_bytree = 0.711915990666168, min_child_samples = 146, num_leaves = 22, subsample = 0.449024728208082, max_bin = 1143, learning_rate = 0.005))]),
+                        'features': ['+linsvm_all', '+lightgbm_target', '+linsvm_team', '-ridge_possessions', '+lasso_target', '+linsvm_possessions', '-lasso_team', '-lasso_target', '-ridge_team', '-linsvm_team', '-lightgbm_target', '-lightgbm_team', '-lightgbm_all', '-lasso_possessions', '+lasso_possessions', '+lightgbm_team', '+rest', '+lightgbm_possessions', '+linsvm_target', '+ridge_all', '-ridge_all', '-lightgbm_possessions', '-rest', '+ridge_target'],
+                        'model': Pipeline([('scale',RobustScaler()), ('clf', lgb.LGBMClassifier(random_state = 1108, n_estimators = 100, colsample_bytree = 0.909298274162142, min_child_samples = 15, num_leaves = 145, subsample = 0.58878259952423, max_bin = 1865, learning_rate = 0.015))]),
                         },
                     'log': {
-                        'features': ['-lightgbm_all', '+pts', '+linsvm_target', '+ridge_target', '+lightgbm_target', '+linsvm_team', '+lightgbm_team', '+ridge_all', '+linsvm_all', '-linsvm_team', '-ridge_all', '-lasso_team', '-lightgbm_team', '-ridge_team', '-lightgbm_target', '-lasso_target', '-lasso_possessions', '-lightgbm_possessions', '-ridge_possessions', '+lasso_target', '+lightgbm_possessions', '+linsvm_possessions', '+lasso_possessions', '-rest', '+rest', '-possessions', '+possessions'],
-                        'model': Pipeline([('scale',StandardScaler()), ('clf', LogisticRegression(random_state = 1108, C = 975.204044353, solver = "liblinear"))]),
+                        'features': ['-lightgbm_all', '+lightgbm_team', '+ridge_all', '+linsvm_all', '+ridge_target', '+linsvm_team', '-lightgbm_target', '+linsvm_target', '-ridge_team', '-linsvm_team', '-lightgbm_team', '-lasso_team', '-ridge_all', '-lasso_target', '+lightgbm_target', '-lasso_possessions', '-lightgbm_possessions', '-ridge_possessions', '+lasso_target'],
+                        'model': Pipeline([('scale',StandardScaler()), ('clf', LogisticRegression(random_state = 1108, C = 1000, solver = "liblinear"))]),
                         },
                     'linsvc': {
-                        'features': ['-lightgbm_all', '+pts', '+linsvm_target', '+ridge_target', '+lightgbm_target', '+linsvm_team', '+lightgbm_team', '+ridge_all', '+linsvm_all', '-linsvm_team', '-ridge_all', '-lasso_team', '-lightgbm_team', '-ridge_team', '-lightgbm_target', '-lasso_target', '-lasso_possessions', '-lightgbm_possessions', '-ridge_possessions', '+lasso_target', '+lightgbm_possessions', '+linsvm_possessions', '+lasso_possessions', '-rest', '+rest', '-possessions', '+possessions'],
-                        'model': Pipeline([('scale',RobustScaler()), ('clf',LinearSVC(random_state = 1108, C = 0.261256486245))]),
+                        'features': ['-lightgbm_all', '+linsvm_target', '+ridge_target', '+lightgbm_target', '+linsvm_team', '+lightgbm_team', '+ridge_all', '+linsvm_all', '-linsvm_team', '-ridge_all', '-lasso_team', '-lightgbm_team', '-ridge_team', '-lightgbm_target', '-lasso_target', '-lasso_possessions', '-lightgbm_possessions', '-ridge_possessions', '+lasso_target', '+lightgbm_possessions', '+linsvm_possessions', '+lasso_possessions', '-rest', '+rest'],
+                        'model': Pipeline([('scale',RobustScaler()), ('clf',SVC(random_state = 1108, C = 0.261256486245, kernel = 'linear', probability = True))]),
                         }, 
-                    'rbfsvc': {
-                        'features': ['-lightgbm_all', '+pts', '+linsvm_target', '+ridge_target', '+lightgbm_target', '+linsvm_team', '+lightgbm_team', '+ridge_all', '+linsvm_all', '-linsvm_team', '-ridge_all', '-lasso_team', '-lightgbm_team', '-ridge_team', '-lightgbm_target', '-lasso_target', '-lasso_possessions', '-lightgbm_possessions', '-ridge_possessions', '+lasso_target', '+lightgbm_possessions', '+linsvm_possessions', '+lasso_possessions', '-rest', '+rest', '-possessions'],
-                        'model': Pipeline([('scale',MinMaxScaler()), ('clf',SVC(random_state = 1108, C = 6.24660175945, gamma = 0.0884396941322, solver = 'rbf'))]),
-                        }, 
-                    'polysvc': {
-                        'features': ['-lightgbm_all', '+pts', '+linsvm_target', '+ridge_target', '+lightgbm_target', '+linsvm_team', '+lightgbm_team', '+ridge_all', '+linsvm_all', '-linsvm_team', '-ridge_all', '-lasso_team', '-lightgbm_team', '-ridge_team', '-lightgbm_target', '-lasso_target', '-lasso_possessions', '-lightgbm_possessions', '-ridge_possessions', '+lasso_target', '+lightgbm_possessions', '+linsvm_possessions', '+lasso_possessions', '-rest', '+rest', '-possessions'],
-                        'model': Pipeline([('scale',MinMaxScaler()), ('clf',SVC(random_state = 1108, C = 9.39273679717, gamma = 0.289168829661, solver = 'poly', degree = 2))]),
+#                    'rbfsvc': {
+#                        'features': ['-lightgbm_all', '+linsvm_target', '+ridge_target', '+lightgbm_target', '+linsvm_team', '+lightgbm_team', '+ridge_all', '+linsvm_all', '-linsvm_team', '-ridge_all', '-lasso_team', '-lightgbm_team', '-ridge_team', '-lightgbm_target', '-lasso_target', '-lasso_possessions', '-lightgbm_possessions', '-ridge_possessions', '+lasso_target', '+lightgbm_possessions', '+linsvm_possessions', '+lasso_possessions', '-rest', '+rest'],
+#                        'model': Pipeline([('scale',MinMaxScaler()), ('clf',SVC(random_state = 1108, C = 6.24660175945, gamma = 0.0884396941322, kernel = 'rbf', predict_proba = True))]),
+#                        }, 
+#                    'polysvc': {
+#                        'features': ['-lightgbm_all', '+linsvm_target', '+ridge_target', '+lightgbm_target', '+linsvm_team', '+lightgbm_team', '+ridge_all', '+linsvm_all', '-linsvm_team', '-ridge_all', '-lasso_team', '-lightgbm_team', '-ridge_team', '-lightgbm_target', '-lasso_target', '-lasso_possessions', '-lightgbm_possessions', '-ridge_possessions', '+lasso_target', '+lightgbm_possessions', '+linsvm_possessions', '+lasso_possessions', '-rest', '+rest'],
+#                        'model': Pipeline([('scale',MinMaxScaler()), ('clf',SVC(random_state = 1108, C = 9.39273679717, gamma = 0.289168829661, kernel = 'poly', degree = 2, predict_proba = True))]),
+#                        }, 
+                    'knn': {
+                        'features': ['-lightgbm_all', '+lightgbm_team', '+ridge_all', '+linsvm_all', '+ridge_target', '+linsvm_team', '-lightgbm_target', '+linsvm_target', '-ridge_team'],
+                        'model': Pipeline([('scale',MinMaxScaler()), ('clf', KNeighborsClassifier(n_neighbors = 199, leaf_size = 59))]),
                         }, 
                     },
                 'raw':{
@@ -72,6 +76,14 @@ stored_models = {
                         'features': ['expected_ppp_for', '-50_g_HAspread_allow_points-per-game`/`possessions-per-game', '-75_g_HAspread_allow_defensive-efficiency', 'expected_ftm-per-100-possessions_for', '30_g_HAspread_for_floor-percentage', '-75_g_HAspread_allow_floor-percentage', '75_g_HAspread_allow_points-per-game', '100_g_HAspread_for_defensive-efficiency', '75_g_HAspread_for_defensive-efficiency', '-50_g_HAspread_for_assist--per--turnover-ratio', '-50_g_HAspread_for_personal-fouls-per-game', '-100_g_HAspread_for_defensive-efficiency', '30_g_HAspread_allow_free-throw-rate', '-100_g_HAspread_allow_assist--per--turnover-ratio', '100_g_HAspread_for_personal-fouls-per-game', 'expected_offensive-rebounding-pct_for', '50_g_HAspread_allow_defensive-efficiency', 'expected_effective-field-goal-pct_for', '-10_g_HAspread_allow_ftm-per-100-possessions', 'expected_turnovers-per-possession_for', 'pregame_turnovers-per-possession_for'],
                         'model': Pipeline([('scale',MinMaxScaler()), ('clf', LogisticRegression(random_state = 1108, C = 1.007409512406823, solver = "lbfgs"))]),
                         }, 
+                    'linsvc': {
+                        'features': ['expected_ppp_for', '-50_g_HAspread_allow_points-per-game`/`possessions-per-game', '-75_g_HAspread_allow_defensive-efficiency', 'expected_ftm-per-100-possessions_for', '30_g_HAspread_for_floor-percentage', '-75_g_HAspread_allow_floor-percentage', '75_g_HAspread_allow_points-per-game', '100_g_HAspread_for_defensive-efficiency', '75_g_HAspread_for_defensive-efficiency', '-50_g_HAspread_for_assist--per--turnover-ratio', '-50_g_HAspread_for_personal-fouls-per-game', '-100_g_HAspread_for_defensive-efficiency', '30_g_HAspread_allow_free-throw-rate', '-100_g_HAspread_allow_assist--per--turnover-ratio', '100_g_HAspread_for_personal-fouls-per-game', 'expected_offensive-rebounding-pct_for', '50_g_HAspread_allow_defensive-efficiency', 'expected_effective-field-goal-pct_for', '-10_g_HAspread_allow_ftm-per-100-possessions', 'expected_turnovers-per-possession_for', 'pregame_turnovers-per-possession_for', '-50_game_avg_30_g_Tweight_allow_fta-per-fga', '-20_game_avg_50_g_Tweight_for_floor-percentage'],
+                        'model': Pipeline([('scale',StandardScaler()), ('clf',SVC(random_state = 1108, C = 0.0207173498763, kernel = 'linear', probability = True))]),
+                        }, 
+                    'lightgbc': {
+                        'features': ['-100_g_HAspread_allow_assist--per--turnover-ratio', '-10_g_HAspread_allow_ftm-per-100-possessions', '50_g_HAspread_allow_defensive-efficiency', 'expected_ppp_for', '30_g_HAspread_for_floor-percentage', 'expected_offensive-rebounding-pct_for', 'pregame_turnovers-per-possession_for', '-100_g_HAspread_for_defensive-efficiency', '-50_game_avg_30_g_Tweight_allow_fta-per-fga', '-50_g_HAspread_allow_points-per-game`/`possessions-per-game', '100_g_HAspread_for_defensive-efficiency', 'expected_turnovers-per-possession_for', 'expected_effective-field-goal-pct_for', '-20_game_avg_50_g_Tweight_for_floor-percentage', 'expected_ftm-per-100-possessions_for', '-50_g_HAspread_for_assist--per--turnover-ratio', '100_g_HAspread_for_personal-fouls-per-game', '75_g_HAspread_allow_points-per-game', '-75_g_HAspread_allow_floor-percentage', '75_g_HAspread_for_defensive-efficiency', '-50_g_HAspread_for_personal-fouls-per-game', '-75_g_HAspread_allow_defensive-efficiency', '30_g_HAspread_allow_free-throw-rate'],
+                        'model': Pipeline([('scale',StandardScaler()), ('clf', lgb.LGBMClassifier(random_state = 1108, n_estimators = 100, colsample_bytree = 0.642120736080607, min_child_samples = 116, num_leaves = 12, subsample = 0.897114330960264, max_bin = 1021, learning_rate = 0.08))]),
+                        },
                 },
         },
         'ou':{
@@ -79,7 +91,15 @@ stored_models = {
                     'log': {
                         'features': ['+linsvm_team', '+lightgbm_team', '-lasso_team', '-ridge_team', '-linsvm_team', '-ridge_all', '-lightgbm_team', '-lightgbm_target', '-lightgbm_all', '-lasso_target', '+lightgbm_target', '+linsvm_target', '+ridge_target', '+lasso_target', '+lightgbm_possessions', '+linsvm_possessions', '+lasso_possessions', '-ridge_possessions', '-lasso_possessions', '-lightgbm_possessions', '+ridge_all', '+linsvm_all', '+rest'],
                         'model': Pipeline([('scale',MinMaxScaler()), ('clf', LogisticRegression(random_state = 1108, C = 15.56187413425767, solver = "newton-cg"))]),
-                        },                                              
+                        }, 
+                    'linsvc': {
+                        'features': ['+linsvm_team', '+lightgbm_team', '-lasso_team', '-ridge_team', '-linsvm_team', '-ridge_all', '-lightgbm_team', '-lightgbm_target', '-lightgbm_all', '-lasso_target', '+lightgbm_target', '+linsvm_target', '+ridge_target', '+lasso_target', '+lightgbm_possessions', '+linsvm_possessions', '+lasso_possessions', '-ridge_possessions', '-lasso_possessions', '-lightgbm_possessions', '+ridge_all', '+linsvm_all', '+rest', '-rest', 'tsvd_ou', 'pca_ou', 'lightgbm_ou', 'ridge_ou'],
+                        'model': Pipeline([('scale',MinMaxScaler()), ('clf',SVC(random_state = 1108, C =  0.15817437173, kernel = 'linear', probability = True))]),
+                        },    
+                    'lightgbc': {
+                        'features': ['lasso_ou', '+linsvm_possessions', '+lightgbm_team', '-lasso_team', 'pca_ou', 'lightgbm_ou', '-ridge_possessions', 'tsvd_ou', '+ridge_target', '+linsvm_all', '-lasso_target', '+linsvm_team', '-lightgbm_all', '-lasso_possessions', '+lasso_possessions', '+ridge_all', 'ridge_ou', '-ridge_team', '-lightgbm_target', '-lightgbm_team', '+lightgbm_target', '-rest', '+rest', '-linsvm_team', '+linsvm_target', '+lasso_target', '+lightgbm_possessions', '-ridge_all', '-lightgbm_possessions'],
+                        'model': Pipeline([('scale',StandardScaler()), ('clf', lgb.LGBMClassifier(random_state = 1108, n_estimators = 100, colsample_bytree = 0.925424645171526, min_child_samples = 63, num_leaves = 159, subsample = 0.417196512684593, max_bin = 1011, learning_rate = 0.01))]),
+                        },                                          
                 },
                 'raw':{
                     'lightgbc': {
@@ -96,7 +116,7 @@ stored_models = {
                         }, 
                     'linsvc': {
                         'features': ['expected_effective-field-goal-pct_for', '-expected_effective-field-goal-pct_allowed', '20_game_avg_10_g_HAweight_for_possessions-per-game', '-20_game_avg_50_g_Tweight_for_floor-percentage', '-10_game_avg_10_g_Tweight_allow_points-per-game`/`possessions-per-game', '-20_game_avg_50_g_Tweight_allow_points-per-game', '20_game_avg_30_g_HAweight_for_defensive-rebounds-per-game', '10_game_avg_30_g_Tweight_for_true-shooting-percentage', '-20_game_avg_25_g_Tweight_allow_possessions-per-game', '-20_game_avg_50_g_HAweight_allow_defensive-efficiency', '-10_game_avg_15_g_HAweight_allow_defensive-rebounds-per-game', '-10_game_avg_15_g_HAweight_for_defensive-efficiency', '75_g_HAspread_allow_percent-of-points-from-3-pointers', '10_game_avg_10_g_Tweight_for_possessions-per-game', '25_g_HAspread_for_points-per-game', '-10_game_avg_10_g_HAweight_allow_points-per-game', '30_game_avg_5_g_Tweight_for_possessions-per-game', '-100_g_HAspread_allow_assist--per--turnover-ratio', '-75_g_HAspread_allow_defensive-efficiency', '-30_game_avg_50_g_Tweight_allow_points-per-game`/`possessions-per-game', '50_game_avg_50_g_HAweight_for_assists-per-game', '75_g_HAspread_for_floor-percentage', 'tsvd_ou', '-50_game_avg_50_g_HAweight_allow_ftm-per-100-possessions', '-15_g_HAspread_allow_block-pct', '-50_game_avg_50_g_HAweight_for_assists-per-game', '-100_g_HAspread_for_points-per-game', '-30_game_avg_25_g_Tweight_allow_points-per-game', '25_g_HAspread_for_possessions-per-game', 'pca_ou', '-25_g_HAspread_allow_possessions-per-game', 'lightgbm_ou', '10_game_avg_50_g_HAweight_for_blocks-per-game', '-30_game_avg_50_g_HAweight_allow_points-per-game', '100_g_HAspread_allow_block-pct', 'ridge_ou', 'lasso_ou'],
-                        'model': Pipeline([('scale',RobustScaler()), ('clf',LinearSVC(random_state = 1108, C = 1.42797971225))]),
+                        'model': Pipeline([('scale',RobustScaler()), ('clf',SVC(random_state = 1108, C = 1.42797971225, kernel = 'linear', probability = True))]),
                         }, 
                 },
         },
@@ -110,6 +130,14 @@ stored_models = {
                         'features': ['lasso_line', 'ridge_line', 'lightgbm_line', '+linsvm_target', '+ridge_target', '+lasso_target', '-ridge_team', '-lasso_team', '-lasso_target'],
                         'model': Pipeline([('scale',RobustScaler()), ('clf', LogisticRegression(random_state = 1108, C = 13.48854758964598, solver = "liblinear"))]),
                         },                                              
+                    'linsvc': {
+                        'features': ['lasso_line', 'ridge_line', 'lightgbm_line', '+linsvm_target', '+ridge_target', '+lasso_target', '-ridge_team', '-lasso_team'],
+                        'model': Pipeline([('scale',StandardScaler()), ('clf',SVC(random_state = 1108, C =  4.87778133978, kernel = 'linear', probability = True))]),
+                        }, 
+                    'lightgbc': {
+                        'features': ['lasso_line', '+linsvm_possessions', 'tsvd_line', 'pca_line', '-lasso_possessions', '+lasso_possessions', 'lightgbm_line', '+ridge_target', '-lasso_target', '-ridge_possessions', '+linsvm_all', '-lasso_team', '+linsvm_team'],
+                        'model': Pipeline([('scale',RobustScaler()), ('clf', lgb.LGBMClassifier(random_state = 1108, n_estimators = 225, colsample_bytree =0.985094185628027, min_child_samples = 13, num_leaves = 15, subsample = 0.721806428713343, max_bin = 1110, learning_rate = 0.03))]),
+                        },                                             
             },
                 'raw':{
                     'lightgbc': {
@@ -126,7 +154,7 @@ stored_models = {
                         }, 
                     'linsvc': {
                         'features': ['lasso_line', 'ridge_line', 'lightgbm_line', '-75_g_HAspread_allow_defensive-efficiency', '75_g_HAspread_allow_defensive-efficiency', '75_g_HAspread_for_defensive-efficiency', '100_g_HAspread_allow_block-pct', '100_g_HAspread_for_defensive-efficiency', '50_g_HAspread_allow_assist--per--turnover-ratio', '-expected_effective-field-goal-pct_allowed', 'pregame_offensive-rebounding-pct_for', '-10_g_HAspread_allow_points-per-game`/`possessions-per-game', '25_g_HAspread_for_possessions-per-game', '-5_game_avg_10_g_Tweight_allow_possessions-per-game', '-5_game_avg_50_g_HAweight_allow_possessions-per-game', '20_game_avg_30_g_Tweight_allow_assist--per--turnover-ratio', '1_game_avg_10_g_HAweight_for_points-per-game', '10_game_avg_30_g_Tweight_for_assists-per-game', '-expected_poss_pg_allowed', '-50_game_avg_15_g_Tweight_allow_blocks-per-game', 'pca_line', '-50_game_avg_30_g_Tweight_allow_block-pct', '20_game_avg_30_g_HAweight_allow_fta-per-fga', '-50_game_avg_15_g_HAweight_allow_blocks-per-game', '-20_game_avg_50_g_Tweight_for_block-pct', '-20_game_avg_15_g_Tweight_allow_extra-chances-per-game', '-30_game_avg_10_g_HAweight_allow_possessions-per-game', '-50_game_avg_50_g_HAweight_for_offensive-rebounding-pct', 'tsvd_line', 'pregame_ppp_for', '-50_game_avg_50_g_Tweight_for_assist--per--turnover-ratio', '50_game_avg_30_g_Tweight_allow_offensive-efficiency', '-10_game_avg_50_g_Tweight_for_assists-per-game', '-20_game_avg_50_g_Tweight_allow_fta-per-fga'],
-                        'model': Pipeline([('scale',MinMaxScaler()), ('clf',LinearSVC(random_state = 1108, C = 0.00100000009439))]),
+                        'model': Pipeline([('scale',MinMaxScaler()), ('clf',SVC(random_state = 1108, C = 0.00100000009439, kernel = 'linear', probability = True))]),
                         }, 
                 },
         },
@@ -171,22 +199,16 @@ stored_models = {
                         'model': Pipeline([('scale',StandardScaler()), ('clf', lgb.LGBMRegressor(random_state = 1108, n_estimators = 400, colsample_bytree = 0.796359005305649, min_child_samples = 198, num_leaves = 13, subsample = 0.65344498465166, max_bin = 1953, learning_rate = 0.03))]),
                         }
                     },
-#                    
                 'target':{
                     'lightgbm': {
                         'features': ['20_game_avg_50_g_Tweight_allow_points-per-game', '20_game_avg_25_g_Tweight_allow_points-per-game', '50_g_HAspread_allow_points-per-game`/`possessions-per-game', 'expected_ppp_allowed', '10_game_avg_5_g_Tweight_allow_points-per-game`/`possessions-per-game', '30_game_avg_25_g_Tweight_allow_points-per-game', '25_g_HAspread_allow_points-per-game`/`possessions-per-game', '10_game_avg_25_g_HAweight_allow_points-per-game', '1_game_avg_25_g_Tweight_allow_points-per-game`/`possessions-per-game', 'pregame_ppp_allowed', '10_g_HAspread_allow_points-per-game`/`possessions-per-game', '30_game_avg_50_g_Tweight_allow_points-per-game`/`possessions-per-game', 'expected_pts_pg_allowed'],
                         'model': Pipeline([('scale',MinMaxScaler()), ('clf', lgb.LGBMRegressor(random_state = 1108, n_estimators = 900, colsample_bytree = 0.956416580127077, min_child_samples = 4, num_leaves = 61, subsample = 0.631441132669909, max_bin = 1974, learning_rate = 0.00375))]),
                         },                         
-#                    'ridge': {
-#                        'features': ['expected_ppp_allowed', '50_g_HAspread_allow_points-per-game`/`possessions-per-game', 'expected_pts_pg_allowed', 'pregame_ppp_allowed', '25_g_HAspread_allow_points-per-game`/`possessions-per-game', '10_g_HAspread_allow_points-per-game`/`possessions-per-game', '20_game_avg_5_g_HAweight_allow_points-per-game', '20_game_avg_25_g_Tweight_allow_points-per-game', '20_game_avg_50_g_Tweight_allow_points-per-game', '30_game_avg_25_g_Tweight_allow_points-per-game', '30_game_avg_50_g_Tweight_allow_points-per-game`/`possessions-per-game', '10_game_avg_5_g_Tweight_allow_points-per-game`/`possessions-per-game', '10_game_avg_25_g_HAweight_allow_points-per-game', '1_game_avg_25_g_Tweight_allow_points-per-game`/`possessions-per-game'],
-#                        'model': Pipeline([('scale',MinMaxScaler()), ('clf',Ridge(random_state = 1108, solver = 'lsqr', alpha = 7.004254054653961))]),
-#                        }, 
                     'lasso': {
                         'features': ['expected_ppp_allowed', '50_g_HAspread_allow_points-per-game`/`possessions-per-game', 'expected_pts_pg_allowed', 'pregame_ppp_allowed', '25_g_HAspread_allow_points-per-game`/`possessions-per-game', '10_g_HAspread_allow_points-per-game`/`possessions-per-game', '20_game_avg_5_g_HAweight_allow_points-per-game', '20_game_avg_25_g_Tweight_allow_points-per-game', '20_game_avg_50_g_Tweight_allow_points-per-game', '30_game_avg_25_g_Tweight_allow_points-per-game', '30_game_avg_50_g_Tweight_allow_points-per-game`/`possessions-per-game', '10_game_avg_5_g_Tweight_allow_points-per-game`/`possessions-per-game', '10_game_avg_25_g_HAweight_allow_points-per-game', '1_game_avg_25_g_Tweight_allow_points-per-game`/`possessions-per-game'],
                         'model': Pipeline([('scale',StandardScaler()), ('clf',Lasso(random_state = 1108, alpha = 0.001, max_iter = 2000))]),
                         },
                     },
-#                 
                 'possessions': {
                     'lightgbm': {
                         'features': ['5_game_avg_25_g_Tweight_allow_possessions-per-game', 'expected_poss_pg_allowed', '20_game_avg_50_g_Tweight_allow_possessions-per-game', '5_game_avg_10_g_Tweight_allow_possessions-per-game', '25_g_HAspread_allow_possessions-per-game', '1_game_avg_50_g_HAweight_allow_possessions-per-game', 'pregame_poss_pg_allowed', '30_game_avg_5_g_Tweight_allow_possessions-per-game', '1_game_avg_10_g_Tweight_allow_possessions-per-game', '30_game_avg_25_g_HAweight_allow_possessions-per-game'],
@@ -201,7 +223,6 @@ stored_models = {
                         'model': Pipeline([('scale',RobustScaler()), ('clf',Lasso(random_state = 1108, alpha = 0.001))]),
                         },
                     },
-#                        
                 'full-team':{
                     'linsvm': {
                         'features': ['expected_effective-field-goal-pct_allowed', '75_g_HAspread_allow_floor-percentage', 'expected_turnovers-per-possession_allowed', 'expected_effective-field-goal-pct_allowed', 'expected_offensive-rebounding-pct_allowed', '75_g_HAspread_allow_defensive-efficiency', '100_g_HAspread_for_defensive-efficiency', '100_g_HAspread_allow_assist--per--turnover-ratio', '50_g_HAspread_for_assist--per--turnover-ratio', '30_g_HAspread_for_offensive-efficiency'],
@@ -232,7 +253,6 @@ stored_models = {
                         'model': Pipeline([('scale',StandardScaler()), ('clf',Ridge(random_state = 1108, solver = 'lsqr', alpha = 0.00115411795019))]),
                         },                                              
                     },
-#                
                 'possessions':{
                     'linsvm': {
                         'features': ['expected_poss_pg_for', 'pregame_poss_pg_for', '10_game_avg_10_g_Tweight_for_possessions-per-game', '10_game_avg_10_g_HAweight_for_possessions-per-game', '25_g_HAspread_for_possessions-per-game', '50_g_HAspread_for_possessions-per-game', '1_game_avg_50_g_Tweight_for_possessions-per-game', '1_game_avg_5_g_Tweight_for_possessions-per-game', '20_game_avg_10_g_HAweight_for_possessions-per-game', '30_game_avg_25_g_Tweight_for_possessions-per-game', '30_game_avg_10_g_Tweight_for_possessions-per-game', '30_game_avg_5_g_Tweight_for_possessions-per-game', '30_game_avg_50_g_HAweight_for_possessions-per-game'],
@@ -242,16 +262,11 @@ stored_models = {
                         'features': ['10_game_avg_10_g_Tweight_for_possessions-per-game', 'expected_poss_pg_for', '1_game_avg_5_g_Tweight_for_possessions-per-game', 'pregame_poss_pg_for', '10_game_avg_10_g_HAweight_for_possessions-per-game', '1_game_avg_50_g_Tweight_for_possessions-per-game', '30_game_avg_50_g_HAweight_for_possessions-per-game', '30_game_avg_5_g_Tweight_for_possessions-per-game', '30_game_avg_25_g_Tweight_for_possessions-per-game', '20_game_avg_10_g_HAweight_for_possessions-per-game'],
                         'model': Pipeline([('scale',MinMaxScaler()), ('clf', lgb.LGBMRegressor(random_state = 1108, n_estimators = 2800, colsample_bytree = 0.961267241448647, min_child_samples = 9, num_leaves = 18, subsample = 0.596425797228693, max_bin = 1844, learning_rate = 0.0025))]),
                         },
-#                    'ridge': {
-#                        'features': ['expected_poss_pg_for', 'pregame_poss_pg_for', '10_game_avg_10_g_Tweight_for_possessions-per-game', '10_game_avg_10_g_HAweight_for_possessions-per-game', '25_g_HAspread_for_possessions-per-game', '50_g_HAspread_for_possessions-per-game', '1_game_avg_50_g_Tweight_for_possessions-per-game', '1_game_avg_5_g_Tweight_for_possessions-per-game', '20_game_avg_10_g_HAweight_for_possessions-per-game', '30_game_avg_25_g_Tweight_for_possessions-per-game', '30_game_avg_10_g_Tweight_for_possessions-per-game', '30_game_avg_5_g_Tweight_for_possessions-per-game', '30_game_avg_50_g_HAweight_for_possessions-per-game'],
-#                        'model': Pipeline([('scale',MinMaxScaler()), ('clf',Ridge(random_state = 1108, solver = 'lsqr', alpha = 1.985020145021695))]),
-#                        },
                     'lasso': {
                         'features': ['expected_poss_pg_for', 'pregame_poss_pg_for', '10_game_avg_10_g_Tweight_for_possessions-per-game', '10_game_avg_10_g_HAweight_for_possessions-per-game', '25_g_HAspread_for_possessions-per-game', '50_g_HAspread_for_possessions-per-game', '1_game_avg_50_g_Tweight_for_possessions-per-game', '1_game_avg_5_g_Tweight_for_possessions-per-game', '20_game_avg_10_g_HAweight_for_possessions-per-game', '30_game_avg_25_g_Tweight_for_possessions-per-game', '30_game_avg_10_g_Tweight_for_possessions-per-game', '30_game_avg_5_g_Tweight_for_possessions-per-game', '30_game_avg_50_g_HAweight_for_possessions-per-game'],
                         'model': Pipeline([('scale',StandardScaler()), ('clf',Lasso(random_state = 1108, alpha = 0.0015540696172751227, max_iter = 2000))]),
                         },
                     },
-#                        
                 'target':{
                     'linsvm': {
                         'features': ['expected_ppp_for', 'pregame_ppp_for', '50_g_HAspread_for_points-per-game`/`possessions-per-game', 'expected_pts_pg_for', '50_g_HAspread_for_points-per-game', 'pregame_pts_pg_for', '25_g_HAspread_for_points-per-game`/`possessions-per-game', '20_game_avg_50_g_HAweight_for_points-per-game`/`possessions-per-game', '10_game_avg_5_g_HAweight_for_points-per-game`/`possessions-per-game', '10_game_avg_5_g_Tweight_for_points-per-game`/`possessions-per-game', '5_game_avg_50_g_HAweight_for_points-per-game`/`possessions-per-game', '1_game_avg_10_g_HAweight_for_points-per-game'],
@@ -270,16 +285,11 @@ stored_models = {
                         'model': Pipeline([('scale',StandardScaler()), ('clf',Lasso(random_state = 1108, alpha = 0.13526474650418807, max_iter = 2000))]),
                         },
                     },
-#                        
                 'offensive_stats': {                       
                     'linsvm': {
                         'features': ['expected_effective-field-goal-pct_for', '75_g_HAspread_for_floor-percentage', 'expected_turnovers-per-possession_for', 'expected_effective-field-goal-pct_for', 'pregame_effective-field-goal-pct_for', '100_g_HAspread_for_floor-percentage', '100_g_HAspread_for_offensive-efficiency', '30_g_HAspread_for_floor-percentage', 'expected_offensive-rebounding-pct_for', '100_g_HAspread_for_defensive-efficiency', 'expected_ftm-per-100-possessions_for', 'pregame_ftm-per-100-possessions_for', 'pregame_offensive-rebounding-pct_for'],
                         'model': Pipeline([('scale',RobustScaler()), ('clf',LinearSVR(random_state = 1108, C = 0.0869486130678, epsilon=0))]),
                         },                          
-#                    'ridge': {
-#                        'features': ['expected_effective-field-goal-pct_for', '75_g_HAspread_for_floor-percentage', 'expected_turnovers-per-possession_for', 'expected_effective-field-goal-pct_for', 'pregame_effective-field-goal-pct_for', '100_g_HAspread_for_floor-percentage', '100_g_HAspread_for_offensive-efficiency', '30_g_HAspread_for_floor-percentage', 'expected_offensive-rebounding-pct_for', '100_g_HAspread_for_defensive-efficiency', 'expected_ftm-per-100-possessions_for', 'pregame_ftm-per-100-possessions_for', 'pregame_offensive-rebounding-pct_for'],
-#                        'model': Pipeline([('scale',MinMaxScaler()), ('clf',Ridge(random_state = 1108, solver = 'sparse_cg', alpha = 2.15118131602))]),
-#                        },  
                     'lightgbm': {
                         'features': ['75_g_HAspread_for_floor-percentage', '30_g_HAspread_for_floor-percentage', 'pregame_offensive-rebounding-pct_for', 'expected_offensive-rebounding-pct_for', 'expected_effective-field-goal-pct_for', 'expected_ftm-per-100-possessions_for', '100_g_HAspread_for_offensive-efficiency', '100_g_HAspread_for_defensive-efficiency', '100_g_HAspread_for_floor-percentage', 'pregame_effective-field-goal-pct_for', 'pregame_ftm-per-100-possessions_for', 'expected_effective-field-goal-pct_for', 'expected_turnovers-per-possession_for'],
                         'model': Pipeline([('scale',MinMaxScaler()), ('clf', lgb.LGBMRegressor(random_state = 1108, n_estimators = 500, colsample_bytree = 0.808603278021336, min_child_samples = 176, num_leaves = 24, subsample = 0.678375514083654, max_bin = 1032, learning_rate = 0.01))]),
