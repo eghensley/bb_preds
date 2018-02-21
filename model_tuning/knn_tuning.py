@@ -98,6 +98,7 @@ def execute(sa, od, X_data = None, Y_data = None):
     features = len(feat_sigs)
     global features
     leaf_, n_ = leaf_tuning()
+    leaf_, n_ = int(leaf_), int(n_) 
     global leaf_
     global n_
     f = open(os.path.join(output_folder,  '%s-%s-knn.txt'%(sa, od)), 'a')
@@ -105,6 +106,11 @@ def execute(sa, od, X_data = None, Y_data = None):
     f.write('start leaves: %s,'%(leaf_))
     f.close()
 
+#    scale = MinMaxScaler()
+#    leaf_, n_ = int(198), int(100) 
+#    global scale
+#    global leaf_
+#    global n_    
     print('Starting feature ranking')
     sigs = f_classif(x_data, y_data)[1]
     indices = np.argsort(sigs)
