@@ -131,7 +131,6 @@ def update(cnx):
     
     oddsteamsdict = {}
     for i in range(0, len(teamnames)):
-    #    print(teamst[i] + " - " + teamnames[i])
         oddsteamsdict[teamlist[i].upper()] = teamnames[i]
     
     nond1 = ['WINSTON SALEM STATE', 'CHAMINADE', 'DICKINSON STATE', 'ARK MONTICELLO', 'FAIR DICKINSON', 'ARK-FORT SMITH', 'USC UPSTATE', 'NORTHERN MICHIGAN', 'CENTENARY', 'ALASKA ANCHORAGE', 
@@ -147,9 +146,8 @@ def update(cnx):
     spot = 0
     if len(dates) > 0:
         for gameday in dates:
-        #for gameday in dates:
                 spot += 1
-                print('%s percent complete' % ((float(spot)/float(len(dates)))*100))
+                print('%.2f percent complete' % ((float(spot)/float(len(dates)))*100))
                 url = None
                 pageContent = None
                 tree = None
@@ -544,7 +542,6 @@ def update(cnx):
                                             oddslist = ['INSERT INTO oddsdata VALUES', oddsinsertx, ';']
                                             initialoddsinsert = ' '.join(oddslist)  
                                             add_odds = initialoddsinsert  
-        #                                    print(add_odds)
                                             cursor.execute('SET foreign_key_checks = 0;')
                                             cursor.execute(add_odds)
                                             cnx.commit()

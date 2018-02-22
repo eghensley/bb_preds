@@ -43,7 +43,7 @@ def update(cnx):
                 cnx.commit()
             except IntegrityError:
                 pass
-            print('%f percent complete' % (float(progress) / float(len(data)) * 100))    
+            print('%.2f percent complete' % (float(progress) / float(len(data)) * 100))    
     cursor.close()
     cnx.close()
     print('Completed NCAA Basketball Game Data Update')

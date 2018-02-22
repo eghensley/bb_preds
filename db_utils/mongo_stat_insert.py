@@ -1,5 +1,4 @@
 def update(od, sa, client):
-#    od, sa, client = 'possessions', 'pts_scored', mongodb_client
     import numpy as np
     import feature_lists
     import bb_odds
@@ -25,9 +24,7 @@ def update(od, sa, client):
             
             
     for teamname in bb_odds.teamnames:
-#        print('Compiling %s Rolling Averages...'%(teamname))
         if db['%s_%s'% (sa.replace('_','-'), od.replace('_','-'))].find_one({'_team':teamname.replace(' ','_')}, sort=[('_id', -1)]) is None:
-#            print('Initializing %s...'%(teamname))
             if db['weighted_%s_%s'% (sa.replace('_','-'), od.replace('_','-'))].find({'_team':teamname.replace(' ','_'), '_game': 2}).count() == 0:
                 continue
             else:
@@ -65,7 +62,6 @@ def update(od, sa, client):
                 db['%s_%s'% (sa.replace('_','-'), od.replace('_','-'))].insert_one(start_data)
                 start_sum = None
                 start_data = None
-#            print('-- Finished Initializing %s'%(teamname))
         
         latest = db['%s_%s'% (sa.replace('_','-'), od.replace('_','-'))].find_one({'_team':teamname.replace(' ','_')}, sort=[('_game', -1)])['_game']
         limit = db['weighted_%s_%s'% (sa.replace('_','-'), od.replace('_','-'))].find_one({'_team':teamname.replace(' ','_')}, sort=[('_game', -1)])['_game']        

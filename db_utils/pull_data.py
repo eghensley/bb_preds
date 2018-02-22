@@ -423,7 +423,6 @@ def pull_pts(od, cnx):
     return data
     
 def pull_model_features(y, x, mongodb_client):
-#    y,x,mongodb_client = 'pts_scored', 'offensive_stats', mongodb_client
     print('Loading Weighted Features')
     db = mongodb_client['ncaa_bb']
     weighted_stats = {}
