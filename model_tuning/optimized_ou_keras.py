@@ -44,6 +44,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import StratifiedShuffleSplit, StratifiedKFold
 from sklearn.pipeline import Pipeline
 import pandas as pd
+import matplotlib.pyplot as plt
 
 def hfa_patch(x, cnx):
     print('Running HFA Patch')
@@ -184,70 +185,88 @@ y_data = pull_data.ou_wl(update_dbs.mysql_client())
 data = data.join(y_data, how = 'inner')
 line_preds = pull_data.ou_preds(update_dbs.mysql_client())
 data = data.join(line_preds, how = 'inner')
+data = data.reset_index()
 x_data = data[x_feats]
-y_data = data[['line']]
-seed = 7
+y_data = data[['ou']]
+seed = 86
 np.random.seed(seed)
+import random
+random.seed(86)
 data = None
 line_preds = None
-def baseline_model():
-	# create model
-	model = Sequential()
-	model.add(Dense(38, input_dim=38, kernel_initializer='normal', activation='relu'))
-	model.add(Dense(1, kernel_initializer='normal', activation='sigmoid'))
-	# Compile model
-	model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-	return model
-
-def test_scaler(x, y):
-    print('Searching for best scaler...')
-    scores = []
-    for scale in [StandardScaler(), MinMaxScaler(), RobustScaler()]:
-        pipe = Pipeline([('scale',scale), ('clf',KerasRegressor(build_fn=baseline_model, epochs=100, batch_size=64, verbose=1))])
-        score = cross_val_score(pipe, x, y,cv = StratifiedKFold(n_splits = 3, random_state = 46))
-        scores.append(np.mean(score))
-    f = open('keras_model_tuning.txt', 'w')
-    f.write('Baseline: %s.  ' % (max(scores)))
-    f.close()
-    if scores.index(max(scores)) == 0:
-        print('Using Standard Scaler')
-        return StandardScaler()
-    elif scores.index(max(scores)) == 1:
-        print('Using Min Max Scaler')
-        return MinMaxScaler()
-    elif scores.index(max(scores)) == 2:
-        print('Using Robust Scaler')
-        return RobustScaler()
+#def baseline_model():
+#	# create model
+#	model = Sequential()
+#	model.add(Dense(38, input_dim=38, kernel_initializer='normal', activation='relu'))
+#	model.add(Dense(1, kernel_initializer='normal', activation='sigmoid'))
+#	# Compile model
+#	model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+#	return model
+#
+#def test_scaler(x, y):
+#    print('Searching for best scaler...')
+#    scores = []
+#    for scale in [StandardScaler(), MinMaxScaler(), RobustScaler()]:
+#        pipe = Pipeline([('scale',scale), ('clf',KerasRegressor(build_fn=baseline_model, epochs=100, batch_size=64, verbose=1))])
+#        score = cross_val_score(pipe, x, y,cv = StratifiedKFold(n_splits = 3, random_state = 46))
+#        scores.append(np.mean(score))
+#    f = open('keras_model_tuning.txt', 'w')
+#    f.write('Baseline: %s.  ' % (max(scores)))
+#    f.close()
+#    if scores.index(max(scores)) == 0:
+#        print('Using Standard Scaler')
+#        return StandardScaler()
+#    elif scores.index(max(scores)) == 1:
+#        print('Using Min Max Scaler')
+#        return MinMaxScaler()
+#    elif scores.index(max(scores)) == 2:
+#        print('Using Robust Scaler')
+#        return RobustScaler()
     
-scaler = test_scaler(x_data, y_data) #RobustScaler
-f = open('keras_model_tuning_ou.txt', 'a')
-f.write('Scaler: %s  \n' % (scaler))
-f.close()
+#scaler = test_scaler(x_data, y_data) #RobustScaler
+#f = open('keras_model_tuning_ou.txt', 'a')
+#f.write('Scaler: %s  \n' % (scaler))
+#f.close()
 
-for width in np.linspace(1, 2, 4):
-    for depth in range(1,4):
-        def nn_model():
-        	# create model
-            model = Sequential()
-            model.add(Dense(int(38*width), input_dim=38, kernel_initializer='normal', activation='relu'))
-            for lay in range(depth):
-                model.add(Dropout(.9))
-                model.add(Dense(int((float(38*width)/(depth+1))*(depth-lay)), kernel_initializer='normal', activation='relu'))
-            model.add(Dense(1, kernel_initializer='normal', activation='sigmoid'))
-        	# Compile model
-            model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-            return model  
-        estimators = []
-        estimators.append(('standardize', scaler))
+scaler = StandardScaler()
+def nn_model():
+    model = Sequential()
+    model.add(Dense(76, input_dim=38, kernel_initializer='normal', activation='elu'))
+    model.add(Dropout(.45))
+    model.add(Dense(50, kernel_initializer='normal', activation='elu'))
+    model.add(Dropout(.45))
+    model.add(Dense(25, kernel_initializer='normal', activation='elu'))
+    model.add(Dropout(.15))
+    model.add(Dense(1, kernel_initializer='normal', activation='sigmoid'))
+    model.compile(loss='binary_crossentropy', optimizer='adagrad', metrics=['accuracy'])
+    return model 
+
+for width in [7,6,5,4,3]:
+        num_epochs = 1000
         model = nn_model()
-        cv_acc = []
-        cv_logloss = []
-        for test_idx, train_idx in StratifiedShuffleSplit(n_splits=3, test_size=0.9, random_state=86).split(x_data, y_data):
-            model.fit(scaler.fit_transform(x_data.loc[train_idx]), np.ravel(y_data.loc[train_idx]), epochs=100, batch_size=64, verbose=1)
-            cv_results = model.evaluate(scaler.fit_transform(x_data.loc[test_idx]), np.ravel(y_data.loc[test_idx]))
-            cv_acc.append(cv_results[1])
-            cv_logloss.append(cv_results[0])
-        print("Results: logloss %.2f, Accuracy %.2f " % (np.mean(cv_logloss), np.mean(cv_acc)))
-        f = open('keras_model_tuning_ou.txt', 'a')
-        f.write('Width-%s_depth-%s_model: \n logloss %.4f, Accuracy %.4f \n' % (width, depth, np.mean(cv_logloss), np.mean(cv_acc)))
-        f.close()
+        for test_idx, train_idx in StratifiedShuffleSplit(n_splits=1, test_size=0.90, random_state=86).split(x_data, y_data):
+            acc_results = []
+            logloss_results = []
+            history = model.fit(scaler.fit_transform(x_data.loc[train_idx]), np.ravel(y_data.loc[train_idx]), epochs=num_epochs, batch_size=2**width, verbose=1, validation_data=(scaler.fit_transform(x_data.loc[test_idx]), np.ravel(y_data.loc[test_idx])), shuffle = True)
+            plt.plot(history.history['acc'], linestyle = '-.')
+            plt.plot(history.history['val_acc'], linestyle = ':')
+            plt.title('model accuracy')
+            plt.ylabel('accuracy')
+            plt.xlabel('epoch')
+            plt.legend(['train', 'test', 'validation'], loc='upper left')
+            plt.show()
+            print('accuracy graph ^')
+            plt.plot(history.history['loss'], linestyle = '-.')
+            plt.plot(history.history['val_loss'], linestyle = ':')            
+            plt.title('model loss')
+            plt.ylabel('loss')
+            plt.xlabel('epoch')
+            plt.legend(['train', 'test', 'validation'], loc='upper left')
+            plt.show()
+            print('log loss graph ^')
+
+            print("Results: best logloss %.4f @ epoch %s, best accuracy %.4f @ epoch %s" % (min(history.history['val_loss']), list(history.history['val_loss']).index(min(history.history['val_loss'])), max(history.history['val_acc']), list(history.history['val_acc']).index(max(history.history['val_acc']))))
+            f = open('keras_model_tuning_ou.txt', 'a')
+            f.write('BatchSize-%s_epochs-%s_model: \n best logloss %.4f @ epoch %s, best accuracy %.4f @ epoch %s\n' % (2**width, num_epochs, min(history.history['val_loss']), list(history.history['val_loss']).index(min(history.history['val_loss'])), max(history.history['val_acc']), list(history.history['val_acc']).index(max(history.history['val_acc']))))
+            f.close()
+            

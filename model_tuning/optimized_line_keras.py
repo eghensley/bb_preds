@@ -44,6 +44,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import StratifiedShuffleSplit, StratifiedKFold
 from sklearn.pipeline import Pipeline
 import pandas as pd
+import matplotlib.pyplot as plt
 
 def hfa_patch(x, cnx):
     print('Running HFA Patch')
@@ -184,8 +185,10 @@ data = data.join(line_preds, how = 'inner')
 data = data.reset_index()
 x_data = data[x_feats]
 y_data = data[['line']]
-seed = 7
+seed = 86
 np.random.seed(seed)
+import random
+random.seed(86)
 data = None
 line_preds = None
 #def baseline_model():
@@ -283,36 +286,42 @@ scaler = StandardScaler()
 
 
 scaler = StandardScaler()
-for width in [.4]:
-#    for depth in [1,2,3]:
-    depth = 1
-    def nn_model():
-    	# create model
-        model = Sequential()
-        model.add(Dense(int(35*2.5), input_dim=35, kernel_initializer='normal', activation='relu'))
-        for lay in range(depth):
-            model.add(Dropout(width))
-            model.add(Dense(int((float(35*2.5)/(depth+1))*(depth-lay)), kernel_initializer='normal', activation='relu'))
-            model.add(Dropout(width/2))
-        model.add(Dense(1, kernel_initializer='normal', activation='sigmoid'))
-    	# Compile model
-        model.compile(loss='binary_crossentropy', optimizer='Adamax', metrics=['accuracy'])
-        return model 
-    print(nn_model().summary())
-    estimators = []
-    estimators.append(('standardize', scaler))
-    model = nn_model()
-    cv_acc = []
-    cv_logloss = []
-    for test_idx, train_idx in StratifiedShuffleSplit(n_splits=3, test_size=0.9, random_state=86).split(x_data, y_data):
-#            pipe = Pipeline([('scale',scaler), ('clf',KerasRegressor(build_fn=nn_model, epochs=10, batch_size=64, verbose=1))])
-#            score = cross_val_score(pipe, x_data, y_data,cv = StratifiedKFold(n_splits = 3, random_state = 46))
+def nn_model():
+    model = Sequential()
+    model.add(Dense(87, input_dim=35, kernel_initializer='normal', activation='relu'))
+    model.add(Dropout(.4))
+    model.add(Dense(44, kernel_initializer='normal', activation='relu'))
+    model.add(Dropout(.1))
+    model.add(Dense(1, kernel_initializer='normal', activation='sigmoid'))
+    model.compile(loss='binary_crossentropy', optimizer='adamax', metrics=['accuracy'])
+    return model 
 
-        model.fit(scaler.fit_transform(x_data.loc[train_idx]), np.ravel(y_data.loc[train_idx]), epochs=100, batch_size=64, verbose=1)
-        cv_results = model.evaluate(scaler.fit_transform(x_data.loc[test_idx]), np.ravel(y_data.loc[test_idx]))
-        cv_acc.append(cv_results[1])
-        cv_logloss.append(cv_results[0])
-    print("Results: logloss %.2f, Accuracy %.2f " % (np.mean(cv_logloss), np.mean(cv_acc)))
-    f = open('keras_model_tuning_line.txt', 'a')
-    f.write('Width-%s_depth-%s_model: \n logloss %.4f, Accuracy %.4f \n' % (width, depth, np.mean(cv_logloss), np.mean(cv_acc)))
-    f.close()
+for width in [7,6,5,4,3]:
+        num_epochs = 100
+        model = nn_model()
+        for test_idx, train_idx in StratifiedShuffleSplit(n_splits=1, test_size=0.90, random_state=86).split(x_data, y_data):
+            acc_results = []
+            logloss_results = []
+            history = model.fit(scaler.fit_transform(x_data.loc[train_idx]), np.ravel(y_data.loc[train_idx]), epochs=num_epochs, batch_size=2**width, verbose=1, validation_data=(scaler.fit_transform(x_data.loc[test_idx]), np.ravel(y_data.loc[test_idx])), shuffle = True)
+            plt.plot(history.history['acc'], linestyle = '-.')
+            plt.plot(history.history['val_acc'], linestyle = ':')
+            plt.title('model accuracy')
+            plt.ylabel('accuracy')
+            plt.xlabel('epoch')
+            plt.legend(['train', 'test', 'validation'], loc='upper left')
+            plt.show()
+            print('accuracy graph ^')
+            plt.plot(history.history['loss'], linestyle = '-.')
+            plt.plot(history.history['val_loss'], linestyle = ':')            
+            plt.title('model loss')
+            plt.ylabel('loss')
+            plt.xlabel('epoch')
+            plt.legend(['train', 'test', 'validation'], loc='upper left')
+            plt.show()
+            print('log loss graph ^')
+
+            print("Results: best logloss %.4f @ epoch %s, best accuracy %.4f @ epoch %s" % (min(history.history['val_loss']), list(history.history['val_loss']).index(min(history.history['val_loss'])), max(history.history['val_acc']), list(history.history['val_acc']).index(max(history.history['val_acc']))))
+            f = open('keras_model_tuning_line.txt', 'a')
+            f.write('BatchSize-%s_epochs-%s_model: \n best logloss %.4f @ epoch %s, best accuracy %.4f @ epoch %s\n' % (2**width, num_epochs, min(history.history['val_loss']), list(history.history['val_loss']).index(min(history.history['val_loss'])), max(history.history['val_acc']), list(history.history['val_acc']).index(max(history.history['val_acc']))))
+            f.close()
+            
