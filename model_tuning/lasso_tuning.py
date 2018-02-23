@@ -63,8 +63,8 @@ def test_scaler(x, y):
     scores = []
     for scale in [StandardScaler(), MinMaxScaler(), RobustScaler()]:
         pipe = Pipeline([('scale',scale), ('clf',Lasso(random_state = 1108))])
-        score = cross_val_score(pipe, x, y, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 46))
-        scores.append(np.mean(score))
+        score = cross_val_score(pipe, x, y, scoring = 'mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 46))
+        scores.append(np.mean(score) * -1)
     if scores.index(max(scores)) == 0:
         print('Using Standard Scaler')
         return StandardScaler()
@@ -79,9 +79,9 @@ def sample_loss_n_feats(parameters):
     feats = int(parameters[0])
     print('%s features' % (feats))
     model = Pipeline([('scale',scale),  ('clf',Lasso(random_state = 1108, alpha = alpha_, max_iter = 2000))])
-    score = cross_val_score(model, x_data[feat_sigs[:feats]], y_data, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 1108))
-    print('----> score: %s' % np.mean(score))
-    return np.mean(score)
+    score = cross_val_score(model, x_data[feat_sigs[:feats]], y_data, scoring = 'mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 1108))
+    print('----> score: %s' % np.mean(score) * -1)
+    return np.mean(score) * -1
 
 def find_feats():
     print('Searching for best number of features...')
@@ -97,9 +97,9 @@ def find_feats():
 def sample_loss_alpha(parameters):
     alph = 10**parameters[0]
     model = Pipeline([('scale',scale), ('clf',Lasso(random_state = 1108, alpha = alph, max_iter = 2000))])
-    score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 88))
-    print('----> score: %s' % np.mean(score))
-    return np.mean(score)
+    score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 88))
+    print('----> score: %s' % np.mean(score) * -1)
+    return np.mean(score) * -1
  
 def alpha_tuning():
     print('-- Beginning Alpha Search')
@@ -160,13 +160,23 @@ def execute(sa, od, X_data = None, Y_data = None):
     
     print('---Finalizing Lasso Model')
     model = Pipeline([('scale',scale), ('clf',Lasso(random_state = 1108, alpha = alpha_, max_iter = 2000))])                    
-    tune_score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 88))
+    tune_score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 88))
     print('...Lasso Model Finalized')
-    tune_score = np.mean(tune_score)
+    
+#    tune_mse = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 88))
+#    f = open(os.path.join(output_folder, '%s-%s-lasso.txt'%(sa, od)), 'a')
+#    f.write('mse: %s,'% (np.mean(tune_mse)))
+#    f.close()
+#    print('MSE = %s' (np.mean(tune_mse)))
+    
+    tune_score = np.mean(tune_score) * -1
     base_model = Pipeline([('scale',scale), ('clf',LinearRegression())])
-    baseline_score = cross_val_score(base_model, x_data[feat_sigs], y_data, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 86))
-    baseline_score = np.mean(baseline_score)
+    baseline_score = cross_val_score(base_model, x_data[feat_sigs], y_data, scoring = 'mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 86))
+    baseline_score = np.mean(baseline_score) * -1
     improvement = (tune_score - baseline_score)/baseline_score
+    f = open(os.path.join(output_folder, '%s-%s-lasso.txt'%(sa, od)), 'a')
+    f.write('mse: XXX,')
+    f.close()
     print('%s percent improvement from baseline' % (improvement * 100))
     if improvement < 0:
         f = open(os.path.join(output_folder, '%s-%s-lasso.txt'%(sa, od)), 'a')

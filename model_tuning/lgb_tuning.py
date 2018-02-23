@@ -67,8 +67,8 @@ def test_scaler(x, y):
     scores = []
     for scale in [StandardScaler(), MinMaxScaler(), RobustScaler()]:
         pipe = Pipeline([('scale',scale), ('clf',lgb.LGBMRegressor(random_state = 1108))])
-        score = cross_val_score(pipe, x, y, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 46))
-        scores.append(np.mean(score))
+        score = cross_val_score(pipe, x, y, scoring = 'mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 46))
+        scores.append(np.mean(score) * -1)
     if scores.index(max(scores)) == 0:
         print('Using Standard Scaler')
         return StandardScaler()
@@ -83,8 +83,8 @@ def check_lr(lr, x, y, scale):
     scores = []
     for tree in [75, 100, 125]:
         test = Pipeline([('scale',scale), ('clf',lgb.LGBMRegressor(random_state = 1108, n_estimators = tree, subsample = .8, learning_rate = lr))])
-        score = cross_val_score(test, x, y, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 86))
-        scores.append(np.mean(score))
+        score = cross_val_score(test, x, y, scoring = 'mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 86))
+        scores.append(np.mean(score) * -1)
     return scores.index(max(scores))
 
 def find_lr(start_lr, x_, y, scale):
@@ -118,9 +118,9 @@ def sample_loss_n_feats(parameters):
     feats = int(parameters[0])
     print('%s features' % (feats))
     model = Pipeline([('scale',scale), ('clf',lgb.LGBMRegressor(random_state = 1108, n_estimators = 100, subsample = .8, learning_rate = learn_rate))])
-    score = cross_val_score(model, x_data[feat_sigs[:feats]], y_data, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 1108))
-    print('----> score: %s' % np.mean(score))
-    return np.mean(score)
+    score = cross_val_score(model, x_data[feat_sigs[:feats]], y_data, scoring = 'mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 1108))
+    print('----> score: %s' % np.mean(score) * -1)
+    return np.mean(score) * -1
 
 def find_feats():
     print('Searching for best number of features')
@@ -140,9 +140,9 @@ def sample_loss_hyperparameters(parameters):
     leaves = int(parameters[3])
     sample = parameters[4]
     model = Pipeline([('scale',scale), ('clf',lgb.LGBMRegressor(random_state = 1108, n_estimators = 100, colsample_bytree = tree_sample, min_child_samples = child_samples, num_leaves = leaves, subsample = sample, max_bin = bin_max, learning_rate = new_learn_rate))])
-    score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 88))
-    print('----> score: %s' % np.mean(score))
-    return np.mean(score)
+    score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 88))
+    print('----> score: %s' % np.mean(score) * -1)
+    return np.mean(score) * -1
  
 def hyper_parameter_tuning():
     print('Searching hyper parameters')
@@ -166,14 +166,14 @@ def drop_lr(l_drop, trees):
     for trial in np.linspace(1.5, 8.5, 15):
         num_trees = trees * trial
         model_lr = Pipeline([('scale',scale), ('clf',lgb.LGBMRegressor(random_state = 1108, n_estimators = int(num_trees), colsample_bytree = colsample, min_child_samples = int(min_child), num_leaves = int(n_leaves), subsample = sub_sample, max_bin = int(bin_size), learning_rate = l_drop))])
-        lr_score = cross_val_score(model_lr, x_data[feat_sigs[:features]], y_data, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 151))
-        if np.mean(lr_score) > prev_score:
+        lr_score = cross_val_score(model_lr, x_data[feat_sigs[:features]], y_data, scoring = 'mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 151))
+        if prev_score == 0 or np.mean(lr_score) * -1 > prev_score:
             print('%s x trees IMPROVEMENT, continuing'  % (trial))
-            prev_score = np.mean(lr_score)
+            prev_score = np.mean(lr_score) * -1
             prev_trees = num_trees
         else:
             print('%s x trees NO IMPROVEMENT'  % (trial))
-            return prev_score, prev_trees
+            return prev_score * -1, prev_trees
 
 def execute(sa, od, X_data = None, Y_data = None):
     x_data = X_data
@@ -221,8 +221,8 @@ def execute(sa, od, X_data = None, Y_data = None):
     gauss_results.to_csv(os.path.join(output_folder, '%s-%s-lightgbm-results.csv'%(sa, od)))
     
     base_model = Pipeline([('scale',scale), ('clf',LinearRegression())])
-    baseline_score = cross_val_score(base_model, x_data[feat_sigs], y_data, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 86))
-    baseline_score = np.mean(baseline_score)
+    baseline_score = cross_val_score(base_model, x_data[feat_sigs], y_data, scoring = 'mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 86))
+    baseline_score = np.mean(baseline_score) * -1
     colsample, bin_size, min_child, n_leaves, score_val, sub_sample = gauss_results.sort_values('score', ascending = False)[:1].values[0]
     global colsample
     global bin_size
@@ -231,8 +231,8 @@ def execute(sa, od, X_data = None, Y_data = None):
     global sub_sample
     
     tune_model = Pipeline([('scale',scale), ('clf',lgb.LGBMRegressor(random_state = 1108, n_estimators = 100, colsample_bytree = colsample, min_child_samples = int(min_child), num_leaves = int(n_leaves), subsample = sub_sample, max_bin = int(bin_size), learning_rate = new_learn_rate))])    
-    tune_score = cross_val_score(tune_model, x_data[feat_sigs[:features]], y_data, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 86))
-    tune_score = np.mean(tune_score)        
+    tune_score = cross_val_score(tune_model, x_data[feat_sigs[:features]], y_data, scoring = 'mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 86))
+    tune_score = np.mean(tune_score) * -1
         
     lr_drop = new_learn_rate
     trees_drop = 100
@@ -240,7 +240,7 @@ def execute(sa, od, X_data = None, Y_data = None):
     dropped_score_val = score_val
     improvement = 0
     if type(baseline_score) is np.float64:
-        improvement = (tune_score - baseline_score)/baseline_score
+        improvement = (tune_score - baseline_score)/(baseline_score * -1)
         print('%s percent improvement from baseline, dropping learning rate' % (improvement * 100))
     
     while improvement >= 0 and trees_drop <= 5000:
@@ -267,9 +267,16 @@ def execute(sa, od, X_data = None, Y_data = None):
         
     print('--- Finalizing Light GBM model')    
     model_lr = Pipeline([('scale',scale), ('clf',lgb.LGBMRegressor(random_state = 1108, n_estimators = int(trees_drop), colsample_bytree = colsample, min_child_samples = int(min_child), num_leaves = int(n_leaves), subsample = sub_sample, max_bin = int(bin_size), learning_rate = lr_drop))])
-    tune_score = cross_val_score(model_lr, x_data[feat_sigs[:features]], y_data, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 151))
+    tune_score = cross_val_score(model_lr, x_data[feat_sigs[:features]], y_data, scoring = 'mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 151))
     print('...Light GBM finalized')
     tune_score = np.mean(tune_score)
+
+#    tune_mse = cross_val_score(model_lr, x_data[feat_sigs[:features]], y_data, scoring = 'mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 88))
+#    f = open(os.path.join(output_folder, '%s-%s-lightgbm.txt'%(sa, od)), 'a')
+#    f.write('mse: %s,'% (np.mean(tune_mse)))
+#    f.close()
+#    print('MSE = %s' (np.mean(tune_mse)))
+    
     improvement = (tune_score - baseline_score)/baseline_score
     if improvement < 0:
         f = open(os.path.join(output_folder, '%s-%s-lightgbm.txt'%(sa, od)), 'a')
