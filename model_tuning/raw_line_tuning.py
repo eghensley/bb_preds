@@ -156,20 +156,28 @@ x_cols = ['20_game_avg_30_g_HAweight_allow_fta-per-fga',
 '-20_game_avg_50_g_Tweight_for_block-pct']
 y_data = pull_data.line_wl(update_dbs.mysql_client())
 all_data = data.join(y_data, how = 'inner')
+line_preds = pull_data.line_preds(update_dbs.mysql_client())
+all_data = all_data.join(line_preds, how = 'inner')
 y_data = np.ravel(all_data[['line']])
+for pred in list(line_preds):
+    x_cols.append(pred)
 x_data_stable = all_data[x_cols]
 
 
+import linsvc_tuning
 import lgclass_tuning
-import log_tuning
-import knn_tuning
+#import log_tuning
+#import knn_tuning
 x_vals = 'raw'
 y_val = 'line'
 
 
-
 x_data = x_data_stable   
 result = lgclass_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
+print("Best %s %s score: %s" % (x_vals, y_val, result)) 
+
+x_data = x_data_stable   
+result = linsvc_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
 print("Best %s %s score: %s" % (x_vals, y_val, result)) 
 
 #x_data = x_data_stable   

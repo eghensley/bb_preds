@@ -31,7 +31,7 @@ def aggregate_weighted_ha(index, fa, stats, date_from):
         for key in use_stat.keys():
             weighted_ha_data[key]['stats']['%s_g_HAweight_%s_%s' % (num[0], fa, stat[0])] = use_stat[key]['%s_g_HAweight_%s_%s' % (num[0], fa, stat[0])]
         use_stat = None
-        print('finished compiling %.2f game home field weighted %s' %(num[0], stat[0]))
+        print('finished compiling %s game home field weighted %s' %(num[0], stat[0]))
     return weighted_ha_data
 
 def aggregate_weighted_team(fa, weighted_team_data, stats, date_from):
@@ -49,7 +49,7 @@ def aggregate_weighted_team(fa, weighted_team_data, stats, date_from):
         for key in use_stat.keys():
             weighted_team_data[key]['stats']['%s_g_Tweight_%s_%s' % (num[0], fa, stat[0])] = use_stat[key]['%s_g_Tweight_%s_%s' % (num[0], fa, stat[0])]
         use_stat = None
-        print('finished compiling %.2f game team weighted %s' %(num[0], stat[0]))
+        print('finished compiling %s game team weighted %s' %(num[0], stat[0]))
     return weighted_team_data
 
 def aggregate_hfa_spread(index, fa, stats, date_from):
@@ -71,7 +71,7 @@ def aggregate_hfa_spread(index, fa, stats, date_from):
         for key in use_stat.keys():
             ha_spread_data[key]['stats']['%s_g_HAspread_%s_%s' % (num, fa, stat)] = use_stat[key]['%s_g_HAspread_%s_%s' % (num, fa, stat)]
         use_stat = None
-        print('finished compiling %.2f home field (dis)advantage for %s' %(num, stat))
+        print('finished compiling %s home field (dis)advantage for %s' %(num, stat))
     return ha_spread_data
     
 def insert(od, sa, client, mysql_client):

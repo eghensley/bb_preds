@@ -21,6 +21,8 @@ import pull_data
 import update_dbs
 import numpy as np
 import pandas as pd
+import polysvc_tuning
+import rbfsvc_tuning
 
 def hfa_patch(x, cnx):
     print('Running HFA Patch')
@@ -158,27 +160,43 @@ x_cols = ['expected_effective-field-goal-pct_for',
 '-30_game_avg_25_g_Tweight_allow_points-per-game',
 '-25_g_HAspread_allow_possessions-per-game']
 y_data = pull_data.ou_wl(update_dbs.mysql_client())
+ou_preds = pull_data.ou_preds(update_dbs.mysql_client())
 all_data = data.join(y_data, how = 'inner')
-y_data = np.ravel(all_data[['line']])
+all_data = all_data.join(ou_preds, how = 'inner')
+y_data = np.ravel(all_data[['ou']])
+for pred in list(ou_preds):
+    x_cols.append(pred)
 x_data_stable = all_data[x_cols]
-
-
-import lgclass_tuning
-import log_tuning
-import knn_tuning
+    
+#import linsvc_tuning
+#import lgclass_tuning
+#import log_tuning
+#import knn_tuning
 x_vals = 'raw'
 y_val = 'ou'
 
-
 #
+#x_data = x_data_stable   
+#result = polysvc_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
+#print("Best %s %s score: %s" % (x_vals, y_val, result))  
+
+x_data = x_data_stable   
+result = rbfsvc_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
+print("Best %s %s score: %s" % (x_vals, y_val, result))  
+
+
 #x_data = x_data_stable   
 #result = lgclass_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
 #print("Best %s %s score: %s" % (x_vals, y_val, result)) 
+#
+#x_data = x_data_stable   
+#result = linsvc_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
+#print("Best %s %s score: %s" % (x_vals, y_val, result)) 
 
-x_data = x_data_stable   
-result = knn_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
-print("Best %s %s score: %s" % (x_vals, y_val, result))
- 
-x_data = x_data_stable   
-result = log_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
-print("Best %s %s score: %s" % (x_vals, y_val, result))  
+#x_data = x_data_stable   
+#result = knn_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
+#print("Best %s %s score: %s" % (x_vals, y_val, result))
+# 
+#x_data = x_data_stable   
+#result = log_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
+#print("Best %s %s score: %s" % (x_vals, y_val, result))  

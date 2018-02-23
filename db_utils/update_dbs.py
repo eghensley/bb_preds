@@ -16,6 +16,8 @@ import _config
 from pymongo import MongoClient
 import mysql.connector 
 import fourfeats_elo
+import derived_insert
+import vegas_pred_insert
 
 def mysql_client():
     sql = mysql.connector.connect(user='root', password=_config.mysql_creds,host='127.0.0.1',database='ncaa_bb')
@@ -34,6 +36,8 @@ def run():
             mongodb_weighted_stat_insert.insert(od, sa, mongodb_client, mysql_client())
             mongo_stat_insert.update(od, sa, mongodb_client)
     fourfeats_elo.update(mongodb_client, mysql_client())  
-        
+    derived_insert.update()
+    vegas_pred_insert.update()
+    
 if __name__ == '__main__':
     run()

@@ -107,7 +107,7 @@ def execute(sa, od, X_data = None, Y_data = None):
     f.close()
 
 #    scale = MinMaxScaler()
-#    leaf_, n_ = int(198), int(100) 
+#    leaf_, n_ = int(66), int(128) 
 #    global scale
 #    global leaf_
 #    global n_    

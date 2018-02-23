@@ -39,20 +39,21 @@ x_cols = list(x_data_stable)
 x_cols.remove('+pts')
 x_cols.remove('+possessions')
 x_cols.remove('-possessions')
-y_data = pull_data.pull_wl(update_dbs.mysql_client())
-y_data = x_data_stable.join(y_data, how = 'inner')['outcome']
+y_data_stable = pull_data.pull_wl(update_dbs.mysql_client())
+alldata = y_data_stable.join(x_data_stable, how = 'inner')
+y_data = alldata['outcome']
 
-#x_data = x_data_stable   
+#x_data = x_data_stable.join(y_data_stable, how = 'inner')[x_cols]   
 #result = lgclass_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
 #print("Best %s %s score: %s" % (x_vals, y_val, result)) 
 
-x_data = x_data_stable   
+x_data = x_data_stable[x_cols]   
 result = knn_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
 print("Best %s %s score: %s" % (x_vals, y_val, result))
-# 
-#x_data = x_data_stable   
-#result = log_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
-#print("Best %s %s score: %s" % (x_vals, y_val, result))  
+ 
+x_data = x_data_stable[x_cols]   
+result = log_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
+print("Best %s %s score: %s" % (x_vals, y_val, result))  
 
 #x_data = x_data_stable   
 #result = polysvc_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
@@ -61,8 +62,8 @@ print("Best %s %s score: %s" % (x_vals, y_val, result))
 #x_data = x_data_stable   
 #result = rbfsvc_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
 #print("Best %s %s score: %s" % (x_vals, y_val, result))  
-#
-#x_data = x_data_stable   
+
+#x_data = x_data_stable.join(y_data, how = 'inner')[x_cols]   
 #result = linsvc_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
 #print("Best %s %s score: %s" % (x_vals, y_val, result))               
 

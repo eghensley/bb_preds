@@ -11,7 +11,7 @@ sys.path.insert(-1, os.path.join(cur_path, 'model_tuning'))
 
 output_folder = os.path.join(cur_path, 'model_results')
 features_folder = os.path.join(cur_path, 'feature_dumps')
-derived_folder = os.path.join(cur_path, 'derived_data')
+model_storage = os.path.join(cur_path, 'saved_models')
 
 import numpy as np
 import pull_data
@@ -171,12 +171,12 @@ y_ou = None
 y_line = None
 x_line = None
 random.seed(86)
-for sort in ['winner', 'line', 'ou']:
+for sort in ['ou']: #'winner', 'line', 
     print('... starting %s' % (sort))
     f = open(os.path.join(output_folder, 'classification_scoring.txt'), 'a')
     f.write('-- %s \n' % (sort))
     f.close()
-    for kind in ['+pts', 'raw']:
+    for kind in ['raw']: #'+pts', 
         print('... starting %s' % (kind))
         for model_name, model_details in saved_models.stored_models[sort][kind].items():
             print('Scoring %s'%(model_name))

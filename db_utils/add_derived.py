@@ -8,20 +8,18 @@ while cur_path.split('/')[-1] != 'bb_preds':
 sys.path.insert(-1, os.path.join(cur_path, 'model_conf'))
 sys.path.insert(-1, os.path.join(cur_path, 'db_utils'))
 sys.path.insert(-1, os.path.join(cur_path, 'model_tuning'))
-derived_folder = os.path.join(cur_path, 'derived_data')
-import pandas as pd
 import update_dbs
 import numpy as np
-cnx = update_dbs.mysql_client()
 
-for name in ['offensive_preds', 'defensive_preds']:
-    data = pd.read_csv(os.path.join(derived_folder, '%s.csv'%(name)))
+def update(name, data):
+#    name, data = 'offensive_preds', update_df
+    cnx = update_dbs.mysql_client()
     cursor = cnx.cursor() 
     insertlist = []
     continuance = 0
-    for entry in np.array(data):
+    for idx, entry in zip(list(data.index), np.array(data)):
         insert = list(entry)
-        idx = insert[0]
+#        idx = insert[0]
         date = '"'+idx[:10]+'"'
         tname = '"'+idx[10:].replace('_', ' ')+'"'
         insert = insert[1:]
@@ -34,6 +32,7 @@ for name in ['offensive_preds', 'defensive_preds']:
         insertlist.append(sql_insert)
         continuance += 1
         if continuance == 500:
+            break
             insertlist = ', '.join(insertlist)
             oddslist = ['INSERT INTO %s VALUES '%(name), insertlist, ';']
             initialoddsinsert = ' '.join(oddslist)  
@@ -48,3 +47,17 @@ for name in ['offensive_preds', 'defensive_preds']:
             cursor.execute('SET foreign_key_checks = 1;')
             insertlist = []
             continuance = 0
+    insertlist = ', '.join(insertlist)
+    oddslist = ['INSERT INTO %s VALUES '%(name), insertlist, ';']
+    initialoddsinsert = ' '.join(oddslist)  
+    add_odds = initialoddsinsert  
+    cursor.execute('SET foreign_key_checks = 0;')
+    try:
+        cursor.execute(add_odds)
+        cnx.commit()
+        print(entry)
+    except:
+        pass
+    cursor.execute('SET foreign_key_checks = 1;')
+    insertlist = []
+    continuance = 0

@@ -1,0 +1,4 @@
+Width-0.5_depth-1_model: 
+ logloss 0.6931, Accuracy 0.5057 
+Width-0.5_depth-2_model: 
+ logloss 0.6931, Accuracy 0.5057 

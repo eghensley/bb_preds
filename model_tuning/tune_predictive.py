@@ -22,7 +22,7 @@ train_index = pull_data.pull_train_index(update_dbs.mysql_client())
 random.seed(86)
 random.shuffle(train_index)
 derived_data = {}
-
+cnx = update_dbs.mysql_client()
 x_vals = 'predictive'
 y_val = '+pts'
 x_data_stable = pull_data.score(update_dbs.mysql_client())

@@ -24,7 +24,7 @@ def test_scaler(x, y):
     scores = []
     for scale in [StandardScaler(), MinMaxScaler(), RobustScaler()]:
         pipe = Pipeline([('scale',scale), ('clf',SVC(random_state = 1108, kernel = 'rbf', degree = 2))])
-        score = cross_val_score(pipe, x, y, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 46), n_jobs = -1)
+        score = cross_val_score(pipe, x, y, scoring = 'accuracy' ,cv = KFold(n_splits = 3, random_state = 46))
         scores.append(np.mean(score))
     if scores.index(max(scores)) == 0:
         print('Using Standard Scaler')
@@ -40,7 +40,7 @@ def sample_loss_n_feats(parameters):
     feats = int(parameters[0])
     print('%s features' % (feats))
     model = Pipeline([('scale',scale),  ('clf',SVC(random_state = 1108, C = C_, kernel = 'rbf', gamma = g_))])
-    score = cross_val_score(model, x_data[feat_sigs[:feats]], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 1108), n_jobs = -1)
+    score = cross_val_score(model, x_data[feat_sigs[:feats]], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 5, random_state = 1108))
     print('----> score: %s' % np.mean(score))
     return np.mean(score)
 
@@ -58,7 +58,7 @@ def find_feats():
 def sample_loss_c(parameters):
     c = 10**parameters[0]
     model = Pipeline([('scale',scale), ('clf',SVC(random_state = 1108, C = c, kernel = 'rbf', gamma = g_))])
-    score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 88), n_jobs = -1)
+    score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 5, random_state = 88))
     print('----> score: %s' % np.mean(score))
     return np.mean(score)
  
@@ -75,13 +75,13 @@ def c_tuning():
 def sample_loss_gamma(parameters):
     g = parameters[0]
     model = Pipeline([('scale',scale), ('clf',SVC(random_state = 1108, C = C_, kernel = 'rbf', gamma = g))])
-    score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 88), n_jobs = -1)
+    score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 5, random_state = 88))
     print('----> score: %s' % np.mean(score))
     return np.mean(score)
  
 def gamma_tuning():
     print('-- Beginning C Search')
-    bounds = np.array([[-3, 3]])
+    bounds = np.array([[0, 1]])
     results = bayesian_optimisation(n_iters=5,  
                           sample_loss=sample_loss_gamma, 
                           bounds=bounds,
@@ -156,11 +156,11 @@ def execute(sa, od, X_data = None, Y_data = None):
           
     print('---Finalizing Linear SVC Model')
     model = Pipeline([('scale',scale), ('clf',SVC(random_state = 1108, C = C_, kernel = 'rbf', gamma = g_))])                    
-    tune_score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 88), n_jobs = -1)
+    tune_score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 5, random_state = 88))
     print('...Linear SVC Model Finalized')
     tune_score = np.mean(tune_score)
     base_model = Pipeline([('scale',scale), ('clf',GaussianNB())])
-    baseline_score = cross_val_score(base_model, x_data[feat_sigs], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 10, random_state = 86), n_jobs = -1)
+    baseline_score = cross_val_score(base_model, x_data[feat_sigs], y_data, scoring = 'accuracy' ,cv = KFold(n_splits = 5, random_state = 88))
     baseline_score = np.mean(baseline_score)
     improvement = (tune_score - baseline_score)/baseline_score
     print('%s percent improvement from baseline' % (improvement * 100))

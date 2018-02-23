@@ -1,0 +1,76 @@
+Starting Keras Analysis...Baseline: -0.310398824472, 0.0236003173978.  Scaler: MinMaxScaler(copy=True, feature_range=(0, 1))  
+Starting Keras Analysis... 
+StandardScaler(copy=True, with_mean=True, with_std=True): -0.731201204644.  MinMaxScaler(copy=True, feature_range=(0, 1)): -0.694605718196.  RobustScaler(copy=True, quantile_range=(25.0, 75.0), with_centering=True,
+       with_scaling=True): -0.694605718196.  Scaler: MinMaxScaler(copy=True, feature_range=(0, 1))  
+Starting Keras Analysis... 
+Starting Keras Analysis... 
+Starting Keras Analysis... 
+Width-1.0_depth-1_model: 
+ logloss 0.6928, Accuracy 0.5087 
+Width-1.0_depth-2_model: 
+ logloss 0.6931, Accuracy 0.5001 
+Width-1.0_depth-3_model: 
+ logloss 0.6932, Accuracy 0.5001 
+Starting Keras Analysis... 
+Width-1.33_depth-0_model: 
+ logloss 0.6999, Accuracy 0.5241 
+Width-1.665_depth-0_model: 
+ logloss 0.7054, Accuracy 0.5229 
+Width-2.0_depth-0_model: 
+ logloss 0.7099, Accuracy 0.5248 
+Starting Keras Analysis... 
+Width-500_depth-64_model: 
+ logloss 0.7268, Accuracy 0.5225 
+Starting Keras Analysis... 
+Width-1.0_depth-0_model: 
+ logloss 0.6985, Accuracy 0.5132 
+Width-1.0_depth-0_model: 
+ logloss 0.7003, Accuracy 0.5147 
+Width-1.5_depth-0_model: 
+ logloss 0.7037, Accuracy 0.5183 
+Width-1.5_depth-0_model: 
+ logloss 0.7039, Accuracy 0.5232 
+Width-2.0_depth-0_model: 
+ logloss 0.7088, Accuracy 0.5229 
+Width-2.0_depth-0_model: 
+ logloss 0.7087, Accuracy 0.5256 
+Starting Keras Analysis... 
+Width-2_depth-1_model: 
+ logloss 0.7055, Accuracy 0.5318 
+Width-2_depth-2_model: 
+ logloss 0.7006, Accuracy 0.5307 
+Width-2_depth-3_model: 
+ logloss 0.6994, Accuracy 0.5304 
+Width-2.5_depth-1_model: 
+ logloss 0.7040, Accuracy 0.5410 
+Width-2.5_depth-2_model: 
+ logloss 0.7037, Accuracy 0.5357 
+Width-2.5_depth-3_model: 
+ logloss 0.7018, Accuracy 0.5351 
+Starting Keras Analysis... 
+Width-RMSProp_depth-3_model: 
+ logloss 0.7001, Accuracy 0.5300 
+Width-Adagrad_depth-3_model: 
+ logloss 0.6919, Accuracy 0.5280 
+Width-Adadelta_depth-3_model: 
+ logloss 0.7048, Accuracy 0.5332 
+Width-Adamax_depth-3_model: 
+ logloss 0.6981, Accuracy 0.5318 
+Width-Adam_depth-3_model: 
+ logloss 0.7023, Accuracy 0.5322 
+Starting Keras Analysis... 
+Width-0.1_depth-1_model: 
+ logloss 0.7153, Accuracy 0.5253 
+Width-0.2_depth-1_model: 
+ logloss 0.6998, Accuracy 0.5306 
+Width-0.3_depth-1_model: 
+ logloss 0.6959, Accuracy 0.5224 
+Width-0.4_depth-1_model: 
+ logloss 0.6929, Accuracy 0.5233 
+Starting Keras Analysis... 
+Width-0.3_depth-1_model: 
+ logloss 0.6931, Accuracy 0.5272 
+Width-0.4_depth-1_model: 
+ logloss 0.6910, Accuracy 0.5274 
+Width-0.5_depth-1_model: 
+ logloss 0.6905, Accuracy 0.5214 

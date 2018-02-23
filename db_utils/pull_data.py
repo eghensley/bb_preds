@@ -1,6 +1,21 @@
 import pandas as pd
 import numpy as np
 
+def update_idx(cnx, db):
+    cursor = cnx.cursor()
+    query = "SELECT max(date) FROM ncaa_bb.%s;" % (db)
+    cursor.execute(query)
+    update = cursor.fetchall()
+    cursor = cnx.cursor()
+    query = 'select date, teamname from gamedata where date > "%s"' % (str(update[0][0]))
+    print(query)
+    cursor.execute(query)
+    indexdata = pd.DataFrame(cursor.fetchall(), columns = ['date', 'name'])
+    idx = []
+    for d,n in np.array(indexdata):
+        idx.append(str(d)+n.replace(' ','_'))
+    return idx
+
 def pull_possessions(od, cnx): 
     print('Loading Possession Data')
     if od == 'pts_scored':

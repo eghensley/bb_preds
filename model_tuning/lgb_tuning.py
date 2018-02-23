@@ -269,7 +269,7 @@ def execute(sa, od, X_data = None, Y_data = None):
     model_lr = Pipeline([('scale',scale), ('clf',lgb.LGBMRegressor(random_state = 1108, n_estimators = int(trees_drop), colsample_bytree = colsample, min_child_samples = int(min_child), num_leaves = int(n_leaves), subsample = sub_sample, max_bin = int(bin_size), learning_rate = lr_drop))])
     tune_score = cross_val_score(model_lr, x_data[feat_sigs[:features]], y_data, scoring = 'neg_mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 151))
     print('...Light GBM finalized')
-    tune_score = np.mean(tune_score)z
+    tune_score = np.mean(tune_score)
     improvement = (tune_score - baseline_score)/baseline_score
     if improvement < 0:
         f = open(os.path.join(output_folder, '%s-%s-lightgbm.txt'%(sa, od)), 'a')

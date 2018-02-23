@@ -47,17 +47,17 @@ y_data = np.ravel(all_data[['ou']])
 x_data_stable = all_data[x_cols]
 
 
-#x_data = x_data_stable   
-#result = lgclass_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
-#print("Best %s %s score: %s" % (x_vals, y_val, result)) 
+x_data = x_data_stable   
+result = lgclass_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
+print("Best %s %s score: %s" % (x_vals, y_val, result)) 
 
-x_data = x_data_stable   
-result = knn_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
-print("Best %s %s score: %s" % (x_vals, y_val, result))
- 
-x_data = x_data_stable   
-result = log_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
-print("Best %s %s score: %s" % (x_vals, y_val, result))  
+#x_data = x_data_stable   
+#result = knn_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
+#print("Best %s %s score: %s" % (x_vals, y_val, result))
+# 
+#x_data = x_data_stable   
+#result = log_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
+#print("Best %s %s score: %s" % (x_vals, y_val, result))  
 
 #x_data = x_data_stable   
 #result = polysvc_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
@@ -67,9 +67,9 @@ print("Best %s %s score: %s" % (x_vals, y_val, result))
 #result = rbfsvc_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
 #print("Best %s %s score: %s" % (x_vals, y_val, result))  
 #
-#x_data = x_data_stable   
-#result = linsvc_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
-#print("Best %s %s score: %s" % (x_vals, y_val, result))               
+x_data = x_data_stable   
+result = linsvc_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
+print("Best %s %s score: %s" % (x_vals, y_val, result))               
 
 
 #for each in [('combined', 'pts')]:

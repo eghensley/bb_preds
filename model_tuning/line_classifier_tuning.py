@@ -43,21 +43,21 @@ x_cols.remove('+possessions')
 x_cols.remove('-possessions')
 y_data = pull_data.line_wl(update_dbs.mysql_client())
 all_data = x_data_stable.join(y_data, how = 'inner')
-y_data = np.ravel(all_data[['outcome']])
+y_data = np.ravel(all_data[['line']])
 x_data_stable = all_data[x_cols]
 
 
-#x_data = x_data_stable   
-#result = lgclass_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
-#print("Best %s %s score: %s" % (x_vals, y_val, result)) 
+x_data = x_data_stable   
+result = lgclass_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
+print("Best %s %s score: %s" % (x_vals, y_val, result)) 
 
-x_data = x_data_stable   
-result = knn_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
-print("Best %s %s score: %s" % (x_vals, y_val, result))
- 
-x_data = x_data_stable   
-result = log_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
-print("Best %s %s score: %s" % (x_vals, y_val, result))  
+#x_data = x_data_stable   
+#result = knn_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
+#print("Best %s %s score: %s" % (x_vals, y_val, result))
+# 
+#x_data = x_data_stable   
+#result = log_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
+#print("Best %s %s score: %s" % (x_vals, y_val, result))  
 
 #x_data = x_data_stable   
 #result = polysvc_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)

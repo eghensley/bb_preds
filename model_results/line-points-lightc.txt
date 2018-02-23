@@ -1,0 +1,2 @@
+scale: RobustScaler(copy=True, quantile_range=(25.0, 75.0), with_centering=True,
+       with_scaling=True),start lr: 0.12,start n feats: 13,significant features: lasso_line, +linsvm_possessions, tsvd_line, pca_line, -lasso_possessions, +lasso_possessions, lightgbm_line, +ridge_target, -lasso_target, -ridge_possessions, +linsvm_all, -lasso_team, +linsvm_team, trees: 225.0,lr: 0.03,final score: 0.517320261438,

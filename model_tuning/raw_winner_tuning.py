@@ -152,7 +152,7 @@ all_data = data.join(y_data, how = 'inner')
 y_data = np.ravel(all_data[['outcome']])
 x_data_stable = all_data[x_cols]
 
-import rbfsvc_tuning
+import linsvc_tuning
 import lgclass_tuning
 import log_tuning
 import knn_tuning
@@ -161,14 +161,14 @@ y_val = 'winner'
 
 
 #
-#x_data = x_data_stable   
-#result = rbfsvc_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
-#print("Best %s %s score: %s" % (x_vals, y_val, result)) 
+x_data = x_data_stable   
+result = lgclass_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
+print("Best %s %s score: %s" % (x_vals, y_val, result)) 
 
 x_data = x_data_stable   
-result = knn_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
+result = linsvc_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
 print("Best %s %s score: %s" % (x_vals, y_val, result))
- 
-x_data = x_data_stable   
-result = log_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
-print("Best %s %s score: %s" % (x_vals, y_val, result))  
+# 
+#x_data = x_data_stable   
+#result = log_tuning.execute(y_val, x_vals, X_data = x_data, Y_data = y_data)
+#print("Best %s %s score: %s" % (x_vals, y_val, result))  
