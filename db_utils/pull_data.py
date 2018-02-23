@@ -206,6 +206,39 @@ def score(cnx):
     data = data.dropna(how = 'any')
     return data
 
+def share(cnx):
+    off_data = points(cnx, 'offense')
+    off_poss = pace(cnx, 'offense')
+    off_data = off_data.join(off_poss, how = 'inner')
+    off_data = off_data.rename(columns = {i:'+'+i for i in list(off_data)})
+    def_data = points(cnx, 'defense')
+    def_poss = pace(cnx, 'defense')
+    def_data = def_data.join(def_poss, how = 'inner')
+    def_data = def_data.rename(columns = {i:'-'+i for i in list(def_data)})
+#    del def_data['-pts']
+    def_data *= -1
+    cursor = cnx.cursor()
+    query = 'SELECT * from gamedata;'
+    cursor.execute(query)
+    data = pd.DataFrame(cursor.fetchall(), columns = ['teamname', 'date', 'opponent', 'location'])
+    idx_switch = {}
+    for t,d,o,l in np.array(data):
+        idx_switch[str(d)+t.replace(' ', '_')] = str(d)+o.replace(' ', '_')
+    idx = []
+    for idxx in def_data.index:
+        idx.append(idx_switch[idxx])
+    def_data['idx'] = idx
+    def_data = def_data.set_index('idx')
+    data = def_data.join(off_data) 
+    
+    data['share'] = data['+pts']/(data['+pts'] - data['-pts'])
+    del data['+pts']
+    del data['-pts']
+    data = data.replace([np.inf, -np.inf], np.nan)
+    data = data.replace('NULL', np.nan)
+    data = data.dropna(how = 'any')
+    return data
+
 def line(cnx):
     import vegas_watson
     import bb_odds

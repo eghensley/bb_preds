@@ -60,11 +60,12 @@ def hfa_patch(x, cnx):
     return x
 
 def test_scaler(x, y):
+#    x, y = x_data, y_data
     print('Searching for best scaler...')
     scores = []
     for scale in [StandardScaler(), MinMaxScaler(), RobustScaler()]:
         pipe = Pipeline([('scale',scale), ('clf',LinearSVR(random_state = 1108, epsilon=0))])
-        score = cross_val_score(pipe, x, y, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 46))
+        score = cross_val_score(pipe, x, y, scoring = 'neg_mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 46))
         scores.append(np.mean(score))
     if scores.index(max(scores)) == 0:
         print('Using Standard Scaler')
@@ -80,7 +81,7 @@ def sample_loss_n_feats(parameters):
     feats = int(parameters[0])
     print('%s features' % (feats))
     model = Pipeline([('scale',scale),  ('clf',LinearSVR(random_state = 1108, C = C_, epsilon=0))])
-    score = cross_val_score(model, x_data[feat_sigs[:feats]], y_data, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 1108))
+    score = cross_val_score(model, x_data[feat_sigs[:feats]], y_data, scoring = 'neg_mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 1108))
     print('----> score: %s' % np.mean(score))
     return np.mean(score)
 
@@ -98,14 +99,14 @@ def find_feats():
 def sample_loss_c(parameters):
     c = 10**parameters[0]
     model = Pipeline([('scale',scale), ('clf',LinearSVR(random_state = 1108, C = c, epsilon=0))])
-    score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 88))
+    score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'neg_mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 88))
     print('----> score: %s' % np.mean(score))
     return np.mean(score)
  
 def c_tuning():
     print('-- Beginning C Search')
-    bounds = np.array([[-3, 3]])
-    results = bayesian_optimisation(n_iters=5,  
+    bounds = np.array([[-3, -1]])
+    results = bayesian_optimisation(n_iters=10,  
                           sample_loss=sample_loss_c, 
                           bounds=bounds,
                           gp_params = {'kernel': Matern(), 'alpha': 1e-5, 'n_restarts_optimizer': 10, 'normalize_y': True})
@@ -162,11 +163,11 @@ def execute(sa, od, X_data = None, Y_data = None):
     
     print('---Finalizing Linear SVM Model')
     model = Pipeline([('scale',scale), ('clf',LinearSVR(random_state = 1108, C = C_, epsilon=0))])                    
-    tune_score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 88))
+    tune_score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'neg_mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 88))
     print('...Linear SVM Model Finalized')
     tune_score = np.mean(tune_score)
     base_model = Pipeline([('scale',scale), ('clf',LinearRegression())])
-    baseline_score = cross_val_score(base_model, x_data[feat_sigs], y_data, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 86))
+    baseline_score = cross_val_score(base_model, x_data[feat_sigs], y_data, scoring = 'neg_mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 86))
     baseline_score = np.mean(baseline_score)
     improvement = (tune_score - baseline_score)/baseline_score
     print('%s percent improvement from baseline' % (improvement * 100))
