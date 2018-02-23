@@ -63,8 +63,8 @@ def test_scaler(x, y):
     scores = []
     for scale in [StandardScaler(), MinMaxScaler(), RobustScaler()]:
         pipe = Pipeline([('scale',scale), ('clf',Ridge(random_state = 1108))])
-        score = cross_val_score(pipe, x, y, scoring = 'mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 46))
-        scores.append(np.mean(score) * -1)
+        score = cross_val_score(pipe, x, y, scoring = 'neg_mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 46))
+        scores.append(np.mean(score))
     if scores.index(max(scores)) == 0:
         print('Using Standard Scaler')
         return StandardScaler()
@@ -79,9 +79,9 @@ def sample_loss_n_feats(parameters):
     feats = int(parameters[0])
     print('%s features' % (feats))
     model = Pipeline([('scale',scale),  ('clf',Ridge(random_state = 1108, solver = solver_, alpha = alpha_))])
-    score = cross_val_score(model, x_data[feat_sigs[:feats]], y_data, scoring = 'mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 1108))
-    print('----> score: %s' % np.mean(score) * -1)
-    return np.mean(score) * -1
+    score = cross_val_score(model, x_data[feat_sigs[:feats]], y_data, scoring = 'neg_mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 1108))
+    print('----> score: %s' % np.mean(score))
+    return np.mean(score)
 
 def find_feats():
     print('Searching for best number of features...')
@@ -99,8 +99,8 @@ def test_solver(x, y):
     scores = []
     for slvr in ['svd', 'cholesky', 'lsqr', 'sparse_cg', 'sag', 'saga']:
         pipe = Pipeline([('scale',scale), ('clf',Ridge(random_state = 1108, solver = slvr, alpha = alpha_))])
-        score = cross_val_score(pipe, x, y, scoring = 'explained_variance' ,cv = KFold(n_splits = 10, random_state = 86))
-        scores.append(np.mean(score) * -1)
+        score = cross_val_score(pipe, x, y, scoring = 'neg_mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 86))
+        scores.append(np.mean(score))
     if scores.index(max(scores)) == 0:
         print('Using svd')
         return 'svd'
@@ -123,9 +123,9 @@ def test_solver(x, y):
 def sample_loss_alpha(parameters):
     alph = 10**parameters[0]
     model = Pipeline([('scale',scale), ('clf',Ridge(random_state = 1108, solver = solver_, alpha = alph))])
-    score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 88))
-    print('----> score: %s' % np.mean(score) * -1)
-    return np.mean(score) * -1
+    score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'neg_mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 88))
+    print('----> score: %s' % np.mean(score))
+    return np.mean(score)
  
 def alpha_tuning():
     print('-- Beginning Alpha Search')
@@ -197,19 +197,12 @@ def execute(sa, od, X_data = None, Y_data = None):
     
     print('---Finalizing Ridge Model')
     model = Pipeline([('scale',scale), ('clf',Ridge(random_state = 1108, solver = solver_, alpha = alpha_))])                    
-    tune_score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 88))
+    tune_score = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'neg_mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 88))
     print('...Ridge Model Finalized')
-    
-#    tune_mse = cross_val_score(model, x_data[feat_sigs[:features]], y_data, scoring = 'mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 88))
-#    f = open(os.path.join(output_folder, '%s-%s-ridge.txt'%(sa, od)), 'a')
-#    f.write('mse: %s,'% (np.mean(tune_mse)))
-#    f.close()
-#    print('MSE = %s' (np.mean(tune_mse)))
-    
-    tune_score = np.mean(tune_score) * -1
+    tune_score = np.mean(tune_score)
     base_model = Pipeline([('scale',scale), ('clf',LinearRegression())])
-    baseline_score = cross_val_score(base_model, x_data[feat_sigs], y_data, scoring = 'mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 86))
-    baseline_score = np.mean(baseline_score) * -1
+    baseline_score = cross_val_score(base_model, x_data[feat_sigs], y_data, scoring = 'neg_mean_squared_error' ,cv = KFold(n_splits = 10, random_state = 86))
+    baseline_score = np.mean(baseline_score)
     improvement = (tune_score - baseline_score)/baseline_score
     print('%s percent improvement from baseline' % (improvement * 100))
     if improvement < 0:
