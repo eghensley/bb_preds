@@ -214,8 +214,12 @@ def share(cnx):
     def_data = points(cnx, 'defense')
     def_poss = pace(cnx, 'defense')
     def_data = def_data.join(def_poss, how = 'inner')
+    off_pts_allowed = off_data['+pts']
+    def_data = def_data.join(off_pts_allowed, how = 'inner')
     def_data = def_data.rename(columns = {i:'-'+i for i in list(def_data)})
-#    del def_data['-pts']
+    del def_data['-pts']    
+
+#    off_pts_allowed = off_pts_allowed.rename(columns = {'+pts':'-pts'})
     def_data *= -1
     cursor = cnx.cursor()
     query = 'SELECT * from gamedata;'
@@ -231,9 +235,9 @@ def share(cnx):
     def_data = def_data.set_index('idx')
     data = def_data.join(off_data) 
     
-    data['share'] = data['+pts']/(data['+pts'] - data['-pts'])
+    data['share'] = data['+pts']/(data['+pts'] - data['-+pts'])
     del data['+pts']
-    del data['-pts']
+    del data['-+pts']
     data = data.replace([np.inf, -np.inf], np.nan)
     data = data.replace('NULL', np.nan)
     data = data.dropna(how = 'any')
