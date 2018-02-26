@@ -41,7 +41,12 @@ stored_models = {
                         'features': ['+rest', '+ridge_all', '-lightgbm_all', '-ridge_all', '-rest', '-lasso_team', '+lightgbm_possessions', '+lasso_target', '+linsvm_all', '-lasso_target', '+linsvm_team', '+lasso_possessions', '-lasso_possessions', '+linsvm_target', '-lightgbm_team', '-linsvm_team', '-lightgbm_possessions', '-ridge_possessions', '+lightgbm_target', '-lightgbm_target', '+lightgbm_team', '-ridge_team', '+ridge_target', '+linsvm_possessions'],
                         'model': LinearSVR(random_state = 1108, C =  0.0395279798349, epsilon=0),
                         'scale': StandardScaler(),
-                        },    
+                        }, 
+                    'share': {
+                        'features': ['+ridge_all', 'pregame_ppp_for', '-75_g_HAspread_allow_floor-percentage', '-30_g_HAspread_for_offensive-efficiency', '-25_g_HAspread_allow_points-per-game`/`possessions-per-game', '-50_g_HAspread_allow_points-per-game`/`possessions-per-game', '100_g_HAspread_for_personal-fouls-per-game', '75_g_HAspread_for_shooting-pct', '-100_g_HAspread_for_points-per-game', '-lightgbm_team', '10_g_HAspread_allow_personal-fouls-per-possession', '-expected_pts_pg_allowed', '50_g_HAspread_for_points-per-game', '50_g_HAspread_allow_floor-percentage', '25_g_HAspread_for_points-per-game', '-linsvm_team', 'expected_offensive-rebounding-pct_for', 'expected_effective-field-goal-pct_for', 'expected_ftm-per-100-possessions_for', 'expected_turnovers-per-possession_for', '30_g_HAspread_for_steal-pct', '-pregame_turnovers-per-possession_allowed', 'pregame_turnovers-per-possession_for', '10_game_avg_50_g_HAweight_for_offensive-efficiency'],
+                        'model': Lasso(random_state = 1108, alpha = 0.001),
+                        'scale': StandardScaler(),                            
+                        },
         },
         'winner':{
                 '+pts':{
