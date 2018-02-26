@@ -190,6 +190,16 @@ def pull_train_index(cnx):
     for d,n in np.array(indexdata):
         idx.append(str(d)+n.replace(' ','_'))
     return idx 
+
+def pull_test_index(cnx):
+    cursor = cnx.cursor()
+    query = 'select date, teamname from gamedata where date > "2017-11-1"'
+    cursor.execute(query)
+    indexdata = pd.DataFrame(cursor.fetchall(), columns = ['date', 'name'])
+    idx = []
+    for d,n in np.array(indexdata):
+        idx.append(str(d)+n.replace(' ','_'))
+    return idx 
     
 def score(cnx):
     off_data = points(cnx, 'offense')

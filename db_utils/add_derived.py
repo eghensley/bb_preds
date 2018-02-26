@@ -22,7 +22,7 @@ def update(name, data):
 #        idx = insert[0]
         date = '"'+idx[:10]+'"'
         tname = '"'+idx[10:].replace('_', ' ')+'"'
-        insert = insert[1:]
+#        insert = insert[1:]
         sql_insert = []
         sql_insert.append(tname)
         sql_insert.append(date)
@@ -32,7 +32,7 @@ def update(name, data):
         insertlist.append(sql_insert)
         continuance += 1
         if continuance == 500:
-            break
+#            break
             insertlist = ', '.join(insertlist)
             oddslist = ['INSERT INTO %s VALUES '%(name), insertlist, ';']
             initialoddsinsert = ' '.join(oddslist)  
@@ -43,6 +43,7 @@ def update(name, data):
                 cnx.commit()
                 print(entry)
             except:
+                print(entry)
                 pass
             cursor.execute('SET foreign_key_checks = 1;')
             insertlist = []

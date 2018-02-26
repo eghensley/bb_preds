@@ -171,7 +171,7 @@ y_ou = None
 y_line = None
 x_line = None
 random.seed(86)
-for sort in ['ou']: #'winner', 'line', 
+for sort in ['winner']: #'winner', 'line', 'ou'
     print('... starting %s' % (sort))
     f = open(os.path.join(output_folder, 'classification_scoring.txt'), 'a')
     f.write('-- %s \n' % (sort))

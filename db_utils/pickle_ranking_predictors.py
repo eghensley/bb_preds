@@ -44,11 +44,17 @@ for x_vals in ['offense', 'defense']:
         
         if not os.path.isfile(os.path.join(model_storage, '%s_%s_regression.pkl' % (x_vals,y_val))):
             print('Loading %s_%s'%(x_vals, y_val))
+            
             model = saved_models.stored_models[x_vals][y_val]['model']
-            model.fit(saved_models.stored_models[x_vals][y_val]['scale'].fit_transform(x_data[list(set(saved_models.stored_models[x_vals][y_val]['features']))]), np.ravel(y_data))
-            joblib.dump(model,os.path.join(model_storage, '%s_%s_regression.pkl' % (x_vals,y_val))) 
+            scale = saved_models.stored_models[x_vals][y_val]['scale']
+            
+            scale.fit(x_data[saved_models.stored_models[x_vals][y_val]['features']])
+            joblib.dump(scale,os.path.join(model_storage, '%s_%s_regression_scaler.pkl' % (y_val, x_vals)))             
+            model.fit(scale.transform(x_data[saved_models.stored_models[x_vals][y_val]['features']]), np.ravel(y_data))
+            joblib.dump(model,os.path.join(model_storage, '%s_%s_regression_model.pkl' % (y_val, x_vals))) 
+
             print('Stored %s_%s'%(x_vals, y_val))
-                
+            
 x_vals = 'predictive'
 y_val = '+pts'
 x_data_stable = pull_data.score(update_dbs.mysql_client())
@@ -58,8 +64,14 @@ x_cols.remove(y_val)
 y_data = x_data_stable[y_val] 
 x_data = x_data_stable[x_cols]                       
 if not os.path.isfile(os.path.join(model_storage, '%s_%s_regression.pkl' % (x_vals,y_val))):
-    print('Loading %s_%s'%(x_vals, y_val))
-    model = saved_models.stored_models[x_vals][y_val]['model']
-    model.fit(saved_models.stored_models[x_vals][y_val]['scale'].fit_transform(x_data[list(set(saved_models.stored_models[x_vals][y_val]['features']))]), np.ravel(y_data))
-    joblib.dump(model,os.path.join(model_storage, '%s_%s_regression.pkl' % (x_vals,y_val))) 
-    print('Stored %s_%s'%(x_vals, y_val))
+            print('Loading %s_%s'%(x_vals, y_val))
+    
+            model = saved_models.stored_models[x_vals][y_val]['model']
+            scale = saved_models.stored_models[x_vals][y_val]['scale']
+            
+            scale.fit(x_data[saved_models.stored_models[x_vals][y_val]['features']])
+            joblib.dump(scale,os.path.join(model_storage, '%s_%s_regression_scaler.pkl' % (y_val, x_vals)))             
+            model.fit(scale.transform(x_data[saved_models.stored_models[x_vals][y_val]['features']]), np.ravel(y_data))
+            joblib.dump(model,os.path.join(model_storage, '%s_%s_regression_model.pkl' % (y_val, x_vals))) 
+
+            print('Stored %s_%s'%(x_vals, y_val))

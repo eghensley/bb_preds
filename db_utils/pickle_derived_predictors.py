@@ -16,6 +16,7 @@ import pandas as pd
 import numpy as np
 import saved_models
 from sklearn.externals import joblib
+import pickle
 
 def hfa_patch(x, cnx):
     print('Running HFA Patch')
@@ -122,11 +123,23 @@ for y_val in ['pts_scored', 'pts_allowed']:
             x_data = x_data.join(y_data, how = 'inner')[list(x_data)]     
         
         for model_name, model_details in saved_models.stored_models[y_val][x_vals].items():
-            if not os.path.isfile(os.path.join(model_storage, '%s_%s_%s.pkl' % (y_val, x_vals, model_name))):
-                print('Loading %s Values'%(model_name))
+            if not os.path.isfile(os.path.join(model_storage, '%s_%s_%s_model.pkl' % (y_val, x_vals, model_name))):
+                print('Loading %s Values'%(model_name))               
+
                 model = model_details['model']
-                model.fit(model_details['scale'].fit_transform(x_data[list(set(model_details['features']))]), y_data)
-                joblib.dump(model,os.path.join(model_storage, '%s_%s_%s.pkl' % (y_val, x_vals, model_name))) 
+                scale = model_details['scale']
+                
+                scale.fit(x_data[model_details['features']])
+                joblib.dump(scale,os.path.join(model_storage, '%s_%s_%s_scaler.pkl' % (y_val, x_vals, model_name)))             
+    
+                model.fit(scale.transform(x_data[model_details['features']]), np.ravel(y_data))
+                if model_name != 'lightgbc':
+                    joblib.dump(model,os.path.join(model_storage, '%s_%s_%s_model.pkl' % (y_val, x_vals, model_name))) 
+                else:
+                    pickle_dump = open(os.path.join(model_storage, '%s_%s_%s_model.pkl' % (y_val, x_vals, model_name)), 'wb')
+                    pickle.dump(model, pickle_dump)
+                    pickle_dump.close() 
+                    
                 print('Stored %s'%(model_name))
             
 

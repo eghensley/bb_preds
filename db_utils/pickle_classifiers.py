@@ -20,6 +20,7 @@ import random
 import saved_models
 import pandas as pd
 from sklearn.externals import joblib
+import pickle
 
 train_index = pull_data.pull_train_index(update_dbs.mysql_client())
 random.seed(86)
@@ -172,15 +173,28 @@ y_ou = None
 y_line = None
 x_line = None
 random.seed(86)
+
 for sort in ['ou', 'winner', 'line']:
     print('... starting %s' % (sort))
     for kind in ['raw', '+pts']: 
         print('... starting %s' % (kind))
         for model_name, model_details in saved_models.stored_models[sort][kind].items():
             print('...storing %s'%(model_name))
+
             model = model_details['model']
-            model.fit(model_details['scale'].fit_transform(all_x_data[sort][kind][list(set(model_details['features']))]), np.ravel(all_y_data[sort][kind]))
-            joblib.dump(model,os.path.join(model_storage, '%s_%s_%s.pkl' % (sort, kind, model_name))) 
+            scale = model_details['scale']
+            
+            scale.fit(all_x_data[sort][kind][model_details['features']])
+            joblib.dump(scale,os.path.join(model_storage, '%s_%s_%s_scaler.pkl' % (sort, kind, model_name)))             
+
+            model.fit(scale.transform(all_x_data[sort][kind][model_details['features']]), np.ravel(all_y_data[sort][kind]))
+            if model_name != 'lightgbc':
+                joblib.dump(model,os.path.join(model_storage, '%s_%s_%s_model.pkl' % (sort, kind, model_name))) 
+            else:
+                pickle_dump = open(os.path.join(model_storage, '%s_%s_%s_model.pkl' % (sort, kind, model_name)), 'wb')
+                pickle.dump(model, pickle_dump)
+                pickle_dump.close()
+            
             print('Stored %s'%(model_name))
         print('Finished %s' % (kind))
     print('Finished %s' % (sort))
