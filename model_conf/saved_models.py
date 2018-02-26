@@ -1,5 +1,32 @@
-import sys
-
+import os, sys
+try:                                            # if running in CLI
+    cur_path = os.path.abspath(__file__)
+    try:
+        import pandas as pd
+    except ImportError:
+        for loc in ['/usr/lib/python3.5','/usr/lib/python3.5/plat-x86_64-linux-gnu','/usr/lib/python3.5/lib-dynload','/usr/local/lib/python3.5/dist-packages','/usr/lib/python3/dist-packages']:
+            sys.path.insert(-1, loc)
+    try:
+        import keras
+    except ImportError:
+        for loc in ['/usr/lib/python36.zip', '/usr/lib/python3.6', '/usr/lib/python3.6/lib-dynload', '/home/eric/ncaa_bb/lib/python3.6/site-packages']:
+            sys.path.insert(-1, loc)
+        sys.path.insert(-1, '/home/eric/stats_bb')
+except NameError:                               # if running in IDE
+    cur_path = os.getcwd()
+    try:
+        import keras
+    except ImportError:
+        for loc in ['/usr/lib/python36.zip', '/usr/lib/python3.6', '/usr/lib/python3.6/lib-dynload', '/home/eric/ncaa_bb/lib/python3.6/site-packages']:
+            sys.path.insert(-1, loc)
+        sys.path.insert(-1, '/home/eric/stats_bb')
+while cur_path.split('/')[-1] != 'bb_preds':
+    cur_path = os.path.abspath(os.path.join(cur_path, os.pardir))
+sys.path.insert(-1, os.path.join(cur_path, 'model_conf'))
+sys.path.insert(-1, os.path.join(cur_path, 'db_utils'))
+sys.path.insert(-1, os.path.join(cur_path, 'model_tuning'))
+output_folder = os.path.join(cur_path, 'model_results')
+sys.path.insert(-1, output_folder)
 try:
     import lightgbm as lgb
 except ImportError:
@@ -10,8 +37,50 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 from sklearn.linear_model import Lasso, Ridge, LogisticRegression
 from sklearn.svm import LinearSVR, SVC
 from sklearn.neighbors import KNeighborsClassifier
+from keras.models import Sequential
+from keras.wrappers.scikit_learn import KerasClassifier
+from keras.layers import Dense, Dropout
+
+def ou_nn():
+    model = Sequential()
+    model.add(Dense(76, input_dim=39, kernel_initializer='normal', activation='elu'))
+    model.add(Dropout(.45))
+    model.add(Dense(50, kernel_initializer='normal', activation='elu'))
+    model.add(Dropout(.45))
+    model.add(Dense(25, kernel_initializer='normal', activation='elu'))
+    model.add(Dropout(.15))
+    model.add(Dense(1, kernel_initializer='normal', activation='sigmoid'))
+    model.compile(loss='binary_crossentropy', optimizer='adagrad', metrics=['accuracy'])
+    return model 
+
+def line_nn():
+    model = Sequential()
+    model.add(Dense(87, input_dim=36, kernel_initializer='normal', activation='relu'))
+    model.add(Dropout(.4))
+    model.add(Dense(44, kernel_initializer='normal', activation='relu'))
+    model.add(Dropout(.1))
+    model.add(Dense(1, kernel_initializer='normal', activation='sigmoid'))
+    model.compile(loss='binary_crossentropy', optimizer=keras.optimizers.SGD(lr=.05, momentum=0.0, decay=0.0, nesterov=False), metrics=['accuracy'])
+    return model 
 
 stored_models = {
+        'keras': {
+#            'winner':{
+#                'features': [],
+#                'model': ,
+#                'scale': ,
+#                },
+            'ou':{
+                'features': ['expected_effective-field-goal-pct_for','10_game_avg_30_g_Tweight_for_true-shooting-percentage','-75_g_HAspread_allow_defensive-efficiency','100_g_HAspread_allow_block-pct','10_game_avg_10_g_Tweight_for_possessions-per-game','-expected_effective-field-goal-pct_allowed','75_g_HAspread_for_floor-percentage','-10_game_avg_15_g_HAweight_for_defensive-efficiency','-30_game_avg_50_g_Tweight_allow_points-per-game`/`possessions-per-game','30_game_avg_5_g_Tweight_for_possessions-per-game','25_g_HAspread_for_points-per-game','-30_game_avg_50_g_HAweight_allow_points-per-game','-10_game_avg_10_g_Tweight_allow_points-per-game`/`possessions-per-game','-1_game_avg_10_g_Tweight_allow_possessions-per-game','-100_g_HAspread_for_points-per-game','-50_game_avg_50_g_HAweight_for_assists-per-game','25_g_HAspread_for_possessions-per-game','10_game_avg_50_g_HAweight_for_blocks-per-game','-50_game_avg_50_g_HAweight_allow_ftm-per-100-possessions','20_game_avg_30_g_HAweight_for_defensive-rebounds-per-game','-20_game_avg_50_g_Tweight_for_floor-percentage','20_game_avg_10_g_HAweight_for_possessions-per-game','-20_game_avg_50_g_Tweight_allow_points-per-game','-100_g_HAspread_allow_assist--per--turnover-ratio','-10_game_avg_10_g_HAweight_allow_points-per-game','75_g_HAspread_allow_percent-of-points-from-3-pointers','-15_g_HAspread_allow_block-pct','-20_game_avg_25_g_Tweight_allow_possessions-per-game','-10_game_avg_15_g_HAweight_allow_defensive-rebounds-per-game','-20_game_avg_50_g_HAweight_allow_defensive-efficiency','50_game_avg_50_g_HAweight_for_assists-per-game','-30_game_avg_25_g_Tweight_allow_points-per-game','-25_g_HAspread_allow_possessions-per-game', 'pca_ou', 'tsvd_ou', 'lasso_ou', 'lightgbm_ou', 'ridge_ou', 'vegas_ou'],
+                'model': KerasClassifier(build_fn=ou_nn, epochs=120, batch_size=16, verbose=1),
+                'scale': StandardScaler(),
+                },
+            'line':{
+                'features': ['20_game_avg_30_g_HAweight_allow_fta-per-fga','-75_g_HAspread_allow_defensive-efficiency','-expected_poss_pg_allowed','50_game_avg_50_g_HAweight_for_defensive-rebounding-pct','75_g_HAspread_allow_defensive-efficiency','-20_game_avg_50_g_Tweight_allow_fta-per-fga','50_g_HAspread_allow_assist--per--turnover-ratio','50_game_avg_30_g_Tweight_allow_offensive-efficiency','-50_game_avg_15_g_HAweight_allow_blocks-per-game','pregame_offensive-rebounding-pct_for','10_game_avg_30_g_Tweight_for_assists-per-game','20_game_avg_30_g_Tweight_allow_assist--per--turnover-ratio','-30_game_avg_10_g_HAweight_allow_possessions-per-game','-50_game_avg_50_g_Tweight_for_assist--per--turnover-ratio','100_g_HAspread_allow_block-pct','75_g_HAspread_for_defensive-efficiency','1_game_avg_10_g_HAweight_for_points-per-game','-50_game_avg_30_g_Tweight_allow_block-pct','25_g_HAspread_for_possessions-per-game','-5_game_avg_10_g_Tweight_allow_possessions-per-game','100_g_HAspread_for_defensive-efficiency','-10_game_avg_50_g_Tweight_for_assists-per-game','-20_game_avg_15_g_Tweight_allow_extra-chances-per-game','pregame_ppp_for','-expected_effective-field-goal-pct_allowed','-5_game_avg_50_g_HAweight_allow_possessions-per-game','-10_g_HAspread_allow_points-per-game`/`possessions-per-game','-50_game_avg_15_g_Tweight_allow_blocks-per-game','-50_game_avg_50_g_HAweight_for_offensive-rebounding-pct','-20_game_avg_50_g_Tweight_for_block-pct', 'pca_line', 'tsvd_line', 'lasso_line', 'lightgbm_line', 'ridge_line', 'vegas_line'],
+                'model': KerasClassifier(build_fn=line_nn, epochs=30, batch_size=64, verbose=1),
+                'scale': StandardScaler(),
+                },
+            },
         'offense':{
             'pace': {
                 'features': ['lightgbm_possessions', 'lasso_possessions', 'linsvm_possessions'],
