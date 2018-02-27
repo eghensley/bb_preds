@@ -193,31 +193,30 @@ for kind in ['keras']:
     print('... starting %s' % (kind))
     for sort in ['winner', 'line', 'ou']: 
         print('... starting %s' % (sort))
-        for model_name, model_details in saved_models.stored_models[sort]['raw'][kind].items():
-            if not os.path.isfile(os.path.join(model_storage, '%s_%s_regression.pkl' % (sort,kind))):
+        if not os.path.isfile(os.path.join(model_storage, '%s_%s_regression.pkl' % (sort,kind))):
     
-                X = all_x_data[sort]['raw']
-                X = X.reset_index()
-                X = X[model_details['features']]
-                Y = all_y_data[sort]['raw']
-                Y = Y.reset_index()
-                if sort != 'winner':
-                    Y = Y[kind]
-                else:
-                    Y = Y['outcome']
-                
-                print('...storing %s'%(model_name))
-                
-                
-                model = saved_models.stored_models[sort]['raw'][kind]['model']
-                scale = saved_models.stored_models[sort]['raw'][kind]['scale']
+            X = all_x_data[sort]['raw']
+            X = X.reset_index()
+            X = X[saved_models.stored_models[sort]['raw'][kind]['features']]
+            Y = all_y_data[sort]['raw']
+            Y = Y.reset_index()
+            if sort != 'winner':
+                Y = Y[kind]
+            else:
+                Y = Y['outcome']
             
-                scale.fit(X[saved_models.stored_models[sort]['raw'][kind]['features']])
-                joblib.dump(scale,os.path.join(model_storage, '%s_%s_regression_scaler.pkl' % (sort,kind)))             
-                model.fit(scale.transform(X[saved_models.stored_models[sort]['raw'][kind]['features']]), np.ravel(Y))
-                joblib.dump(model,os.path.join(model_storage, '%s_%s_regression_model.pkl' % (sort,kind))) 
+            print('...storing %s Keras'%(sort))
             
-                print('Stored %s_%s'%(sort,kind))
+            
+            model = saved_models.stored_models[sort]['raw'][kind]['model']
+            scale = saved_models.stored_models[sort]['raw'][kind]['scale']
+        
+            scale.fit(X[saved_models.stored_models[sort]['raw'][kind]['features']])
+            joblib.dump(scale,os.path.join(model_storage, '%s_%s_regression_scaler.pkl' % (sort,kind)))             
+            model.fit(scale.transform(X[saved_models.stored_models[sort]['raw'][kind]['features']]), np.ravel(Y))
+            joblib.dump(model,os.path.join(model_storage, '%s_%s_regression_model.pkl' % (sort,kind))) 
+        
+            print('Stored %s_%s'%(sort,kind))
             
         print('Finished %s' % (kind))
     print('Finished %s' % (sort))
