@@ -38,8 +38,9 @@ from sklearn.linear_model import Lasso, Ridge, LogisticRegression
 from sklearn.svm import LinearSVR, SVC
 from sklearn.neighbors import KNeighborsClassifier
 from keras.models import Sequential
-from keras.wrappers.scikit_learn import KerasClassifier
+from keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
 from keras.layers import Dense, Dropout
+import keras as K
 import keras
 
 def ou_nn():
@@ -76,7 +77,20 @@ def winner_nn():
     model.compile(loss='binary_crossentropy', optimizer=keras.optimizers.SGD(lr=0.0005, momentum=0, decay=0.0), metrics=['accuracy'])
     return model
 
+def explained_variance(y_true, y_pred):
+    ss_res = K.sum(K.square(y_true-y_pred))
+    ss_tot = K.sum(K.square(y_true - K.mean(y_true)))
+    return (1 - ss_res/(ss_tot + K.epsilon()))
 
+def share_nn():
+    model = Sequential()
+    model.add(Dense(68, input_dim=25, kernel_initializer='normal', activation='relu'))
+    model.add(Dropout(.05))
+    model.add(Dense(34, kernel_initializer='normal', activation='relu'))
+    model.add(Dropout(.05))
+    model.add(Dense(1, kernel_initializer='normal'))
+    model.compile(loss='mean_squared_error', optimizer=keras.optimizers.SGD(lr=.075, momentum=0.0, decay=0.0), metrics=[explained_variance])
+    return model 
 
 stored_models = {
         'keras': {
@@ -95,6 +109,12 @@ stored_models = {
                 'keras':{
                     'features': ['20_game_avg_30_g_HAweight_allow_fta-per-fga','-75_g_HAspread_allow_defensive-efficiency','-expected_poss_pg_allowed','50_game_avg_50_g_HAweight_for_defensive-rebounding-pct','75_g_HAspread_allow_defensive-efficiency','-20_game_avg_50_g_Tweight_allow_fta-per-fga','50_g_HAspread_allow_assist--per--turnover-ratio','50_game_avg_30_g_Tweight_allow_offensive-efficiency','-50_game_avg_15_g_HAweight_allow_blocks-per-game','pregame_offensive-rebounding-pct_for','10_game_avg_30_g_Tweight_for_assists-per-game','20_game_avg_30_g_Tweight_allow_assist--per--turnover-ratio','-30_game_avg_10_g_HAweight_allow_possessions-per-game','-50_game_avg_50_g_Tweight_for_assist--per--turnover-ratio','100_g_HAspread_allow_block-pct','75_g_HAspread_for_defensive-efficiency','1_game_avg_10_g_HAweight_for_points-per-game','-50_game_avg_30_g_Tweight_allow_block-pct','25_g_HAspread_for_possessions-per-game','-5_game_avg_10_g_Tweight_allow_possessions-per-game','100_g_HAspread_for_defensive-efficiency','-10_game_avg_50_g_Tweight_for_assists-per-game','-20_game_avg_15_g_Tweight_allow_extra-chances-per-game','pregame_ppp_for','-expected_effective-field-goal-pct_allowed','-5_game_avg_50_g_HAweight_allow_possessions-per-game','-10_g_HAspread_allow_points-per-game`/`possessions-per-game','-50_game_avg_15_g_Tweight_allow_blocks-per-game','-50_game_avg_50_g_HAweight_for_offensive-rebounding-pct','-20_game_avg_50_g_Tweight_for_block-pct', 'pca_line', 'tsvd_line', 'lasso_line', 'lightgbm_line', 'ridge_line', 'vegas_line'],
                     'model': KerasClassifier(build_fn=line_nn, epochs=30, batch_size=64, verbose=1),
+                    'scale': StandardScaler(),
+                }},
+            'share':{
+                'keras':{
+                    'features': ['+ridge_all','expected_effective-field-goal-pct_for','expected_turnovers-per-possession_for','expected_offensive-rebounding-pct_for','-linsvm_team','25_g_HAspread_for_points-per-game','-pregame_turnovers-per-possession_allowed','50_g_HAspread_allow_floor-percentage','50_g_HAspread_for_points-per-game','-expected_pts_pg_allowed','10_game_avg_50_g_HAweight_for_offensive-efficiency','30_g_HAspread_for_steal-pct','10_g_HAspread_allow_personal-fouls-per-possession','pregame_turnovers-per-possession_for','-10_game_avg_15_g_HAweight_for_assist--per--turnover-ratio','-100_g_HAspread_for_points-per-game','75_g_HAspread_for_shooting-pct','100_g_HAspread_for_personal-fouls-per-game','-50_g_HAspread_allow_points-per-game`/`possessions-per-game','-25_g_HAspread_allow_points-per-game`/`possessions-per-game','-30_g_HAspread_for_offensive-efficiency','-75_g_HAspread_allow_floor-percentage','pregame_ppp_for','-lightgbm_team','expected_ftm-per-100-possessions_for'],
+                    'model': KerasRegressor(build_fn=share_nn, epochs=270, batch_size=64, verbose=1),
                     'scale': StandardScaler(),
                 }},
             },
