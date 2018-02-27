@@ -64,13 +64,27 @@ def line_nn():
     model.compile(loss='binary_crossentropy', optimizer=keras.optimizers.SGD(lr=.05, momentum=0.0, decay=0.0, nesterov=False), metrics=['accuracy'])
     return model 
 
+def winner_nn():
+    model = Sequential()
+    model.add(Dense(48, input_dim=23, kernel_initializer='normal', activation='elu'))
+    model.add(Dropout(.15))
+    model.add(Dense(32, kernel_initializer='normal', activation='elu'))
+    model.add(Dropout(.15))
+    model.add(Dense(16, kernel_initializer='normal', activation='elu'))
+    model.add(Dropout(.05))
+    model.add(Dense(1, kernel_initializer='normal', activation='sigmoid'))
+    model.compile(loss='binary_crossentropy', optimizer=keras.optimizers.SGD(lr=0.0005, momentum=0, decay=0.0), metrics=['accuracy'])
+    return model
+
+
+
 stored_models = {
         'keras': {
-#            'winner':{
-#                'features': [],
-#                'model': ,
-#                'scale': ,
-#                },
+            'winner':{
+                'features': ['expected_ppp_for','expected_effective-field-goal-pct_for','50_g_HAspread_allow_defensive-efficiency','expected_offensive-rebounding-pct_for','-20_game_avg_50_g_Tweight_for_floor-percentage','100_g_HAspread_for_personal-fouls-per-game','-100_g_HAspread_allow_assist--per--turnover-ratio','expected_turnovers-per-possession_for','30_g_HAspread_allow_free-throw-rate','-100_g_HAspread_for_defensive-efficiency','pregame_turnovers-per-possession_for','-50_g_HAspread_for_personal-fouls-per-game','75_g_HAspread_for_defensive-efficiency','100_g_HAspread_for_defensive-efficiency','75_g_HAspread_allow_points-per-game','-75_g_HAspread_allow_floor-percentage','30_g_HAspread_for_floor-percentage','expected_ftm-per-100-possessions_for','-75_g_HAspread_allow_defensive-efficiency','-50_g_HAspread_allow_points-per-game`/`possessions-per-game','-50_game_avg_30_g_Tweight_allow_fta-per-fga','-50_g_HAspread_for_assist--per--turnover-ratio','-10_g_HAspread_allow_ftm-per-100-possessions'],
+                'model': KerasClassifier(build_fn=winner_nn, epochs=30, batch_size=16, verbose=1),
+                'scale': RobustScaler(),
+                },
             'ou':{
                 'keras':{
                     'features': ['expected_effective-field-goal-pct_for','10_game_avg_30_g_Tweight_for_true-shooting-percentage','-75_g_HAspread_allow_defensive-efficiency','100_g_HAspread_allow_block-pct','10_game_avg_10_g_Tweight_for_possessions-per-game','-expected_effective-field-goal-pct_allowed','75_g_HAspread_for_floor-percentage','-10_game_avg_15_g_HAweight_for_defensive-efficiency','-30_game_avg_50_g_Tweight_allow_points-per-game`/`possessions-per-game','30_game_avg_5_g_Tweight_for_possessions-per-game','25_g_HAspread_for_points-per-game','-30_game_avg_50_g_HAweight_allow_points-per-game','-10_game_avg_10_g_Tweight_allow_points-per-game`/`possessions-per-game','-1_game_avg_10_g_Tweight_allow_possessions-per-game','-100_g_HAspread_for_points-per-game','-50_game_avg_50_g_HAweight_for_assists-per-game','25_g_HAspread_for_possessions-per-game','10_game_avg_50_g_HAweight_for_blocks-per-game','-50_game_avg_50_g_HAweight_allow_ftm-per-100-possessions','20_game_avg_30_g_HAweight_for_defensive-rebounds-per-game','-20_game_avg_50_g_Tweight_for_floor-percentage','20_game_avg_10_g_HAweight_for_possessions-per-game','-20_game_avg_50_g_Tweight_allow_points-per-game','-100_g_HAspread_allow_assist--per--turnover-ratio','-10_game_avg_10_g_HAweight_allow_points-per-game','75_g_HAspread_allow_percent-of-points-from-3-pointers','-15_g_HAspread_allow_block-pct','-20_game_avg_25_g_Tweight_allow_possessions-per-game','-10_game_avg_15_g_HAweight_allow_defensive-rebounds-per-game','-20_game_avg_50_g_HAweight_allow_defensive-efficiency','50_game_avg_50_g_HAweight_for_assists-per-game','-30_game_avg_25_g_Tweight_allow_points-per-game','-25_g_HAspread_allow_possessions-per-game', 'pca_ou', 'tsvd_ou', 'lasso_ou', 'lightgbm_ou', 'ridge_ou', 'vegas_ou'],
