@@ -17,7 +17,6 @@ import numpy as np
 import saved_models
 from sklearn.externals import joblib
 import add_derived
-import pickle
 
 def hfa_patch(x, cnx):
     print('Running HFA Patch')
@@ -131,14 +130,11 @@ def update():
                 x_data = x_data.join(y_data, how = 'inner')[list(x_data)]     
             
             for model_name, model_details in saved_models.stored_models[y_val][x_vals].items():
-                if os.path.isfile(os.path.join(model_storage, '%s_%s_%s.pkl' % (y_val, x_vals, model_name))):
+                if os.path.isfile(os.path.join(model_storage, '%s_%s_%s_model.pkl' % (y_val, x_vals, model_name))):
                     print('Loading %s Values'%(model_name))
                     
-                    if model_name != 'lightgbc':
-                        model = joblib.load(os.path.join(model_storage, '%s_%s_%s_model.pkl' % (y_val, x_vals, model_name))) 
-                    else:
-                        model = pickle.load(open(os.path.join(model_storage, '%s_%s_%s_model.pkl' % (y_val, x_vals, model_name))))
-                    scale = joblib.load(os.path.join(model_storage, '%s_%s_%s_scale.pkl' % (y_val, x_vals, model_name))) 
+                    model = joblib.load(os.path.join(model_storage, '%s_%s_%s_model.pkl' % (y_val, x_vals, model_name))) 
+                    scale = joblib.load(os.path.join(model_storage, '%s_%s_%s_scaler.pkl' % (y_val, x_vals, model_name))) 
                     
                     preds = model.predict(scale.fit_transform(x_data[model_details['features']]))
                     indy_pred = pd.DataFrame()

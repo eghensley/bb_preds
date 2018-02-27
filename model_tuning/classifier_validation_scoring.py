@@ -20,6 +20,7 @@ import pandas as pd
 from sklearn.metrics import accuracy_score, log_loss
 import saved_models
 from sklearn.externals import joblib
+import pickle
 
 train_index = pull_data.pull_test_index(update_dbs.mysql_client())
 random.seed(86)
@@ -192,13 +193,15 @@ for sort in ['ou', 'winner', 'line']:
     
     print('... starting %s' % (sort))
     for kind in ['raw', '+pts']: 
-        
         print('... starting %s' % (kind))
         for model_name, model_details in saved_models.stored_models[sort][kind].items():
-            if os.path.isfile(os.path.join(model_storage, '%s_%s_%s.pkl' % (sort, kind, model_name))):
+            if os.path.isfile(os.path.join(model_storage, '%s_%s_%s_model.pkl' % (sort, kind, model_name))):
                 print('Evaluating %s '%(model_name))
-                model = joblib.load(os.path.join(model_storage, '%s_%s_%s.pkl' % (sort, kind, model_name))) 
-                preds = model.predict_proba(model_details['scale'].fit_transform(all_x_data[sort][kind][list(set(model_details['features']))]))
+
+                model = joblib.load(os.path.join(model_storage, '%s_%s_%s_model.pkl' % (sort, kind, model_name))) 
+                scale = joblib.load(os.path.join(model_storage, '%s_%s_%s_scaler.pkl' % (sort, kind, model_name))) 
+
+                preds = model.predict_proba(scale.fit_transform(all_x_data[sort][kind][model_details['features']]))
                 pred_logloss['%s_%s_%s' % (sort, kind, model_name)] = log_loss(np.ravel(all_y_data[sort][kind]), preds)
                 model_outcome = pd.DataFrame()
                 winner = []
@@ -212,7 +215,10 @@ for sort in ['ou', 'winner', 'line']:
                         confidence.append(game[1])
                 pred_accuracy['%s_%s_%s' % (sort, kind, model_name)] = accuracy_score(np.ravel(all_y_data[sort][kind]), winner)
                 
-                model_outcome['idx'] = list(all_x_data[sort][kind][list(set(model_details['features']))].index)
+                print('Accuracy: %s' % (accuracy_score(np.ravel(all_y_data[sort][kind]), winner)))
+                print('Log Loss: %s' % (log_loss(np.ravel(all_y_data[sort][kind]), preds)))
+                
+                model_outcome['idx'] = list(all_x_data[sort][kind][model_details['features']].index)
                 model_outcome['%s_%s_prediction' % (kind, model_name)] = winner
                 model_outcome['%s_%s_confidence' % (kind, model_name)] = confidence
                 model_outcome = model_outcome.set_index('idx')

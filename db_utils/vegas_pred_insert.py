@@ -17,7 +17,6 @@ from sklearn.externals import joblib
 import vegas_watson
 import pandas as pd
 import add_derived
-import pickle
 
 def update():
     for x_vals in ['line', 'ou']:
@@ -37,14 +36,11 @@ def update():
         x_cols.remove(y_val)
         x_data_stable = x_data_stable[x_cols]
         for model_name, model_details in saved_models.stored_models[y_val][x_vals].items():
-            if os.path.isfile(os.path.join(model_storage, '%s_%s_%s.pkl' % (y_val, x_vals, model_name))):
+            if os.path.isfile(os.path.join(model_storage, '%s_%s_%s_model.pkl' % (y_val, x_vals, model_name))):
                 print('Loading %s Values'%(model_name))
                 
-                if model_name != 'lightgbc':
-                    model = joblib.load(os.path.join(model_storage, '%s_%s_%s_model.pkl' % (y_val, x_vals, model_name))) 
-                else:
-                    model = pickle.load(open(os.path.join(model_storage, '%s_%s_%s_model.pkl' % (y_val, x_vals, model_name))))
-                scale = joblib.load(os.path.join(model_storage, '%s_%s_%s_scale.pkl' % (y_val, x_vals, model_name))) 
+                model = joblib.load(os.path.join(model_storage, '%s_%s_%s_model.pkl' % (y_val, x_vals, model_name))) 
+                scale = joblib.load(os.path.join(model_storage, '%s_%s_%s_scaler.pkl' % (y_val, x_vals, model_name))) 
                 
                 preds = model.predict(scale.fit_transform(x_data_stable[model_details['features']]))
                 indy_pred = pd.DataFrame()
@@ -55,7 +51,7 @@ def update():
                 print('Loaded %s'%(model_name))
                 
         for model_name in ['PCA', "TSVD"]:
-            if os.path.isfile(os.path.join(model_storage, '%s_%s_%s.pkl' % (y_val, x_vals, model_name))):
+            if os.path.isfile(os.path.join(model_storage, '%s_%s_%s_model.pkl' % (y_val, x_vals, model_name))):
                 print('Loading %s Values'%(model_name))
                 model = joblib.load(os.path.join(model_storage, '%s_%s_%s_model.pkl' % (y_val, x_vals, model_name))) 
                 if x_vals == 'ou':

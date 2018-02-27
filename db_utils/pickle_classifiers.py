@@ -179,23 +179,19 @@ for sort in ['ou', 'winner', 'line']:
     for kind in ['raw', '+pts']: 
         print('... starting %s' % (kind))
         for model_name, model_details in saved_models.stored_models[sort][kind].items():
-            print('...storing %s'%(model_name))
-
-            model = model_details['model']
-            scale = model_details['scale']
-            
-            scale.fit(all_x_data[sort][kind][model_details['features']])
-            joblib.dump(scale,os.path.join(model_storage, '%s_%s_%s_scaler.pkl' % (sort, kind, model_name)))             
-
-            model.fit(scale.transform(all_x_data[sort][kind][model_details['features']]), np.ravel(all_y_data[sort][kind]))
-            if model_name != 'lightgbc':
+            if not os.path.isfile(os.path.join(model_storage, '%s_%s_%s_model.pkl' % (sort, kind, model_name))):
+                print('...storing %s'%(model_name))
+    
+                model = model_details['model']
+                scale = model_details['scale']
+                
+                scale.fit(all_x_data[sort][kind][model_details['features']])
+                joblib.dump(scale,os.path.join(model_storage, '%s_%s_%s_scaler.pkl' % (sort, kind, model_name)))             
+    
+                model.fit(scale.transform(all_x_data[sort][kind][model_details['features']]), np.ravel(all_y_data[sort][kind]))
                 joblib.dump(model,os.path.join(model_storage, '%s_%s_%s_model.pkl' % (sort, kind, model_name))) 
-            else:
-                pickle_dump = open(os.path.join(model_storage, '%s_%s_%s_model.pkl' % (sort, kind, model_name)), 'wb')
-                pickle.dump(model, pickle_dump)
-                pickle_dump.close()
-            
-            print('Stored %s'%(model_name))
+                
+                print('Stored %s'%(model_name))
         print('Finished %s' % (kind))
     print('Finished %s' % (sort))
 

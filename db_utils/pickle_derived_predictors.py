@@ -133,12 +133,7 @@ for y_val in ['pts_scored', 'pts_allowed']:
                 joblib.dump(scale,os.path.join(model_storage, '%s_%s_%s_scaler.pkl' % (y_val, x_vals, model_name)))             
     
                 model.fit(scale.transform(x_data[model_details['features']]), np.ravel(y_data))
-                if model_name != 'lightgbc':
-                    joblib.dump(model,os.path.join(model_storage, '%s_%s_%s_model.pkl' % (y_val, x_vals, model_name))) 
-                else:
-                    pickle_dump = open(os.path.join(model_storage, '%s_%s_%s_model.pkl' % (y_val, x_vals, model_name)), 'wb')
-                    pickle.dump(model, pickle_dump)
-                    pickle_dump.close() 
+                joblib.dump(model,os.path.join(model_storage, '%s_%s_%s_model.pkl' % (y_val, x_vals, model_name))) 
                     
                 print('Stored %s'%(model_name))
             

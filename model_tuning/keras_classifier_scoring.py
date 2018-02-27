@@ -192,13 +192,15 @@ x_line = None
 random.seed(86)
 for sort in ['keras']:
     print('... starting %s' % (sort))
-    for kind in ['ou', 'line']: 
+    for kind in ['line', 'ou']: 
         print('... starting %s' % (kind))
         for model_name, model_details in saved_models.stored_models[sort][kind].items():
-            X = all_x_data[kind]['raw'][model_details['features']]
+            X = all_x_data[kind]['raw']
             X = X.reset_index()
+            X = X[model_details['features']]
             Y = all_y_data[kind]['raw']
             Y = Y.reset_index()
+            Y = Y[kind]
             
             print('...storing %s'%(model_name))
             model = model_details['model']
@@ -207,8 +209,8 @@ for sort in ['keras']:
             
             score = cross_validate(pipe, X, Y, scoring = ['accuracy', 'neg_log_loss'], cv = StratifiedKFold(n_splits = 20, random_state = 86))
 
-            acc = score['mean_test_accuracy']
-            logloss = score['mean_test_neg_log_loss']
+            acc = np.mean(score['test_accuracy'])
+            logloss = np.mean(score['test_neg_log_loss'])
             
             f = open('keras_scoring.txt', 'a')
             f.write('model: %s, accuracy: %s, logloss: %s \n' % (kind, acc, logloss))

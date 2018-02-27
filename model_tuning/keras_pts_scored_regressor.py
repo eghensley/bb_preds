@@ -150,10 +150,10 @@ for width in np.linspace(1, 4, 8):
             model.add(Dense(int(22*width), input_dim=22, kernel_initializer='normal', activation='relu'))
             for lay in range(depth):
                 model.add(Dropout(.1))
-                model.add(Dense(int((float(25*width)/(depth+1))*(depth-lay)), kernel_initializer='normal', activation='relu'))
+                model.add(Dense(int((float(22*width)/(depth+1))*(depth-lay)), kernel_initializer='normal', activation='relu'))
             model.add(Dense(1, kernel_initializer='normal'))
         	# Compile model
-            model.compile(loss='mean_squared_error', optimizer='adam', metrics=[explained_variance])
+            model.compile(loss='mean_squared_error', optimizer='SGD', metrics=[explained_variance])
             return model 
         
         model = nn_model()
