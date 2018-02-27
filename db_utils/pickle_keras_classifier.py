@@ -193,7 +193,7 @@ for kind in ['keras']:
     print('... starting %s' % (kind))
     for sort in ['winner', 'line', 'ou']: 
         print('... starting %s' % (sort))
-        if not os.path.isfile(os.path.join(model_storage, '%s_%s_regression.pkl' % (sort,kind))):
+        if not os.path.isfile(os.path.join(model_storage, '%s_%s_regression.h5' % (sort,kind))):
     
             X = all_x_data[sort]['raw']
             X = X.reset_index()
@@ -201,7 +201,7 @@ for kind in ['keras']:
             Y = all_y_data[sort]['raw']
             Y = Y.reset_index()
             if sort != 'winner':
-                Y = Y[kind]
+                Y = Y[sort]
             else:
                 Y = Y['outcome']
             
@@ -214,10 +214,10 @@ for kind in ['keras']:
             scale.fit(X[saved_models.stored_models[sort]['raw'][kind]['features']])
             joblib.dump(scale,os.path.join(model_storage, '%s_%s_regression_scaler.pkl' % (sort,kind)))             
             model.fit(scale.transform(X[saved_models.stored_models[sort]['raw'][kind]['features']]), np.ravel(Y))
-            model.save(os.path.join(model_storage, '%s_%s_regression_model.h5' % (sort,kind))) 
+            model.model.save(os.path.join(model_storage, '%s_%s_regression_model.h5' % (sort,kind))) 
         
             print('Stored %s_%s'%(sort,kind))
             
-        print('Finished %s' % (kind))
-    print('Finished %s' % (sort))
+        print('Finished %s' % (sort))
+    print('Finished %s' % (kind))
 

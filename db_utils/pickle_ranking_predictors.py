@@ -57,10 +57,11 @@ for y_val in ['regression', 'keras']:
     x_data_stable = pull_data.score(update_dbs.mysql_client())
     x_data_stable = x_data_stable.loc[x_data_stable.index.isin(train_index)]
     x_cols = list(x_data_stable)
-    x_cols.remove(y_val)
+    x_cols.remove('+pts')
     y_data = x_data_stable[y_val] 
-    x_data = x_data_stable[x_cols]                       
-    if not os.path.isfile(os.path.join(model_storage, '%s_%s_regression.pkl' % (x_vals,y_val))):
+    x_data = x_data_stable[x_cols]
+                       
+    if not os.path.isfile(os.path.join(model_storage, '%s_%s_regression.pkl' % (x_vals,y_val))) and not os.path.isfile(os.path.join(model_storage, '%s_%s_regression.h5' % (x_vals,y_val))) :
         print('Loading %s_%s'%(x_vals, y_val))
 
         model = saved_models.stored_models[x_vals][y_val]['model']
@@ -72,6 +73,6 @@ for y_val in ['regression', 'keras']:
         if y_val != 'keras':
             joblib.dump(model,os.path.join(model_storage,  '%s_%s_regression_model.pkl' % (y_val, x_vals)))             
         else:    
-            model.save(os.path.join(model_storage, '%s_%s_regression_model.h5' % (y_val, x_vals))) 
+            model.model.save(os.path.join(model_storage, '%s_%s_regression_model.h5' % (y_val, x_vals))) 
 
         print('Stored %s_%s'%(x_vals, y_val))
