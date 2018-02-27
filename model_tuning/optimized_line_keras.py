@@ -177,11 +177,26 @@ x_feats = ['20_game_avg_30_g_HAweight_allow_fta-per-fga',
 '-10_g_HAspread_allow_points-per-game`/`possessions-per-game',
 '-50_game_avg_15_g_Tweight_allow_blocks-per-game',
 '-50_game_avg_50_g_HAweight_for_offensive-rebounding-pct',
-'-20_game_avg_50_g_Tweight_for_block-pct', 'pca_line', 'tsvd_line', 'lasso_line', 'lightgbm_line', 'ridge_line']
+'-20_game_avg_50_g_Tweight_for_block-pct', 'pca_line', 'tsvd_line', 'lasso_line', 'lightgbm_line', 'ridge_line', 'vegas_line']
 y_data = pull_data.line_wl(update_dbs.mysql_client())
 data = data.join(y_data, how = 'inner')
 line_preds = pull_data.line_preds(update_dbs.mysql_client())
 data = data.join(line_preds, how = 'inner')
+line = pull_data.pull_odds_data(update_dbs.mysql_client())
+idx = []
+gameline = []
+line_data = line[['fav_idx', 'dog_idx', 'line']]
+for fix, dix, ln in np.array(line_data):
+    idx.append(fix)
+    idx.append(dix)
+    gameline.append(ln)
+    gameline.append(ln * -1)
+    
+linedata = pd.DataFrame()
+linedata['idx'] = idx
+linedata['vegas_line'] = gameline
+linedata = linedata.set_index('idx')
+data = data.join(linedata, how = 'inner')
 data = data.reset_index()
 x_data = data[x_feats]
 y_data = data[['line']]
@@ -286,23 +301,24 @@ scaler = StandardScaler()
 
 
 scaler = StandardScaler()
-def nn_model():
-    model = Sequential()
-    model.add(Dense(87, input_dim=35, kernel_initializer='normal', activation='relu'))
-    model.add(Dropout(.4))
-    model.add(Dense(44, kernel_initializer='normal', activation='relu'))
-    model.add(Dropout(.1))
-    model.add(Dense(1, kernel_initializer='normal', activation='sigmoid'))
-    model.compile(loss='binary_crossentropy', optimizer='adamax', metrics=['accuracy'])
-    return model 
 
-for width in [7,6,5,4,3]:
+
+for width in [.1, .05, .01, .005, .001]:
+        def nn_model():
+            model = Sequential()
+            model.add(Dense(87, input_dim=36, kernel_initializer='normal', activation='relu'))
+            model.add(Dropout(.4))
+            model.add(Dense(44, kernel_initializer='normal', activation='relu'))
+            model.add(Dropout(.1))
+            model.add(Dense(1, kernel_initializer='normal', activation='sigmoid'))
+            model.compile(loss='binary_crossentropy', optimizer=keras.optimizers.SGD(lr=width, momentum=0.0, decay=0.0, nesterov=False), metrics=['accuracy'])
+            return model 
         num_epochs = 100
         model = nn_model()
         for test_idx, train_idx in StratifiedShuffleSplit(n_splits=1, test_size=0.90, random_state=86).split(x_data, y_data):
             acc_results = []
             logloss_results = []
-            history = model.fit(scaler.fit_transform(x_data.loc[train_idx]), np.ravel(y_data.loc[train_idx]), epochs=num_epochs, batch_size=2**width, verbose=1, validation_data=(scaler.fit_transform(x_data.loc[test_idx]), np.ravel(y_data.loc[test_idx])), shuffle = True)
+            history = model.fit(scaler.fit_transform(x_data.loc[train_idx]), np.ravel(y_data.loc[train_idx]), epochs=num_epochs, batch_size=64, verbose=1, validation_data=(scaler.fit_transform(x_data.loc[test_idx]), np.ravel(y_data.loc[test_idx])), shuffle = True)
             plt.plot(history.history['acc'], linestyle = '-.')
             plt.plot(history.history['val_acc'], linestyle = ':')
             plt.title('model accuracy')

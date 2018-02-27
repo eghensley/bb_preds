@@ -27,7 +27,7 @@ sys.path.insert(-1, os.path.join(cur_path, 'db_utils'))
 sys.path.insert(-1, os.path.join(cur_path, 'model_tuning'))
 output_folder = os.path.join(cur_path, 'model_results')
 sys.path.insert(-1, output_folder)
-f = open('keras_model_tuning.txt', 'w')
+f = open('keras_model_tuning.txt', 'a')
 f.write('Starting Keras Analysis...')
 f.close()
 
@@ -148,73 +148,49 @@ def raw_data():
     data = data.dropna(how = 'any')
     return data
 data = raw_data()
-x_feats = ['expected_effective-field-goal-pct_for',
-'10_game_avg_30_g_Tweight_for_true-shooting-percentage',
-'-75_g_HAspread_allow_defensive-efficiency',
-'100_g_HAspread_allow_block-pct',
-'10_game_avg_10_g_Tweight_for_possessions-per-game',
-'-expected_effective-field-goal-pct_allowed',
-'75_g_HAspread_for_floor-percentage',
-'-10_game_avg_15_g_HAweight_for_defensive-efficiency',
-'-30_game_avg_50_g_Tweight_allow_points-per-game`/`possessions-per-game',
-'30_game_avg_5_g_Tweight_for_possessions-per-game',
-'25_g_HAspread_for_points-per-game',
-'-30_game_avg_50_g_HAweight_allow_points-per-game',
-'-10_game_avg_10_g_Tweight_allow_points-per-game`/`possessions-per-game',
-'-1_game_avg_10_g_Tweight_allow_possessions-per-game',
-'-100_g_HAspread_for_points-per-game',
-'-50_game_avg_50_g_HAweight_for_assists-per-game',
-'25_g_HAspread_for_possessions-per-game',
-'10_game_avg_50_g_HAweight_for_blocks-per-game',
-'-50_game_avg_50_g_HAweight_allow_ftm-per-100-possessions',
-'20_game_avg_30_g_HAweight_for_defensive-rebounds-per-game',
+x_cols = ['expected_ppp_for',
+'expected_effective-field-goal-pct_for',
+'50_g_HAspread_allow_defensive-efficiency',
+'expected_offensive-rebounding-pct_for',
 '-20_game_avg_50_g_Tweight_for_floor-percentage',
-'20_game_avg_10_g_HAweight_for_possessions-per-game',
-'-20_game_avg_50_g_Tweight_allow_points-per-game',
+'100_g_HAspread_for_personal-fouls-per-game',
 '-100_g_HAspread_allow_assist--per--turnover-ratio',
-'-10_game_avg_10_g_HAweight_allow_points-per-game',
-'75_g_HAspread_allow_percent-of-points-from-3-pointers',
-'-15_g_HAspread_allow_block-pct',
-'-20_game_avg_25_g_Tweight_allow_possessions-per-game',
-'-10_game_avg_15_g_HAweight_allow_defensive-rebounds-per-game',
-'-20_game_avg_50_g_HAweight_allow_defensive-efficiency',
-'50_game_avg_50_g_HAweight_for_assists-per-game',
-'-30_game_avg_25_g_Tweight_allow_points-per-game',
-'-25_g_HAspread_allow_possessions-per-game', 'pca_ou', 'tsvd_ou', 'lasso_ou', 'lightgbm_ou', 'ridge_ou', 'vegas_ou']
-y_data = pull_data.ou_wl(update_dbs.mysql_client())
-data = data.join(y_data, how = 'inner')
-line_preds = pull_data.ou_preds(update_dbs.mysql_client())
-data = data.join(line_preds, how = 'inner')
+'expected_turnovers-per-possession_for',
+'30_g_HAspread_allow_free-throw-rate',
+'-100_g_HAspread_for_defensive-efficiency',
+'pregame_turnovers-per-possession_for',
+'-50_g_HAspread_for_personal-fouls-per-game',
+'75_g_HAspread_for_defensive-efficiency',
+'100_g_HAspread_for_defensive-efficiency',
+'75_g_HAspread_allow_points-per-game',
+'-75_g_HAspread_allow_floor-percentage',
+'30_g_HAspread_for_floor-percentage',
+'expected_ftm-per-100-possessions_for',
+'-75_g_HAspread_allow_defensive-efficiency',
+'-50_g_HAspread_allow_points-per-game`/`possessions-per-game',
+'-50_game_avg_30_g_Tweight_allow_fta-per-fga',
+'-50_g_HAspread_for_assist--per--turnover-ratio',
+'-10_g_HAspread_allow_ftm-per-100-possessions']
+y_data = pull_data.pull_wl(update_dbs.mysql_client())
+all_data = data.join(y_data, how = 'inner')
+all_data = all_data.reset_index()
+all_data = all_data.replace([np.inf, -np.inf], np.nan)
+all_data = all_data.replace('NULL', np.nan)
+all_data = all_data.dropna(how = 'any')
+y_data = all_data[['outcome']]
+x_data = all_data[x_cols]
 
-line = pull_data.pull_odds_data(update_dbs.mysql_client())
-idx = []
-gameline = []
-line_data = line[['fav_idx', 'dog_idx', 'overunder']]
-for fix, dix, ln in np.array(line_data):
-    idx.append(fix)
-    idx.append(dix)
-    gameline.append(ln)
-    gameline.append(ln)
-    
-linedata = pd.DataFrame()
-linedata['idx'] = idx
-linedata['vegas_ou'] = gameline
-linedata = linedata.set_index('idx')
-data = data.join(linedata, how = 'inner')
 
-data = data.reset_index()
-x_data = data[x_feats]
-y_data = data[['ou']]
 seed = 86
 np.random.seed(seed)
 import random
 random.seed(86)
-data = None
-line_preds = None
+
+
 #def baseline_model():
 #	# create model
 #	model = Sequential()
-#	model.add(Dense(38, input_dim=38, kernel_initializer='normal', activation='relu'))
+#	model.add(Dense(24, input_dim=24, kernel_initializer='normal', activation='relu'))
 #	model.add(Dense(1, kernel_initializer='normal', activation='sigmoid'))
 #	# Compile model
 #	model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
@@ -223,11 +199,19 @@ line_preds = None
 #def test_scaler(x, y):
 #    print('Searching for best scaler...')
 #    scores = []
+#    model = baseline_model()
 #    for scale in [StandardScaler(), MinMaxScaler(), RobustScaler()]:
-#        pipe = Pipeline([('scale',scale), ('clf',KerasRegressor(build_fn=baseline_model, epochs=100, batch_size=64, verbose=1))])
-#        score = cross_val_score(pipe, x, y,cv = StratifiedKFold(n_splits = 3, random_state = 46))
-#        scores.append(np.mean(score))
-#    f = open('keras_model_tuning.txt', 'w')
+#        cv_acc, cv_logloss = [], []
+#        for test_idx, train_idx in StratifiedShuffleSplit(n_splits=3, test_size=0.9, random_state=86).split(x_data, y_data):
+#            model.fit(scale.fit_transform(x_data.loc[train_idx]), np.ravel(y_data.loc[train_idx]), epochs=100, batch_size=32, verbose=1)
+#            cv_results = model.evaluate(scale.fit_transform(x_data.loc[test_idx]), np.ravel(y_data.loc[test_idx]))
+#            cv_acc.append(cv_results[1])
+#            cv_logloss.append(cv_results[0])        
+#        f = open('keras_model_tuning.txt', 'a')
+#        f.write('%s: accuracy: %s, logloss: %s  \n' % (scale, np.mean(cv_acc), np.mean(cv_logloss)))
+#        f.close()
+#        scores.append(np.mean([np.mean(cv_acc), -1*np.mean(cv_logloss)]))
+#    f = open('keras_model_tuning.txt', 'a')
 #    f.write('Baseline: %s.  ' % (max(scores)))
 #    f.close()
 #    if scores.index(max(scores)) == 0:
@@ -239,42 +223,108 @@ line_preds = None
 #    elif scores.index(max(scores)) == 2:
 #        print('Using Robust Scaler')
 #        return RobustScaler()
-    
+#    
+#results = {}
+#kfold = StratifiedKFold(n_splits=10, random_state=86)
 #scaler = test_scaler(x_data, y_data) #RobustScaler
-#f = open('keras_model_tuning_ou.txt', 'a')
-#f.write('Scaler: %s  \n' % (scaler))
+scaler = RobustScaler()
+#f = open('keras_classifier_tuning.txt', 'a')
+#f.write('Scaler: %s  ' % (scaler))
+#f.close()
+#estimators = []
+#estimators.append(('standardize', scaler))
+#estimators.append(('mlp', KerasRegressor(build_fn=baseline_model, epochs=25, batch_size=64, verbose=1)))
+#pipeline = Pipeline(estimators)
+#baseline_results = cross_val_score(pipeline, x_data, y_data,cv = kfold)
+#print("Results: %.2f (%.2f) accuracy " % (baseline_results.mean(), baseline_results.std()))
+#results['baseline'] = baseline_results
+#f = open('keras_classifier_tuning.txt', 'a')
+#f.write('Baseline: %s, %s.  ' % (baseline_results.mean(), baseline_results.std()))
 #f.close()
 
-scaler = StandardScaler()
-def nn_model():
-    model = Sequential()
-    model.add(Dense(76, input_dim=39, kernel_initializer='normal', activation='elu'))
-    model.add(Dropout(.45))
-    model.add(Dense(50, kernel_initializer='normal', activation='elu'))
-    model.add(Dropout(.45))
-    model.add(Dense(25, kernel_initializer='normal', activation='elu'))
-    model.add(Dropout(.15))
-    model.add(Dense(1, kernel_initializer='normal', activation='sigmoid'))
-    model.compile(loss='binary_crossentropy', optimizer='adagrad', metrics=['accuracy'])
-    return model 
-
-for width in [6]:
-        num_epochs = 1000
+#depth, width = 3, 3
+#def nn_model():
+#        	# create model
+#            model = Sequential()
+#            model.add(Dense(int(24*3), input_dim=24, kernel_initializer='normal', activation='relu'))
+##            model.add(Dense(depth, kernel_initializer='normal', activation='relu'))
+#            for lay in range(depth):
+#                model.add(Dropout(.1))
+#                model.add(Dense(int((float(24*width)/(depth+1))*(depth-lay)), kernel_initializer='normal', activation='relu'))
+#            model.add(Dense(1, kernel_initializer='normal', activation='sigmoid'))
+#        	# Compile model
+#            model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+#            return model  
+#
+#model = nn_model()
+#cv_acc = []
+#cv_logloss = []
+#for test_idx, train_idx in StratifiedShuffleSplit(n_splits=3, test_size=0.9, random_state=86).split(x_data, y_data):
+#    model.fit(scaler.fit_transform(x_data.loc[train_idx]), np.ravel(y_data.loc[train_idx]), epochs=1000, batch_size=32, verbose=1)
+#    cv_results = model.evaluate(scaler.fit_transform(x_data.loc[test_idx]), np.ravel(y_data.loc[test_idx]))
+#    cv_acc.append(cv_results[1])
+#    cv_logloss.append(cv_results[0])
+#history = model.fit(scaler.fit_transform(x_data), np.ravel(y_data), epochs=50, batch_size=32, verbose=1, validation_split=0.1, shuffle = True)
+#
+#plt.plot(history.history['acc'])
+#plt.plot(history.history['val_acc'])
+#plt.title('model accuracy')
+#plt.ylabel('accuracy')
+#plt.xlabel('epoch')
+#plt.legend(['train', 'test'], loc='upper left')
+#plt.show()
+## summarize history for loss
+#plt.plot(history.history['loss'])
+#plt.plot(history.history['val_loss'])
+#plt.title('model loss')
+#plt.ylabel('loss')
+#plt.xlabel('epoch')
+#plt.legend(['train', 'test'], loc='upper left')
+  
+for width in [.05, .1, .15]:
+    for depth in [0]:
+#for width in [.001, .0005, .0001]: #[7,6,5,4,3]:
+        def nn_model():
+            model = Sequential()
+            model.add(Dense(48, input_dim=23, kernel_initializer='normal', activation='elu'))
+            model.add(Dropout(.15))
+            model.add(Dense(32, kernel_initializer='normal', activation='elu'))
+            model.add(Dropout(.15))
+            model.add(Dense(16, kernel_initializer='normal', activation='elu'))
+            model.add(Dropout(.05))
+            model.add(Dense(1, kernel_initializer='normal', activation='sigmoid'))
+            model.compile(loss='binary_crossentropy', optimizer=keras.optimizers.SGD(lr=0.0005, momentum=width, decay=depth), metrics=['accuracy'])
+#            model.compile(loss='binary_crossentropy', optimizer=keras.optimizers.RMSprop(lr=width, rho=0.9, decay=0.0), metrics=['accuracy'])
+            return model
+        num_epochs = 150
         model = nn_model()
         for test_idx, train_idx in StratifiedShuffleSplit(n_splits=1, test_size=0.90, random_state=86).split(x_data, y_data):
             acc_results = []
             logloss_results = []
-            history = model.fit(scaler.fit_transform(x_data.loc[train_idx]), np.ravel(y_data.loc[train_idx]), epochs=num_epochs, batch_size=16, verbose=1, validation_data=(scaler.fit_transform(x_data.loc[test_idx]), np.ravel(y_data.loc[test_idx])), shuffle = True)
+            history = model.fit(scaler.fit_transform(x_data.loc[train_idx]), np.ravel(y_data.loc[train_idx]), epochs=num_epochs, batch_size=2**4, verbose=1, validation_data=(scaler.fit_transform(x_data.loc[test_idx]), np.ravel(y_data.loc[test_idx])), shuffle = True)
+#            random.shuffle(test_idx)
+#            for val_idx in np.array_split(test_idx,3):
+#                cv_results = model.evaluate(scaler.fit_transform(x_data.loc[val_idx]), np.ravel(y_data.loc[val_idx]))
+#                acc_results.append(cv_results[1])
+#                logloss_results.append(cv_results[0])
+
             plt.plot(history.history['acc'], linestyle = '-.')
             plt.plot(history.history['val_acc'], linestyle = ':')
+#            plt.axhline(y=np.mean(acc_results), color='r', linestyle='-') 
+#            for score in acc_results:
+#                plt.axhline(y=score, color='r', linestyle=':') 
             plt.title('model accuracy')
             plt.ylabel('accuracy')
             plt.xlabel('epoch')
             plt.legend(['train', 'test', 'validation'], loc='upper left')
             plt.show()
             print('accuracy graph ^')
+            # summarize history for loss
             plt.plot(history.history['loss'], linestyle = '-.')
-            plt.plot(history.history['val_loss'], linestyle = ':')            
+            plt.plot(history.history['val_loss'], linestyle = ':')
+#            plt.axhline(y=cv_results[0], color='r', linestyle='-')
+#            for score in logloss_results:
+#                plt.axhline(y=score, color='r', linestyle=':')             
             plt.title('model loss')
             plt.ylabel('loss')
             plt.xlabel('epoch')
@@ -283,7 +333,6 @@ for width in [6]:
             print('log loss graph ^')
 
             print("Results: best logloss %.4f @ epoch %s, best accuracy %.4f @ epoch %s" % (min(history.history['val_loss']), list(history.history['val_loss']).index(min(history.history['val_loss'])), max(history.history['val_acc']), list(history.history['val_acc']).index(max(history.history['val_acc']))))
-            f = open('keras_model_tuning_ou.txt', 'a')
-            f.write('BatchSize-%s_epochs-%s_model: \n best logloss %.4f @ epoch %s, best accuracy %.4f @ epoch %s\n' % (2**width, num_epochs, min(history.history['val_loss']), list(history.history['val_loss']).index(min(history.history['val_loss'])), max(history.history['val_acc']), list(history.history['val_acc']).index(max(history.history['val_acc']))))
+            f = open('keras_model_tuning.txt', 'a')
+            f.write('BatchSize-%s_epochs-%s_model: \n best logloss %.4f @ epoch %s, best accuracy %.4f @ epoch %s\n' % (width, depth, min(history.history['val_loss']), list(history.history['val_loss']).index(min(history.history['val_loss'])), max(history.history['val_acc']), list(history.history['val_acc']).index(max(history.history['val_acc']))))
             f.close()
-            
