@@ -69,6 +69,9 @@ for y_val in ['regression', 'keras']:
         scale.fit(x_data[saved_models.stored_models[x_vals][y_val]['features']])
         joblib.dump(scale,os.path.join(model_storage, '%s_%s_regression_scaler.pkl' % (y_val, x_vals)))             
         model.fit(scale.transform(x_data[saved_models.stored_models[x_vals][y_val]['features']]), np.ravel(y_data))
-        joblib.dump(model,os.path.join(model_storage, '%s_%s_regression_model.pkl' % (y_val, x_vals))) 
+        if y_val != 'keras':
+            joblib.dump(model,os.path.join(model_storage,  '%s_%s_regression_model.pkl' % (y_val, x_vals)))             
+        else:    
+            model.save(os.path.join(model_storage, '%s_%s_regression_model.h5' % (y_val, x_vals))) 
 
         print('Stored %s_%s'%(x_vals, y_val))

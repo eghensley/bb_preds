@@ -214,7 +214,7 @@ for kind in ['keras']:
             scale.fit(X[saved_models.stored_models[sort]['raw'][kind]['features']])
             joblib.dump(scale,os.path.join(model_storage, '%s_%s_regression_scaler.pkl' % (sort,kind)))             
             model.fit(scale.transform(X[saved_models.stored_models[sort]['raw'][kind]['features']]), np.ravel(Y))
-            joblib.dump(model,os.path.join(model_storage, '%s_%s_regression_model.pkl' % (sort,kind))) 
+            model.save(os.path.join(model_storage, '%s_%s_regression_model.h5' % (sort,kind))) 
         
             print('Stored %s_%s'%(sort,kind))
             
