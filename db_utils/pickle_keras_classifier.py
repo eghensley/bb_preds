@@ -19,9 +19,8 @@ import update_dbs
 import random
 import saved_models
 import pandas as pd
-from sklearn.pipeline import Pipeline
 from sklearn.model_selection import StratifiedKFold, cross_validate
-import joblib
+from sklearn.externals import joblib
 
 train_index = pull_data.pull_train_index(update_dbs.mysql_client())
 random.seed(86)
