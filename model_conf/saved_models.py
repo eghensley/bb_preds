@@ -93,31 +93,32 @@ def share_nn():
     return model 
 
 stored_models = {
-        'keras': {
-            'winner':{
-                'features': ['expected_ppp_for','expected_effective-field-goal-pct_for','50_g_HAspread_allow_defensive-efficiency','expected_offensive-rebounding-pct_for','-20_game_avg_50_g_Tweight_for_floor-percentage','100_g_HAspread_for_personal-fouls-per-game','-100_g_HAspread_allow_assist--per--turnover-ratio','expected_turnovers-per-possession_for','30_g_HAspread_allow_free-throw-rate','-100_g_HAspread_for_defensive-efficiency','pregame_turnovers-per-possession_for','-50_g_HAspread_for_personal-fouls-per-game','75_g_HAspread_for_defensive-efficiency','100_g_HAspread_for_defensive-efficiency','75_g_HAspread_allow_points-per-game','-75_g_HAspread_allow_floor-percentage','30_g_HAspread_for_floor-percentage','expected_ftm-per-100-possessions_for','-75_g_HAspread_allow_defensive-efficiency','-50_g_HAspread_allow_points-per-game`/`possessions-per-game','-50_game_avg_30_g_Tweight_allow_fta-per-fga','-50_g_HAspread_for_assist--per--turnover-ratio','-10_g_HAspread_allow_ftm-per-100-possessions'],
-                'model': KerasClassifier(build_fn=winner_nn, epochs=30, batch_size=16, verbose=1),
-                'scale': RobustScaler(),
-                },
-            'ou':{
-                'keras':{
-                    'features': ['expected_effective-field-goal-pct_for','10_game_avg_30_g_Tweight_for_true-shooting-percentage','-75_g_HAspread_allow_defensive-efficiency','100_g_HAspread_allow_block-pct','10_game_avg_10_g_Tweight_for_possessions-per-game','-expected_effective-field-goal-pct_allowed','75_g_HAspread_for_floor-percentage','-10_game_avg_15_g_HAweight_for_defensive-efficiency','-30_game_avg_50_g_Tweight_allow_points-per-game`/`possessions-per-game','30_game_avg_5_g_Tweight_for_possessions-per-game','25_g_HAspread_for_points-per-game','-30_game_avg_50_g_HAweight_allow_points-per-game','-10_game_avg_10_g_Tweight_allow_points-per-game`/`possessions-per-game','-1_game_avg_10_g_Tweight_allow_possessions-per-game','-100_g_HAspread_for_points-per-game','-50_game_avg_50_g_HAweight_for_assists-per-game','25_g_HAspread_for_possessions-per-game','10_game_avg_50_g_HAweight_for_blocks-per-game','-50_game_avg_50_g_HAweight_allow_ftm-per-100-possessions','20_game_avg_30_g_HAweight_for_defensive-rebounds-per-game','-20_game_avg_50_g_Tweight_for_floor-percentage','20_game_avg_10_g_HAweight_for_possessions-per-game','-20_game_avg_50_g_Tweight_allow_points-per-game','-100_g_HAspread_allow_assist--per--turnover-ratio','-10_game_avg_10_g_HAweight_allow_points-per-game','75_g_HAspread_allow_percent-of-points-from-3-pointers','-15_g_HAspread_allow_block-pct','-20_game_avg_25_g_Tweight_allow_possessions-per-game','-10_game_avg_15_g_HAweight_allow_defensive-rebounds-per-game','-20_game_avg_50_g_HAweight_allow_defensive-efficiency','50_game_avg_50_g_HAweight_for_assists-per-game','-30_game_avg_25_g_Tweight_allow_points-per-game','-25_g_HAspread_allow_possessions-per-game', 'pca_ou', 'tsvd_ou', 'lasso_ou', 'lightgbm_ou', 'ridge_ou', 'vegas_ou'],
-                    'model': KerasClassifier(build_fn=ou_nn, epochs=120, batch_size=16, verbose=1),
-                    'scale': StandardScaler(),
-                }},
-            'line':{
-                'keras':{
-                    'features': ['20_game_avg_30_g_HAweight_allow_fta-per-fga','-75_g_HAspread_allow_defensive-efficiency','-expected_poss_pg_allowed','50_game_avg_50_g_HAweight_for_defensive-rebounding-pct','75_g_HAspread_allow_defensive-efficiency','-20_game_avg_50_g_Tweight_allow_fta-per-fga','50_g_HAspread_allow_assist--per--turnover-ratio','50_game_avg_30_g_Tweight_allow_offensive-efficiency','-50_game_avg_15_g_HAweight_allow_blocks-per-game','pregame_offensive-rebounding-pct_for','10_game_avg_30_g_Tweight_for_assists-per-game','20_game_avg_30_g_Tweight_allow_assist--per--turnover-ratio','-30_game_avg_10_g_HAweight_allow_possessions-per-game','-50_game_avg_50_g_Tweight_for_assist--per--turnover-ratio','100_g_HAspread_allow_block-pct','75_g_HAspread_for_defensive-efficiency','1_game_avg_10_g_HAweight_for_points-per-game','-50_game_avg_30_g_Tweight_allow_block-pct','25_g_HAspread_for_possessions-per-game','-5_game_avg_10_g_Tweight_allow_possessions-per-game','100_g_HAspread_for_defensive-efficiency','-10_game_avg_50_g_Tweight_for_assists-per-game','-20_game_avg_15_g_Tweight_allow_extra-chances-per-game','pregame_ppp_for','-expected_effective-field-goal-pct_allowed','-5_game_avg_50_g_HAweight_allow_possessions-per-game','-10_g_HAspread_allow_points-per-game`/`possessions-per-game','-50_game_avg_15_g_Tweight_allow_blocks-per-game','-50_game_avg_50_g_HAweight_for_offensive-rebounding-pct','-20_game_avg_50_g_Tweight_for_block-pct', 'pca_line', 'tsvd_line', 'lasso_line', 'lightgbm_line', 'ridge_line', 'vegas_line'],
-                    'model': KerasClassifier(build_fn=line_nn, epochs=30, batch_size=64, verbose=1),
-                    'scale': StandardScaler(),
-                }},
-            'share':{
-                'keras':{
-                    'features': ['+ridge_all','expected_effective-field-goal-pct_for','expected_turnovers-per-possession_for','expected_offensive-rebounding-pct_for','-linsvm_team','25_g_HAspread_for_points-per-game','-pregame_turnovers-per-possession_allowed','50_g_HAspread_allow_floor-percentage','50_g_HAspread_for_points-per-game','-expected_pts_pg_allowed','10_game_avg_50_g_HAweight_for_offensive-efficiency','30_g_HAspread_for_steal-pct','10_g_HAspread_allow_personal-fouls-per-possession','pregame_turnovers-per-possession_for','-10_game_avg_15_g_HAweight_for_assist--per--turnover-ratio','-100_g_HAspread_for_points-per-game','75_g_HAspread_for_shooting-pct','100_g_HAspread_for_personal-fouls-per-game','-50_g_HAspread_allow_points-per-game`/`possessions-per-game','-25_g_HAspread_allow_points-per-game`/`possessions-per-game','-30_g_HAspread_for_offensive-efficiency','-75_g_HAspread_allow_floor-percentage','pregame_ppp_for','-lightgbm_team','expected_ftm-per-100-possessions_for'],
-                    'model': KerasRegressor(build_fn=share_nn, epochs=270, batch_size=64, verbose=1),
-                    'scale': StandardScaler(),
-                }},
-            },
+#        'keras': {
+#            'winner':{
+#                'keras':{
+#                    'features': ['expected_ppp_for','expected_effective-field-goal-pct_for','50_g_HAspread_allow_defensive-efficiency','expected_offensive-rebounding-pct_for','-20_game_avg_50_g_Tweight_for_floor-percentage','100_g_HAspread_for_personal-fouls-per-game','-100_g_HAspread_allow_assist--per--turnover-ratio','expected_turnovers-per-possession_for','30_g_HAspread_allow_free-throw-rate','-100_g_HAspread_for_defensive-efficiency','pregame_turnovers-per-possession_for','-50_g_HAspread_for_personal-fouls-per-game','75_g_HAspread_for_defensive-efficiency','100_g_HAspread_for_defensive-efficiency','75_g_HAspread_allow_points-per-game','-75_g_HAspread_allow_floor-percentage','30_g_HAspread_for_floor-percentage','expected_ftm-per-100-possessions_for','-75_g_HAspread_allow_defensive-efficiency','-50_g_HAspread_allow_points-per-game`/`possessions-per-game','-50_game_avg_30_g_Tweight_allow_fta-per-fga','-50_g_HAspread_for_assist--per--turnover-ratio','-10_g_HAspread_allow_ftm-per-100-possessions'],
+#                    'model': KerasClassifier(build_fn=winner_nn, epochs=30, batch_size=16, verbose=1),
+#                    'scale': RobustScaler(),
+#                }},
+#            'ou':{
+#                'keras':{
+#                    'features': ['expected_effective-field-goal-pct_for','10_game_avg_30_g_Tweight_for_true-shooting-percentage','-75_g_HAspread_allow_defensive-efficiency','100_g_HAspread_allow_block-pct','10_game_avg_10_g_Tweight_for_possessions-per-game','-expected_effective-field-goal-pct_allowed','75_g_HAspread_for_floor-percentage','-10_game_avg_15_g_HAweight_for_defensive-efficiency','-30_game_avg_50_g_Tweight_allow_points-per-game`/`possessions-per-game','30_game_avg_5_g_Tweight_for_possessions-per-game','25_g_HAspread_for_points-per-game','-30_game_avg_50_g_HAweight_allow_points-per-game','-10_game_avg_10_g_Tweight_allow_points-per-game`/`possessions-per-game','-1_game_avg_10_g_Tweight_allow_possessions-per-game','-100_g_HAspread_for_points-per-game','-50_game_avg_50_g_HAweight_for_assists-per-game','25_g_HAspread_for_possessions-per-game','10_game_avg_50_g_HAweight_for_blocks-per-game','-50_game_avg_50_g_HAweight_allow_ftm-per-100-possessions','20_game_avg_30_g_HAweight_for_defensive-rebounds-per-game','-20_game_avg_50_g_Tweight_for_floor-percentage','20_game_avg_10_g_HAweight_for_possessions-per-game','-20_game_avg_50_g_Tweight_allow_points-per-game','-100_g_HAspread_allow_assist--per--turnover-ratio','-10_game_avg_10_g_HAweight_allow_points-per-game','75_g_HAspread_allow_percent-of-points-from-3-pointers','-15_g_HAspread_allow_block-pct','-20_game_avg_25_g_Tweight_allow_possessions-per-game','-10_game_avg_15_g_HAweight_allow_defensive-rebounds-per-game','-20_game_avg_50_g_HAweight_allow_defensive-efficiency','50_game_avg_50_g_HAweight_for_assists-per-game','-30_game_avg_25_g_Tweight_allow_points-per-game','-25_g_HAspread_allow_possessions-per-game', 'pca_ou', 'tsvd_ou', 'lasso_ou', 'lightgbm_ou', 'ridge_ou', 'vegas_ou'],
+#                    'model': KerasClassifier(build_fn=ou_nn, epochs=120, batch_size=16, verbose=1),
+#                    'scale': StandardScaler(),
+#                }},
+#            'line':{
+#                'keras':{
+#                    'features': ['20_game_avg_30_g_HAweight_allow_fta-per-fga','-75_g_HAspread_allow_defensive-efficiency','-expected_poss_pg_allowed','50_game_avg_50_g_HAweight_for_defensive-rebounding-pct','75_g_HAspread_allow_defensive-efficiency','-20_game_avg_50_g_Tweight_allow_fta-per-fga','50_g_HAspread_allow_assist--per--turnover-ratio','50_game_avg_30_g_Tweight_allow_offensive-efficiency','-50_game_avg_15_g_HAweight_allow_blocks-per-game','pregame_offensive-rebounding-pct_for','10_game_avg_30_g_Tweight_for_assists-per-game','20_game_avg_30_g_Tweight_allow_assist--per--turnover-ratio','-30_game_avg_10_g_HAweight_allow_possessions-per-game','-50_game_avg_50_g_Tweight_for_assist--per--turnover-ratio','100_g_HAspread_allow_block-pct','75_g_HAspread_for_defensive-efficiency','1_game_avg_10_g_HAweight_for_points-per-game','-50_game_avg_30_g_Tweight_allow_block-pct','25_g_HAspread_for_possessions-per-game','-5_game_avg_10_g_Tweight_allow_possessions-per-game','100_g_HAspread_for_defensive-efficiency','-10_game_avg_50_g_Tweight_for_assists-per-game','-20_game_avg_15_g_Tweight_allow_extra-chances-per-game','pregame_ppp_for','-expected_effective-field-goal-pct_allowed','-5_game_avg_50_g_HAweight_allow_possessions-per-game','-10_g_HAspread_allow_points-per-game`/`possessions-per-game','-50_game_avg_15_g_Tweight_allow_blocks-per-game','-50_game_avg_50_g_HAweight_for_offensive-rebounding-pct','-20_game_avg_50_g_Tweight_for_block-pct', 'pca_line', 'tsvd_line', 'lasso_line', 'lightgbm_line', 'ridge_line', 'vegas_line'],
+#                    'model': KerasClassifier(build_fn=line_nn, epochs=30, batch_size=64, verbose=1),
+#                    'scale': StandardScaler(),
+#                }},
+#            'share':{
+#                'keras':{
+#                    'features': ['+ridge_all','expected_effective-field-goal-pct_for','expected_turnovers-per-possession_for','expected_offensive-rebounding-pct_for','-linsvm_team','25_g_HAspread_for_points-per-game','-pregame_turnovers-per-possession_allowed','50_g_HAspread_allow_floor-percentage','50_g_HAspread_for_points-per-game','-expected_pts_pg_allowed','10_game_avg_50_g_HAweight_for_offensive-efficiency','30_g_HAspread_for_steal-pct','10_g_HAspread_allow_personal-fouls-per-possession','pregame_turnovers-per-possession_for','-10_game_avg_15_g_HAweight_for_assist--per--turnover-ratio','-100_g_HAspread_for_points-per-game','75_g_HAspread_for_shooting-pct','100_g_HAspread_for_personal-fouls-per-game','-50_g_HAspread_allow_points-per-game`/`possessions-per-game','-25_g_HAspread_allow_points-per-game`/`possessions-per-game','-30_g_HAspread_for_offensive-efficiency','-75_g_HAspread_allow_floor-percentage','pregame_ppp_for','-lightgbm_team','expected_ftm-per-100-possessions_for'],
+#                    'model': KerasRegressor(build_fn=share_nn, epochs=270, batch_size=64, verbose=1),
+#                    'scale': StandardScaler(),
+#                }},
+#            },
         'offense':{
             'pace': {
                 'features': ['lightgbm_possessions', 'lasso_possessions', 'linsvm_possessions'],
@@ -142,17 +143,17 @@ stored_models = {
                 'scale': StandardScaler(),
             },  
         },
-        'predictive':{
-                    '+pts': {
-                        'features': ['+rest', '+ridge_all', '-lightgbm_all', '-ridge_all', '-rest', '-lasso_team', '+lightgbm_possessions', '+lasso_target', '+linsvm_all', '-lasso_target', '+linsvm_team', '+lasso_possessions', '-lasso_possessions', '+linsvm_target', '-lightgbm_team', '-linsvm_team', '-lightgbm_possessions', '-ridge_possessions', '+lightgbm_target', '-lightgbm_target', '+lightgbm_team', '-ridge_team', '+ridge_target', '+linsvm_possessions'],
-                        'model': LinearSVR(random_state = 1108, C =  0.0395279798349, epsilon=0),
-                        'scale': StandardScaler(),
-                        }, 
-                    'share': {
-                        'features': ['+ridge_all', 'pregame_ppp_for', '-75_g_HAspread_allow_floor-percentage', '-30_g_HAspread_for_offensive-efficiency', '-25_g_HAspread_allow_points-per-game`/`possessions-per-game', '-50_g_HAspread_allow_points-per-game`/`possessions-per-game', '100_g_HAspread_for_personal-fouls-per-game', '75_g_HAspread_for_shooting-pct', '-100_g_HAspread_for_points-per-game', '-lightgbm_team', '10_g_HAspread_allow_personal-fouls-per-possession', '-expected_pts_pg_allowed', '50_g_HAspread_for_points-per-game', '50_g_HAspread_allow_floor-percentage', '25_g_HAspread_for_points-per-game', '-linsvm_team', 'expected_offensive-rebounding-pct_for', 'expected_effective-field-goal-pct_for', 'expected_ftm-per-100-possessions_for', 'expected_turnovers-per-possession_for', '30_g_HAspread_for_steal-pct', '-pregame_turnovers-per-possession_allowed', 'pregame_turnovers-per-possession_for', '10_game_avg_50_g_HAweight_for_offensive-efficiency'],
-                        'model': Lasso(random_state = 1108, alpha = 0.001),
-                        'scale': StandardScaler(),                            
-                        },
+        'share':{
+            'regression': {
+                'features': ['+ridge_all', 'pregame_ppp_for', '-75_g_HAspread_allow_floor-percentage', '-30_g_HAspread_for_offensive-efficiency', '-25_g_HAspread_allow_points-per-game`/`possessions-per-game', '-50_g_HAspread_allow_points-per-game`/`possessions-per-game', '100_g_HAspread_for_personal-fouls-per-game', '75_g_HAspread_for_shooting-pct', '-100_g_HAspread_for_points-per-game', '-lightgbm_team', '10_g_HAspread_allow_personal-fouls-per-possession', '-expected_pts_pg_allowed', '50_g_HAspread_for_points-per-game', '50_g_HAspread_allow_floor-percentage', '25_g_HAspread_for_points-per-game', '-linsvm_team', 'expected_offensive-rebounding-pct_for', 'expected_effective-field-goal-pct_for', 'expected_ftm-per-100-possessions_for', 'expected_turnovers-per-possession_for', '30_g_HAspread_for_steal-pct', '-pregame_turnovers-per-possession_allowed', 'pregame_turnovers-per-possession_for', '10_game_avg_50_g_HAweight_for_offensive-efficiency'],
+                'model': Lasso(random_state = 1108, alpha = 0.001),
+                'scale': StandardScaler(),                            
+                },
+            'keras':{
+                'features': ['+ridge_all','expected_effective-field-goal-pct_for','expected_turnovers-per-possession_for','expected_offensive-rebounding-pct_for','-linsvm_team','25_g_HAspread_for_points-per-game','-pregame_turnovers-per-possession_allowed','50_g_HAspread_allow_floor-percentage','50_g_HAspread_for_points-per-game','-expected_pts_pg_allowed','10_game_avg_50_g_HAweight_for_offensive-efficiency','30_g_HAspread_for_steal-pct','10_g_HAspread_allow_personal-fouls-per-possession','pregame_turnovers-per-possession_for','-10_game_avg_15_g_HAweight_for_assist--per--turnover-ratio','-100_g_HAspread_for_points-per-game','75_g_HAspread_for_shooting-pct','100_g_HAspread_for_personal-fouls-per-game','-50_g_HAspread_allow_points-per-game`/`possessions-per-game','-25_g_HAspread_allow_points-per-game`/`possessions-per-game','-30_g_HAspread_for_offensive-efficiency','-75_g_HAspread_allow_floor-percentage','pregame_ppp_for','-lightgbm_team','expected_ftm-per-100-possessions_for'],
+                'model': KerasRegressor(build_fn=share_nn, epochs=270, batch_size=64, verbose=1),
+                'scale': StandardScaler(),
+                },
         },
         'winner':{
                 '+pts':{
@@ -193,6 +194,13 @@ stored_models = {
                         'acc_weight': 0.2895677417,
                         'logloss_weight':0.2511527414,                        
                         },
+                    'keras':{
+                        'features': ['expected_ppp_for','expected_effective-field-goal-pct_for','50_g_HAspread_allow_defensive-efficiency','expected_offensive-rebounding-pct_for','-20_game_avg_50_g_Tweight_for_floor-percentage','100_g_HAspread_for_personal-fouls-per-game','-100_g_HAspread_allow_assist--per--turnover-ratio','expected_turnovers-per-possession_for','30_g_HAspread_allow_free-throw-rate','-100_g_HAspread_for_defensive-efficiency','pregame_turnovers-per-possession_for','-50_g_HAspread_for_personal-fouls-per-game','75_g_HAspread_for_defensive-efficiency','100_g_HAspread_for_defensive-efficiency','75_g_HAspread_allow_points-per-game','-75_g_HAspread_allow_floor-percentage','30_g_HAspread_for_floor-percentage','expected_ftm-per-100-possessions_for','-75_g_HAspread_allow_defensive-efficiency','-50_g_HAspread_allow_points-per-game`/`possessions-per-game','-50_game_avg_30_g_Tweight_allow_fta-per-fga','-50_g_HAspread_for_assist--per--turnover-ratio','-10_g_HAspread_allow_ftm-per-100-possessions'],
+                        'model': KerasClassifier(build_fn=winner_nn, epochs=30, batch_size=16, verbose=1),
+                        'scale': RobustScaler(),
+                        'acc_weight': 0,
+                        'logloss_weight': 0,
+                         },  
                 },
         },
         'ou':{
@@ -201,22 +209,25 @@ stored_models = {
                         'features': ['-ridge_team', '+lasso_target', '-linsvm_team', '+lightgbm_target', '+linsvm_all', '-lasso_possessions', '+rest', '-lightgbm_team', '+ridge_target', '+lightgbm_possessions', '-ridge_all', '-lasso_target', '+ridge_all', '+lightgbm_team', '+linsvm_team', '+lasso_possessions', '+linsvm_possessions', '-ridge_possessions', '-lightgbm_possessions', '-lightgbm_all', '-lightgbm_target', '+linsvm_target', '-lasso_team'],
                         'model':  LogisticRegression(random_state = 1108, C = 15.56187413425767, solver = "newton-cg"),
                         'scale' : MinMaxScaler(),
-                        'acc_weight': 0.1529158222,
-                        'logloss_weight':0.1693534377, 
+                        'acc_weight': 0.1248750836,
+                        'logloss_weight':0.1463453962, 
+                        'combined_weight': 0.1356102399,
                         }, 
                     'linsvc': {
                         'features': ['ridge_ou', '-ridge_team', '+lasso_target', '-linsvm_team', '+lightgbm_target', '+linsvm_all', '-lasso_possessions', '+rest', 'lightgbm_ou', '-lightgbm_team', '+ridge_target', '+lightgbm_possessions', '-ridge_all', 'pca_ou', '-lasso_target', '-rest', '+ridge_all', '+lightgbm_team', '+linsvm_team', '+lasso_possessions', '+linsvm_possessions', '-ridge_possessions', '-lightgbm_possessions', '-lightgbm_all', 'tsvd_ou', '-lightgbm_target', '+linsvm_target', '-lasso_team'],
                         'model': SVC(random_state = 1108, C =  0.15817437173, kernel = 'linear', probability = True),
                         'scale': MinMaxScaler(),
-                        'acc_weight':0.1018977904,
-                        'logloss_weight':0.1562141864, 
+                        'acc_weight':0.0832124165,
+                        'logloss_weight':0.134991219, 
+                        'combined_weight': 0.1091018178,
                         },    
                     'lightgbc': {
                         'features': ['ridge_ou', 'lasso_ou', '-ridge_team', '+lasso_target', '-linsvm_team', '+lightgbm_target', '+linsvm_all', '-lasso_possessions', 'lightgbm_ou', '+rest', '-lightgbm_team', '+ridge_target', '+lightgbm_possessions', '-ridge_all', 'pca_ou', '-lasso_target', '-rest', '+ridge_all', '+lightgbm_team', '+linsvm_team', '+lasso_possessions', '+linsvm_possessions', '-ridge_possessions', '-lightgbm_possessions', '-lightgbm_all', 'tsvd_ou', '-lightgbm_target', '+linsvm_target', '-lasso_team'],
                         'model': lgb.LGBMClassifier(random_state = 1108, n_estimators = 100, colsample_bytree = 0.925424645171526, min_child_samples = 63, num_leaves = 159, subsample = 0.417196512684593, max_bin = 1011, learning_rate = 0.01),
                         'scale': StandardScaler(),
-                        'acc_weight': 0.0955044275,
-                        'logloss_weight':0.1493841177, 
+                        'acc_weight': 0.0779914282,
+                        'logloss_weight':0.1290890707, 
+                        'combined_weight': 0.1035402494,
                         },                                          
                 },
                 'raw':{
@@ -224,23 +235,34 @@ stored_models = {
                         'features': ['-50_game_avg_50_g_HAweight_allow_ftm-per-100-possessions', 'ridge_ou', '-30_game_avg_50_g_Tweight_allow_points-per-game`/`possessions-per-game', 'lasso_ou', '20_game_avg_30_g_HAweight_for_defensive-rebounds-per-game', '10_game_avg_50_g_HAweight_for_blocks-per-game', '100_g_HAspread_allow_block-pct', '-1_game_avg_10_g_Tweight_allow_possessions-per-game', '-20_game_avg_50_g_HAweight_allow_defensive-efficiency', '-20_game_avg_50_g_Tweight_for_floor-percentage', '-100_g_HAspread_allow_assist--per--turnover-ratio', '-100_g_HAspread_for_points-per-game', '-expected_effective-field-goal-pct_allowed', '-10_game_avg_10_g_HAweight_allow_points-per-game', '-10_game_avg_15_g_HAweight_for_defensive-efficiency', '-30_game_avg_50_g_HAweight_allow_points-per-game', '10_game_avg_30_g_Tweight_for_true-shooting-percentage', '-75_g_HAspread_allow_defensive-efficiency', 'lightgbm_ou', '30_game_avg_5_g_Tweight_for_possessions-per-game', '25_g_HAspread_for_points-per-game', '-50_game_avg_50_g_HAweight_for_assists-per-game', 'pca_ou', '-15_g_HAspread_allow_block-pct', 'expected_effective-field-goal-pct_for', '20_game_avg_10_g_HAweight_for_possessions-per-game', '-30_game_avg_25_g_Tweight_allow_points-per-game', '-20_game_avg_50_g_Tweight_allow_points-per-game', '50_game_avg_50_g_HAweight_for_assists-per-game', '-10_game_avg_10_g_Tweight_allow_points-per-game`/`possessions-per-game', '75_g_HAspread_for_floor-percentage', '-10_game_avg_15_g_HAweight_allow_defensive-rebounds-per-game', '10_game_avg_10_g_Tweight_for_possessions-per-game', '75_g_HAspread_allow_percent-of-points-from-3-pointers', 'tsvd_ou', '-25_g_HAspread_allow_possessions-per-game', '25_g_HAspread_for_possessions-per-game'],
                         'model': lgb.LGBMClassifier(random_state = 1108, n_estimators = 100, colsample_bytree = 0.785582982952984, min_child_samples = 198, num_leaves = 11, subsample = 0.633073504349269, max_bin = 1359, learning_rate = 0.02),
                         'scale': StandardScaler(),
-                        'acc_weight': 0.1817906222,
-                        'logloss_weight':0.162580079, 
+                        'acc_weight': 0.1484550049,
+                        'logloss_weight':0.1404922534, 
+                        'combined_weight': 0.1444736291,
                         },
                     'knn': {
                         'features': ['-50_game_avg_50_g_HAweight_allow_ftm-per-100-possessions', '-30_game_avg_50_g_Tweight_allow_points-per-game`/`possessions-per-game', 'ridge_ou', 'lasso_ou', '20_game_avg_30_g_HAweight_for_defensive-rebounds-per-game', '10_game_avg_50_g_HAweight_for_blocks-per-game', '100_g_HAspread_allow_block-pct', '-20_game_avg_50_g_HAweight_allow_defensive-efficiency', '-20_game_avg_50_g_Tweight_for_floor-percentage', '-100_g_HAspread_allow_assist--per--turnover-ratio', '-100_g_HAspread_for_points-per-game', '-expected_effective-field-goal-pct_allowed', '-10_game_avg_10_g_HAweight_allow_points-per-game', '-10_game_avg_15_g_HAweight_for_defensive-efficiency', '-30_game_avg_50_g_HAweight_allow_points-per-game', '10_game_avg_30_g_Tweight_for_true-shooting-percentage', '-75_g_HAspread_allow_defensive-efficiency', 'lightgbm_ou', '30_game_avg_5_g_Tweight_for_possessions-per-game', '25_g_HAspread_for_points-per-game', '-50_game_avg_50_g_HAweight_for_assists-per-game', 'pca_ou', 'expected_effective-field-goal-pct_for', '20_game_avg_10_g_HAweight_for_possessions-per-game', '-30_game_avg_25_g_Tweight_allow_points-per-game', '-20_game_avg_50_g_Tweight_allow_points-per-game', '50_game_avg_50_g_HAweight_for_assists-per-game', '-10_game_avg_10_g_Tweight_allow_points-per-game`/`possessions-per-game', '75_g_HAspread_for_floor-percentage', '-20_game_avg_25_g_Tweight_allow_possessions-per-game', '-10_game_avg_15_g_HAweight_allow_defensive-rebounds-per-game', '10_game_avg_10_g_Tweight_for_possessions-per-game', '75_g_HAspread_allow_percent-of-points-from-3-pointers', 'tsvd_ou', '25_g_HAspread_for_possessions-per-game', '-25_g_HAspread_allow_possessions-per-game', '-15_g_HAspread_allow_block-pct'],
                         'model': KNeighborsClassifier(n_neighbors = 88, leaf_size = 30),
                         'scale': MinMaxScaler(),
-                        'acc_weight': 0.2339456689,
-                        'logloss_weight':0.1929314672, 
+                        'acc_weight': 0.1910461882,
+                        'logloss_weight':0.1667201587,
+                        'combined_weight': 0.1788831735,
                         },                            
                     'log': {
                         'features': ['-10_game_avg_10_g_Tweight_allow_points-per-game`/`possessions-per-game', '-20_game_avg_50_g_Tweight_for_floor-percentage', '30_game_avg_5_g_Tweight_for_possessions-per-game', '-100_g_HAspread_allow_assist--per--turnover-ratio', '25_g_HAspread_for_points-per-game', '-20_game_avg_25_g_Tweight_allow_possessions-per-game', '-expected_effective-field-goal-pct_allowed', '-10_game_avg_15_g_HAweight_allow_defensive-rebounds-per-game', '10_game_avg_10_g_Tweight_for_possessions-per-game', '20_game_avg_30_g_HAweight_for_defensive-rebounds-per-game', '-10_game_avg_15_g_HAweight_for_defensive-efficiency', '-10_game_avg_10_g_HAweight_allow_points-per-game', '75_g_HAspread_allow_percent-of-points-from-3-pointers', 'expected_effective-field-goal-pct_for', '10_game_avg_30_g_Tweight_for_true-shooting-percentage', '20_game_avg_10_g_HAweight_for_possessions-per-game', '-20_game_avg_50_g_Tweight_allow_points-per-game', '-20_game_avg_50_g_HAweight_allow_defensive-efficiency'],
                         'model':LogisticRegression(random_state = 1108, C = 0.04795626933077879, solver = "liblinear"),
                         'scale': MinMaxScaler(),
-                        'acc_weight': 0.2339456689,
-                        'logloss_weight':0.1695367121, 
+                        'acc_weight': 0.1910461882,
+                        'logloss_weight':0.1465037713,
+                        'combined_weight': 0.1687749798,
                         }, 
+                    'keras':{
+                        'features': ['expected_effective-field-goal-pct_for','10_game_avg_30_g_Tweight_for_true-shooting-percentage','-75_g_HAspread_allow_defensive-efficiency','100_g_HAspread_allow_block-pct','10_game_avg_10_g_Tweight_for_possessions-per-game','-expected_effective-field-goal-pct_allowed','75_g_HAspread_for_floor-percentage','-10_game_avg_15_g_HAweight_for_defensive-efficiency','-30_game_avg_50_g_Tweight_allow_points-per-game`/`possessions-per-game','30_game_avg_5_g_Tweight_for_possessions-per-game','25_g_HAspread_for_points-per-game','-30_game_avg_50_g_HAweight_allow_points-per-game','-10_game_avg_10_g_Tweight_allow_points-per-game`/`possessions-per-game','-1_game_avg_10_g_Tweight_allow_possessions-per-game','-100_g_HAspread_for_points-per-game','-50_game_avg_50_g_HAweight_for_assists-per-game','25_g_HAspread_for_possessions-per-game','10_game_avg_50_g_HAweight_for_blocks-per-game','-50_game_avg_50_g_HAweight_allow_ftm-per-100-possessions','20_game_avg_30_g_HAweight_for_defensive-rebounds-per-game','-20_game_avg_50_g_Tweight_for_floor-percentage','20_game_avg_10_g_HAweight_for_possessions-per-game','-20_game_avg_50_g_Tweight_allow_points-per-game','-100_g_HAspread_allow_assist--per--turnover-ratio','-10_game_avg_10_g_HAweight_allow_points-per-game','75_g_HAspread_allow_percent-of-points-from-3-pointers','-15_g_HAspread_allow_block-pct','-20_game_avg_25_g_Tweight_allow_possessions-per-game','-10_game_avg_15_g_HAweight_allow_defensive-rebounds-per-game','-20_game_avg_50_g_HAweight_allow_defensive-efficiency','50_game_avg_50_g_HAweight_for_assists-per-game','-30_game_avg_25_g_Tweight_allow_points-per-game','-25_g_HAspread_allow_possessions-per-game', 'pca_ou', 'tsvd_ou', 'lasso_ou', 'lightgbm_ou', 'ridge_ou', 'vegas_ou'],
+                        'model': KerasClassifier(build_fn=ou_nn, epochs=120, batch_size=16, verbose=1),
+                        'scale': StandardScaler(),
+                        'acc_weight': 0.1833736905,
+                        'logloss_weight': 0.1358581306,
+                        'combined_score': 0.1596159105,
+                         },  
                 },
         },
         'line':{
@@ -249,29 +271,33 @@ stored_models = {
                         'features': ['lasso_line'],
                         'model': KNeighborsClassifier(n_neighbors = 198, leaf_size = 100),
                         'scale': MinMaxScaler(),
-                        'acc_weight': 0.0957541993,
-                        'logloss_weight':0.1242102222,                        
+                        'acc_weight': 0.0825221487,
+                        'logloss_weight':0.1066648644, 
+                        'combined_weight': 0.0945935065,
                         },       
                     'log': {
                         'features': ['+ridge_target', 'ridge_line', 'lasso_line', '-ridge_team', '+lasso_target', '-lasso_target', '+linsvm_target', 'lightgbm_line', '-lasso_team'],
                         'model': LogisticRegression(random_state = 1108, C = 13.48854758964598, solver = "liblinear"),
                         'scale': RobustScaler(),
-                        'acc_weight': 0.1769992154,
-                        'logloss_weight':0.1717807627, 
+                        'acc_weight': 0.1525401044,
+                        'logloss_weight':0.1475158118,
+                        'combined_weight': 0.1500279581,
                         },                                              
                     'linsvc': {
                         'features': ['+ridge_target', 'ridge_line', 'lasso_line', '-ridge_team', '+lasso_target', '+linsvm_target', 'lightgbm_line', '-lasso_team'],
                         'model': SVC(random_state = 1108, C =  4.87778133978, kernel = 'linear', probability = True),
                         'scale': StandardScaler(),
-                        'acc_weight': 0.1358476918,
-                        'logloss_weight':0.169374042,  
+                        'acc_weight': 0.1170752145,
+                        'logloss_weight':0.1454490533,
+                        'combination_weight': 0.1312621339,
                         }, 
                     'lightgbc': {
                         'features': ['+linsvm_team', '+ridge_target', '+lasso_possessions', '+linsvm_possessions', '+linsvm_all', '-ridge_possessions', 'lasso_line', '-lasso_target', '-lasso_possessions', 'tsvd_line', 'pca_line', 'lightgbm_line', '-lasso_team'],
                         'model': lgb.LGBMClassifier(random_state = 1108, n_estimators = 225, colsample_bytree =0.985094185628027, min_child_samples = 13, num_leaves = 15, subsample = 0.721806428713343, max_bin = 1110, learning_rate = 0.03),
                         'scale': RobustScaler(),
-                        'acc_weight': 0.2126075061,
-                        'logloss_weight':0.1811016839, 
+                        'acc_weight': 0.183227768,
+                        'logloss_weight':0.155520103, 
+                        'combined_weight': 0.1693739355,
                         },                                             
             },
                 'raw':{
@@ -279,16 +305,26 @@ stored_models = {
                         'features': ['pregame_ppp_for', 'ridge_line', '50_game_avg_50_g_HAweight_for_defensive-rebounding-pct', '-5_game_avg_50_g_HAweight_allow_possessions-per-game', '100_g_HAspread_allow_block-pct', '-50_game_avg_30_g_Tweight_allow_block-pct', '-expected_effective-field-goal-pct_allowed', '-75_g_HAspread_allow_defensive-efficiency', '-20_game_avg_15_g_Tweight_allow_extra-chances-per-game', 'lasso_line', '-20_game_avg_50_g_Tweight_for_block-pct', '1_game_avg_10_g_HAweight_for_points-per-game', '75_g_HAspread_for_defensive-efficiency', '50_game_avg_30_g_Tweight_allow_offensive-efficiency', '20_game_avg_30_g_HAweight_allow_fta-per-fga', '-50_game_avg_50_g_HAweight_for_offensive-rebounding-pct', '-5_game_avg_10_g_Tweight_allow_possessions-per-game', 'pca_line', 'tsvd_line', '-10_game_avg_50_g_Tweight_for_assists-per-game', '-30_game_avg_10_g_HAweight_allow_possessions-per-game', '10_game_avg_30_g_Tweight_for_assists-per-game', '-20_game_avg_50_g_Tweight_allow_fta-per-fga', '100_g_HAspread_for_defensive-efficiency', '50_g_HAspread_allow_assist--per--turnover-ratio', '20_game_avg_30_g_Tweight_allow_assist--per--turnover-ratio', '75_g_HAspread_allow_defensive-efficiency', '-50_game_avg_15_g_Tweight_allow_blocks-per-game', '-50_game_avg_50_g_Tweight_for_assist--per--turnover-ratio', 'pregame_offensive-rebounding-pct_for', '-50_game_avg_15_g_HAweight_allow_blocks-per-game', '-expected_poss_pg_allowed', 'lightgbm_line', '25_g_HAspread_for_possessions-per-game'],
                         'model': lgb.LGBMClassifier(random_state = 1108, n_estimators = 150, colsample_bytree = 0.609201056258738, min_child_samples = 177, num_leaves = 49, subsample = 0.814351700300212, max_bin = 1958, learning_rate = 0.005),
                         'scale': MinMaxScaler(),
-                        'acc_weight': 0.2461102595,
-                        'logloss_weight':0.1818867281,                         
+                        'acc_weight': 0.2121008537,
+                        'logloss_weight':0.1561942556,
+                        'combined_score': 0.1841475546,                         
                         },                          
                     'log': {
                         'features': ['ridge_line', 'lasso_line', 'lightgbm_line'],
                         'model': LogisticRegression(random_state = 1108, C = 0.012407087605742084, solver = "liblinear"),
                         'scale': RobustScaler(),
-                        'acc_weight': 0.1326811279,
-                        'logloss_weight':0.171646561,                         
+                        'acc_weight': 0.1143462307,
+                        'logloss_weight':0.1474005668,   
+                        'combined_score': 0.1308733987,
                         }, 
+                    'keras':{
+                        'features': ['20_game_avg_30_g_HAweight_allow_fta-per-fga','-75_g_HAspread_allow_defensive-efficiency','-expected_poss_pg_allowed','50_game_avg_50_g_HAweight_for_defensive-rebounding-pct','75_g_HAspread_allow_defensive-efficiency','-20_game_avg_50_g_Tweight_allow_fta-per-fga','50_g_HAspread_allow_assist--per--turnover-ratio','50_game_avg_30_g_Tweight_allow_offensive-efficiency','-50_game_avg_15_g_HAweight_allow_blocks-per-game','pregame_offensive-rebounding-pct_for','10_game_avg_30_g_Tweight_for_assists-per-game','20_game_avg_30_g_Tweight_allow_assist--per--turnover-ratio','-30_game_avg_10_g_HAweight_allow_possessions-per-game','-50_game_avg_50_g_Tweight_for_assist--per--turnover-ratio','100_g_HAspread_allow_block-pct','75_g_HAspread_for_defensive-efficiency','1_game_avg_10_g_HAweight_for_points-per-game','-50_game_avg_30_g_Tweight_allow_block-pct','25_g_HAspread_for_possessions-per-game','-5_game_avg_10_g_Tweight_allow_possessions-per-game','100_g_HAspread_for_defensive-efficiency','-10_game_avg_50_g_Tweight_for_assists-per-game','-20_game_avg_15_g_Tweight_allow_extra-chances-per-game','pregame_ppp_for','-expected_effective-field-goal-pct_allowed','-5_game_avg_50_g_HAweight_allow_possessions-per-game','-10_g_HAspread_allow_points-per-game`/`possessions-per-game','-50_game_avg_15_g_Tweight_allow_blocks-per-game','-50_game_avg_50_g_HAweight_for_offensive-rebounding-pct','-20_game_avg_50_g_Tweight_for_block-pct', 'pca_line', 'tsvd_line', 'lasso_line', 'lightgbm_line', 'ridge_line', 'vegas_line'],
+                        'model': KerasClassifier(build_fn=line_nn, epochs=30, batch_size=64, verbose=1),
+                        'scale': StandardScaler(),
+                        'acc_weight': 0.13818768,
+                        'logloss_weight': 0.1412553452,
+                        'combined_score': 0.1397215126,
+                         },  
                 },
         },
         'result':{
