@@ -1,3 +1,0 @@
-scale: StandardScaler(copy=True, with_mean=True, with_std=True),start solver: lsqr,start alpha: 0.00105397018863,n feats: 9,significant features: lightgbm_ppp, ridge_ppp, lasso_target, lightgbm_target, lasso_team, lightgbm_team, linsvm_team, ridge_team, rest, final solver: lsqr,final alpha: 0.00101115979472,final score: 0.203092903353,
-
-model: ridge

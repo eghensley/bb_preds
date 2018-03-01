@@ -191,9 +191,9 @@ def pull_train_index(cnx):
         idx.append(str(d)+n.replace(' ','_'))
     return idx 
 
-def pull_test_index(cnx):
+def pull_validation_index(cnx):
     cursor = cnx.cursor()
-    query = 'select date, teamname from gamedata where date > "2017-11-1"'
+    query = 'select date, teamname from gamedata where date > "2017-11-1" and date <= "2018-02-27"'
     cursor.execute(query)
     indexdata = pd.DataFrame(cursor.fetchall(), columns = ['date', 'name'])
     idx = []

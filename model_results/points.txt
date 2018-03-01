@@ -1,4 +1,0 @@
-scale: RobustScaler(copy=True, quantile_range=(25.0, 75.0), with_centering=True,
-       with_scaling=True),start solver: saga,start alpha: 0.00437271263148,n feats: 20,significant features: lightgbm_allow_all, lightgbm_for_target, lightgbm_for_possessions, lasso_for_possessions, ridge_for_all, linsvm_for_all, linsvm_for_team, lightgbm_for_team, ridge_for_target, lightgbm_allowed_target, ridge_allow_possessions, lightgbm_allow_possessions, lasso_allow_possessions, ridge_allow_team, linsvm_allow_team, lightgbm_allow_team, lasso_allow_team, ridge_allow_all, lasso_allowed_target, lasso_for_target, final solver: lsqr,final alpha: 0.859276035795,final score: 0.254875650293,
-
-model: ridge

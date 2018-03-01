@@ -20,7 +20,6 @@ import pandas as pd
 from sklearn.metrics import accuracy_score, log_loss
 import saved_models
 from sklearn.externals import joblib
-import pickle
 
 train_index = pull_data.pull_test_index(update_dbs.mysql_client())
 random.seed(86)

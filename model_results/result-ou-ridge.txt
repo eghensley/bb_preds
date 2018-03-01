@@ -1,1 +1,0 @@
-scale: MinMaxScaler(copy=True, feature_range=(0, 1)),start solver: lsqr,start alpha: 384.250032894,n feats: 6,significant features: 10_game_avg, 15_game_avg, 50_game_avg, 5_game_avg, streak, 30_game_avg, final solver: lsqr,final alpha: 737.480281596,final score: 0.000199789840906,

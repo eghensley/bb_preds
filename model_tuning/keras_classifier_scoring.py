@@ -19,7 +19,6 @@ import update_dbs
 import random
 import saved_models
 import pandas as pd
-from sklearn.externals import joblib
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import StratifiedKFold, cross_validate
 
@@ -192,7 +191,7 @@ x_line = None
 random.seed(86)
 for sort in ['keras']:
     print('... starting %s' % (sort))
-    for kind in ['line', 'ou']: 
+    for kind in ['winner']: 
         print('... starting %s' % (kind))
         for model_name, model_details in saved_models.stored_models[sort][kind].items():
             X = all_x_data[kind]['raw']
@@ -200,7 +199,10 @@ for sort in ['keras']:
             X = X[model_details['features']]
             Y = all_y_data[kind]['raw']
             Y = Y.reset_index()
-            Y = Y[kind]
+            if kind != 'winner':
+                Y = Y[kind]
+            else:
+                Y = Y['outcome']
             
             print('...storing %s'%(model_name))
             model = model_details['model']

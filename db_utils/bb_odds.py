@@ -385,7 +385,7 @@ def update(cnx):
                                             elif len(spacesplit1) == 1 and len(osplit1) == 2 and len(usplit1) == 1:
                                                 x1 = float(team1linelist[each].strip().split('o')[0])
                                                 favorite2 = True
-                                                y1 = float(team1linelist[each].strip().split('o')[1])      
+                                                y1 = float(team1linelist[each].strip().split('o')[1]) * -1  
                                             elif len(spacesplit1) == 2 and len(osplit1) == 1 and len(usplit1) == 1:
                                                 try:
                                                     x1 = float(team1linelist[each].strip().split(' ')[0])

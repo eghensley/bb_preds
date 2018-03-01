@@ -1,1 +1,0 @@
-Scaler: MinMaxScaler(copy=True, feature_range=(0, 1))  

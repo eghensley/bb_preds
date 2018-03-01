@@ -1,1 +1,0 @@
-scale: MinMaxScaler(copy=True, feature_range=(0, 1)),start neighbors: 128.111844616,start leaves: 65.7745764637,n feats: 9,significant features: -lightgbm_all, +lightgbm_team, +ridge_all, +linsvm_all, +ridge_target, +linsvm_team, -lightgbm_target, +linsvm_target, -ridge_team, final neighbors: 199,final leaves: 59,final score: 0.694903235568,

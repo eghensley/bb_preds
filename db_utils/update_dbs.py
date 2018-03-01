@@ -27,7 +27,7 @@ try:
     mongodb_client = MongoClient(_config.mongodb_creds)
 except:
     mongodb_client = MongoClient()
-    
+
 def run():
     bb_odds.update(mysql_client() )
     bb_stats.update(mysql_client() )
@@ -39,6 +39,7 @@ def run():
     fourfeats_elo.update(mongodb_client, mysql_client())  
     derived_insert.update()
     vegas_pred_insert.update()
-#    predictor_insert.update()
+    predictor_insert.update()
+    
 if __name__ == '__main__':
     run()
